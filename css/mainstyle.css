@@ -1,0 +1,95 @@
+body{
+    background-color: #404040;
+}
+
+footer{
+    text-align: center;
+    font-size: small;
+}
+
+.PageHeader{
+    text-align: center;
+    border: 2px solid black;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    margin-left: 3%;
+    margin-right: 3%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    background-color: #b3b3b3;
+}
+
+.wrap {
+    width: 100%;
+    color: white;
+}
+
+.board{
+    float:left;
+    width: 74%;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-top: 1%;
+    background-color: #808080;
+    margin-left: 1%;
+}
+
+.advert{
+    float:right;
+    width: 20%;
+    height: 400px;
+    border: 1px solid black;
+    margin-right: 1%;
+    padding-left: 1%;
+    background-color: #808080;
+}
+
+.nav{
+    float:right;
+    width: 20%;
+    border: 1px solid black;
+    margin-bottom: 1%;
+    margin-right: 1%;
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    background-color: #808080;
+}
+
+.newsPost_title{
+    font-size: 20px; 
+    font-weight: bold; 
+    text-decoration: overline;
+    text-align: left;
+}
+.newsPost_time{
+    font-size: 14px;
+    float: right;
+}
+
+.thread_title{
+    font-size: 20px; 
+    font-weight: bold; 
+    text-decoration: overline;
+}
+.threadInfo{
+    font-size: 14px;
+    float: right;
+}
+
+.headTitle{
+    font-size: 20px; 
+    font-weight: bold; 
+}
+.headText{
+    font-size: 20px; 
+}
+
+.newPostBox{
+    border-style: solid;
+    text-align: center;
+    margin-right: 15%;
+    margin-left: 15%;
+    margin-top: 10px;
+    padding: 1%;
+}
