@@ -39,9 +39,7 @@
         </div>  
 
         <div class = "advert">
-            <p>
-            This is where the advert is at
-            </p>
+            <img src="../res/bulletin/bull_0.png" class="advertImg">
         </div>
 
     </div>

@@ -48,7 +48,7 @@
             /************************************************/
             //create board threads
             $que = "CREATE TABLE " . $boardName . "Threads (
-                        title varchar(200),
+                        title varchar(300),
                         threadId int NOT NULL AUTO_INCREMENT,
                         time TIMESTAMP,
                         tags VARCHAR(50) NULL,
@@ -79,8 +79,8 @@ myQuery($connBoards,$que);
             $que = "CREATE TABLE " . $newTable . "(
                         postId int NOT NULL AUTO_INCREMENT,
                         time TIMESTAMP,
-                        content varchar(2000),
-                        ip int,
+                        content varchar(7500),
+                        ip bigint,
                         PRIMARY KEY(postId)
                     )";
             echo $que . "<br>";

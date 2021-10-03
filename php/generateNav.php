@@ -2,7 +2,8 @@
     include_once("../adminPower/login.php");
     $pagetoGo = "frontpage.php?page=";
     echo "<a href= \"".$pagetoGo."news\">News</a> &#183 ";
-    echo "<a href= \"".$pagetoGo."blog\">Blog</a><br>";
+    //echo "<a href= \"".$pagetoGo."blog\">Blog</a>";
+    echo "<br>";
 
     echo "Main Boards:<br>";
     $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"main\"";

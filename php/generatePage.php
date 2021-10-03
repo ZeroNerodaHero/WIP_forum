@@ -60,7 +60,7 @@
 
     function generateBoard($board){
         global $connBoards;
-        $que = "SELECT * FROM ".$board."Threads ORDER BY time ASC";
+        $que = "SELECT * FROM ".$board."Threads ORDER BY time DESC";
 //echo $que."<br>";
 
         $res = $connBoards->query($que); 
@@ -124,7 +124,7 @@
             Title: <input type="text" name="title" class="tit" size="65"> 
             <input type="submit" value="Post"> <br>
             Message: <br>
-                <textarea name="content" rows="6" cols="100" ></textarea>
+                <textarea name="content" rows="6" cols="30" ></textarea>
             <br>
         </form></div>'; 
     }
@@ -134,7 +134,7 @@
         '<div class=newPostBox>
         <form action=' . $redirect. ' method="post">
             Message: <input type="submit" value="Post"> <br> 
-                <textarea name="content" rows="6" cols="100" ></textarea>
+                <textarea name="content" rows="6" cols="30" ></textarea>
             <br>
         </form></div>'; 
     }

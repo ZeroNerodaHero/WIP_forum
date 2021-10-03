@@ -10,9 +10,18 @@
         echo "<div class=headTitle>WELCOME TO PEEPO</div><br>";
         echo "<div class=headText>Blog</div>";
     } else{
-        $TID=$_GET["TID"];
-        if(!empty($TID)){
-            echo "<div class=headTitle>'$pageTitle'</div>";
+        if(!empty($_GET["TID"])){
+            $TID=$_GET["TID"];
+
+            $que = "SELECT title FROM ".$pageTitle."Threads where threadId='$TID'";
+            $res = $connBoards->query($que);
+
+            if(!empty($res) && $res->num_rows > 0){
+                while($row = $res->fetch_assoc()){
+                    echo "<div class=headTitle>".$row["title"]." </div>";
+                }
+            }
+            echo "<div>/".$pageTitle."/</div>";
         } else{
             echo "<div class=headTitle>/".$pageTitle."/</div>";
         }
