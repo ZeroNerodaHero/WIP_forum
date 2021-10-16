@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="../css/mainstyle.css">
+        <link rel="icon" href="../../res/icon/icon_0.png">
         <title>PeePo</title>
     </head>
 

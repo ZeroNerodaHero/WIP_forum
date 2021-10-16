@@ -21,6 +21,8 @@
                     echo "<div class=headTitle>".$row["title"]." </div>";
                 }
             }
+
+            $pageTitle = '<a href="frontpage.php?page='.$pageTitle.'">'.$pageTitle.'</a>';
             echo "<div>/".$pageTitle."/</div>";
         } else{
             echo "<div class=headTitle>/".$pageTitle."/</div>";

@@ -111,6 +111,7 @@
         echo "<span class=threadInfo>" . $time . " :::: PID: " .
             $PID . "<br>";
         echo "</span>";
+        //echo "<p><pre>" . $content . "</pre></p>";
         echo "<p>" . $content . "</p>";
         echo "<hr>";
     }
@@ -119,7 +120,7 @@
         //$redirect = $_SERVER['REQUEST_URI'];
         $redirect = 'postSuccess.php?page=' . $board;
         echo 
-        '<div class=newPostBox>
+        '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">
             Title: <input type="text" name="title" class="tit" size="65"> 
             <input type="submit" value="Post"> <br>
@@ -131,11 +132,21 @@
     function createNewComment($board,$TID){
         $redirect = 'postSuccess.php?page='.$board."&TID=".$TID;
         echo 
-        '<div class=newPostBox>
+        '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">
             Message: <input type="submit" value="Post"> <br> 
-                <textarea name="content" rows="6" cols="30" ></textarea>
-            <br>
+            <textarea id="textArea" name="content" rows="6" cols="30" ></textarea> <br>
+            <button onclick="addImg()" type="button"> ADD IMG </button>
+            <button onclick="addLink()" type="button"> ADD LNK </button>
         </form></div>'; 
     }
 ?>
+
+<script>
+    function addImg(){
+        document.getElementById("textArea").value += "[IMG]()";
+    }
+    function addLink(){
+        document.getElementById("textArea").value += "[LNK]()";
+    }
+</script>
