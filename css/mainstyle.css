@@ -40,8 +40,12 @@ footer{
     height: 400px;
     border: 1px solid black;
     margin-right: 1%;
-    padding-left: 1%;
+    padding: 3px;
     background-color: #808080;
+}
+
+.advertImg{
+    width: 100%;
 }
 
 .nav{
@@ -50,9 +54,12 @@ footer{
     border: 1px solid black;
     margin-bottom: 1%;
     margin-right: 1%;
+    padding: 3px;
+    /*
     padding-left: 1%;
     padding-top: 1%;
     padding-bottom: 1%;
+    */
     background-color: #808080;
 }
 
@@ -67,6 +74,12 @@ footer{
     float: right;
 }
 
+.UID{
+    padding-left: 8px;
+    padding-right: 8px;
+    border: 1px solid black;
+}
+
 .thread_title{
     font-size: 20px; 
     font-weight: bold; 
@@ -75,6 +88,11 @@ footer{
 .threadInfo{
     font-size: 14px;
     float: right;
+}
+
+.postContent{
+    margin-top: 12px;
+    margin-bottom: 8px;
 }
 
 .headTitle{
@@ -92,4 +110,11 @@ footer{
     margin-left: 15%;
     margin-top: 10px;
     padding: 1%;
+}
+
+img {
+    width: 100px;
+}
+img:hover {
+    width: 100%;
 }
