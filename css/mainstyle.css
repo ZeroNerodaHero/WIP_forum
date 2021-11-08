@@ -98,6 +98,8 @@ footer{
 .headTitle{
     font-size: 20px; 
     font-weight: bold; 
+    margin-left: 2%;
+    margin-right: 2%;
 }
 .headText{
     font-size: 20px; 
@@ -110,6 +112,10 @@ footer{
     margin-left: 15%;
     margin-top: 10px;
     padding: 1%;
+}
+
+.tit{
+    width: 90%;
 }
 
 img {

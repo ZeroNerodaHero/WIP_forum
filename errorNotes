@@ -1,0 +1,15 @@
+BASICALLY ALL THE ERRORS
+
+1. TIME STAMP DOESN'T WORK LIKE IT IS SUPPOSE TO
+    in post success, u need to add 
+    CURRENT_TIMESTAMP 
+    but not in my list
+    
+    reasons:
+    got no fucking clue
+
+    solution:
+    no longer made timestamp default
+
+2.
+

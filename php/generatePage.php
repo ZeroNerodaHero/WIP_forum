@@ -78,7 +78,7 @@
         echo "<div class=thread_title>" . $title;
         echo "<span class=threadInfo>" . $time . " :::: TID: " .
             $TID . " | ";
-        echo "<a href='$newLink'> > </a>";
+        echo "<a href='$newLink'> >>> </a>";
         echo "</span></div><br><hr>";
     }
 
@@ -94,26 +94,31 @@
             return NULL;
         }
 
-        $que = "SELECT postId,time,content FROM ".$board."_".$TID;
+        $que = "SELECT * FROM ".$board."_".$TID;
         //echo $que . "<br>";
         $res = $connBoards->query($que);
         if(!empty($res) && $res->num_rows > 0){
             while($row = $res->fetch_assoc()){
-
-                postComment($row["content"],$row["time"],$row["postId"]);
+                postComment($row["content"],$row["ip"],$row["time"],$row["postId"],$board,$TID);
             }
         } else{
             echo "something went wrong lmao <br>";
         }
     }
         
-    function postComment($content,$time,$PID){
+    function postComment($content,$UID,$time,$PID,$board,$TID){
+        if(empty($UID)) $UID = 0;
+        $id_sel = "p".$UID."_".$PID;
+        $r = $UID%256; $g = ($UID/256)%256; $b = (($UID/256)/256)%256;
+        echo "<postEncap>";
+        echo "<style> #".$id_sel." { background-color:rgba(".$r.",".$g.",".$b.",.5); } </style>";
+        echo "<span class=UID id='$id_sel'>" . (($UID%1000000)^($TID^($TID<<16))) . "</span>";
         echo "<span class=threadInfo>" . $time . " :::: PID: " .
             $PID . "<br>";
         echo "</span>";
-        //echo "<p><pre>" . $content . "</pre></p>";
-        echo "<p>" . $content . "</p>";
+        echo "<p class=postContent>" . $content . "</p>";
         echo "<hr>";
+        echo "</postEncap>";
     }
 
     function createNewThread($board){
@@ -124,9 +129,9 @@
         <form action=' . $redirect. ' method="post">
             Title: <input type="text" name="title" class="tit" size="65"> 
             <input type="submit" value="Post"> <br>
-            Message: <br>
-                <textarea name="content" rows="6" cols="30" ></textarea>
-            <br>
+            Message: <br> ' .
+            showTextArea() .
+            '<br>
         </form></div>'; 
     }
     function createNewComment($board,$TID){
@@ -134,11 +139,24 @@
         echo 
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">
-            Message: <input type="submit" value="Post"> <br> 
+            Message: <input type="submit" value="Post"> <br> ' .
+            showTextArea() .
+        '</form></div>'; 
+    }
+
+    function showTextArea(){
+        return '
             <textarea id="textArea" name="content" rows="6" cols="30" ></textarea> <br>
             <button onclick="addImg()" type="button"> ADD IMG </button>
             <button onclick="addLink()" type="button"> ADD LNK </button>
-        </form></div>'; 
+
+        ';
+    }
+
+    function protecIP($ip){
+        //use some sort of encryption
+        //right now random stuff
+        return ($ip % 100000);
     }
 ?>
 

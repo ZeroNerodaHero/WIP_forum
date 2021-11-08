@@ -41,6 +41,7 @@
             $curBoard = $_GET["board"];
             $curTID = $_GET["TID"];
             $deleteRed .= "?board=".$curBoard."&TID=".$curTID;
+            $banGen = "banUsr.php?board=".$curBoard."&TID=".$curTID;
 
             $que = "SELECT * FROM ".$curBoard."_".$curTID;
             $res = $connBoards->query($que);
@@ -48,13 +49,14 @@
             if($res->num_rows > 0){
                 echo "<table>";       
                 echo "<th>CONTENT</th><th>PID</th><th>TIME</th>
-                      <th>DELETE</th>";
+                      <th>DELETE</th><th>BAN(reason/pword)</th>";
                 while($row = $res->fetch_assoc()){
                     echo "<tr>";
                     $rcontent=$row["content"];
                     $rpid=$row["postId"];
                     $rtime=$row["time"];
                     $deletePg=$deleteRed."&PID=".$rpid;
+                    $banPg =$banGen . "&PID=".$rpid;
 
                     echo "<th>".$rcontent."</th>
                         <th>".$rpid."</th>
@@ -62,6 +64,11 @@
                     echo '<th> <form action='.$deletePg.' method="post">
                             <input type="text" name="pword" size="5"> 
                             <input type="submit" value="X"/> </form>
+                         </th>';
+                    echo '<th><form action='.$banPg.' method="post">
+                            <input type="text" name="reason" size="5">
+                            <input type="text" name="pword" size="5"> 
+                            <input type="submit" value="!"/> </form>
                          </th>';
                     echo "</tr>";
                 }

@@ -22,11 +22,14 @@
         $isThread = empty($_GET["TID"]);
 
         $board = $_GET["page"];
+        $time = 5000;
 
         //new thread
         if($isThread && !empty($_POST["title"]) && !empty($_POST["content"]) &&
             strlen($_POST["title"]) < 300 && strlen($_POST["content"]) < 7500){
+            echo $_POST["title"] . "<br>";
             $postTitle = addslashes($_POST["title"]); 
+            $postTitle = parseTitle($postTitle);
             $postContent = addslashes($_POST["content"]); 
 
             $que = "INSERT INTO ". $board. "Threads (title)
@@ -81,24 +84,27 @@
         } else{
             echo strlen($_POST["title"]). " " . strlen($_POST["content"]); 
             echo "<p> uh oh u might have typed or did something wrong </p>";
+            $time = 5000;
         }
 
         echo '
             <script>
                 setTimeout(function(){
                 location="'.$redirect.'";
-                }, 5000);
+                }, '.$time.');
 
             </script> 
             <a href="'.$redirect.'">GO BACK</a>';
 
+        //make error thing
         function postComment($threadTable,$content){
             global $connBoards;
             $content = postParser($content) . "<br>";
+            textVerify($content);
             $content = nl2br($content);
             $usrIP = ip2long(getusrIP());
-            $que = "INSERT INTO ". $threadTable . "( content,ip) 
-                    VALUES( '$content',";
+            $que = "INSERT INTO ". $threadTable . "(time,content,ip) 
+                    VALUES( CURRENT_TIMESTAMP,'$content',";
             if(!empty($usrIP)) $que .= $usrIP.")";
             else $que .= "NULL)";
 
@@ -111,18 +117,46 @@
             myQuery($connBoards,$que);
         }
 
+        //what I need to do here is make sure that no more than two newlines
+        //are used, no bed werd, uh oh stinky and new lines < 30
+        function textVerify($content){
+            $ws = 0; $we = 0;
+            $clen = strlen($content);
+            $retStr = $content;
+
+            //counts new lines
+            $cntNL = 0;
+            while($ws < $clen){
+                while($we < $clen && $content[$we] != ' ' && $content[$we] != "\n" &&
+                      $content[$we] != "\r" && $content[$we] != "\r\n" &&
+                      $content[$we] != "\n\r"){
+                        $we++;
+                }
+                if($content[$we] != "\n" && $content[$we] != "\r" && $content[$we] != "\r\n" &&
+                   $content[$we] != "\n\r"){
+                        $cntNL++;
+                }
+                $ws = ++$we;
+            }
+            echo "CURRENT NEWLINES: " . $cntNL . "<br>";
+            
+        }
+
         //essentially posts 
         function postParser($content){
             $ws = 0; $we = 0;
             $clen = strlen($content);
             $retStr = $content;
+
+            //counts new lines
+            $cntNL = 0;
             while($ws < $clen){
                 //i canot understadn what character html uses for newlines wtf
                 //i do have a problem where the skips for characters are wrong
                 while($we < $clen && $content[$we] != ' ' && $content[$we] != "\n" &&
                       $content[$we] != "\r" && $content[$we] != "\r\n" &&
                       $content[$we] != "\n\r"){
-                    $we++;
+                        $we++;
                 }
                 //check if string is special case
                 $word = substr($content,$ws,$we-$ws);
@@ -161,8 +195,8 @@
                     } else if($tmpTYPE == "LNK"){
                         $newStr = '<a href='.$tmpLNK.'>'.$tmpLNK.'</a>';
                     }
-                    $retStr = str_replace($retStr,substr($content,$ws,$we-$ws),
-                                            $newStr);
+                    //$retStr = str_replace($retStr,substr($content,$ws,$we-$ws), $newStr);
+                    $retStr = str_replace(substr($content,$ws,$we-$ws), $newStr,$retStr);
 
                 }
 
@@ -172,6 +206,12 @@
                 $ws = ++$we;
             }
             echo "returns" .$retStr . "<br>";
+            return $retStr;
+        }
+        function parseTitle($title){
+            $retStr = $title;
+            $retStr = str_replace("<","&lt;",$retStr);
+            $retStr = str_replace(">","&gt;",$retStr);
             return $retStr;
         }
         class myPair{
