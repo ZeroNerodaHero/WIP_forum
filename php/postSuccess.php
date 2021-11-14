@@ -24,9 +24,14 @@
         $board = $_GET["page"];
         $time = 5000;
 
+        if(checkBan(ip2long(getusrIP()))){
+            $time = 5000;
+            echo "you're banned<br>";
+        }
         //new thread
-        if($isThread && !empty($_POST["title"]) && !empty($_POST["content"]) &&
-            strlen($_POST["title"]) < 300 && strlen($_POST["content"]) < 7500){
+        else if($isThread && !empty($_POST["title"]) && 
+                !empty($_POST["content"]) && strlen($_POST["title"]) < 300 
+                && strlen($_POST["content"]) < 7500){
             echo $_POST["title"] . "<br>";
             $postTitle = addslashes($_POST["title"]); 
             $postTitle = parseTitle($postTitle);

@@ -14,6 +14,7 @@
                 <li> <a href="adminPostNews.php">Post News</a> </li>
                 <li> <a href="createBoard.php">Create Board</a> </li>
                 <li> <a href="deleteStuff.php">Delete Stuff</a> </li>
+                <li> <a href="banList.php">Ban List</a> </li>
             </ul>
         </div>
 

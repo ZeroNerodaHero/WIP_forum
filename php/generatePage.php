@@ -109,6 +109,7 @@
     function postComment($content,$UID,$time,$PID,$board,$TID){
         if(empty($UID)) $UID = 0;
         $id_sel = "p".$UID."_".$PID;
+        $UID = (($UID%1000000)^($TID^($TID<<16)));
         $r = $UID%256; $g = ($UID/256)%256; $b = (($UID/256)/256)%256;
         echo "<postEncap>";
         echo "<style> #".$id_sel." { background-color:rgba(".$r.",".$g.",".$b.",.5); } </style>";
