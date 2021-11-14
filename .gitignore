@@ -1,4 +1,5 @@
 res/
+misc/
 
 # ignore log files and databases
 login.php

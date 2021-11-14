@@ -1,1 +1,0 @@
-selct (x) from (x) limit(start, end);
