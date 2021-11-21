@@ -11,5 +11,16 @@ BASICALLY ALL THE ERRORS
     solution:
     no longer made timestamp default
 
-2.
+2. BANNED WORDS
+    I can bann words
+    Needs:
+    -a table for all the words
+    -a php file to list and add words
+    
+    reason:
+    bad ppl
 
+    solution:
+    add it
+
+3. WHEN ADDING LINKS/IMGS, IF THERE IS NO SPACE THEN WORD IS DELETED

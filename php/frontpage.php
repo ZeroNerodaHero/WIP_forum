@@ -36,7 +36,6 @@
         <div class = "nav">
             <?php
                 include_once('generateNav.php');
-                echo "date " .date('Y-m-d H:i:s','1299762201428') . "<br>";
             ?>
         </div>  
 

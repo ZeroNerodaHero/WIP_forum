@@ -2,10 +2,6 @@
 <html>
     <body>
 
-    <h>
-        POST SUCCESSFULL;
-    </h>
-
     <p id="redirect">
         REDIRECTING BACK IN 5 sec.
     </p>
@@ -16,7 +12,6 @@
 
         include_once("../adminPower/login.php");
 
-        //$redirect = "frontpage.php?page=".$_GET['page']."&TID=".$_GET["TID"];
         $redirect = "frontpage.php?page=".$_GET['page'];
 
         $isThread = empty($_GET["TID"]);
@@ -32,10 +27,47 @@
         else if($isThread && !empty($_POST["title"]) && 
                 !empty($_POST["content"]) && strlen($_POST["title"]) < 300 
                 && strlen($_POST["content"]) < 7500){
-            echo $_POST["title"] . "<br>";
-            $postTitle = addslashes($_POST["title"]); 
+
+            manageNewThread($_POST["title"],$_POST["content"],$board);
+        } 
+        //new post
+        else if(!($isThread) && !empty($_POST["content"]) &&
+                strlen($_POST["content"]) < 7500){
+
+            manageNewPost($_POST["content"],$board,$_GET["TID"]);
+        } else{
+            echo strlen($_POST["title"]). " " . strlen($_POST["content"]); 
+            echo "<p> uh oh u might have typed or did something wrong </p>";
+            $time = 5000;
+        }
+
+        echo '
+            <script>
+                setTimeout(function(){
+                location="'.$redirect.'";
+                }, '.$time.');
+
+            </script> 
+            <a href="'.$redirect.'">GO BACK</a>';
+        function manageNewPost($postContent,$board,$TID){
+            $postContent = addslashes($postContent); 
+            $newTable = $board."_".$TID;
+            $redirect = "frontpage.php?page=".$_GET['page'];
+            $redirect = "&TID=".$TID;
+
+            postComment($newTable,$postContent);
+            bumpThread($board,$TID);
+        }
+
+        function manageNewThread($postTitle,$postContent,$board){
+            global $connBoards,$maxThreads;
+            $postTitle = addslashes($postTitle); 
+            if(!textVerify($postTitle)){
+                echo "YOU SAID BAD WORD!!!!!<br>";
+                return;
+            }
             $postTitle = parseTitle($postTitle);
-            $postContent = addslashes($_POST["content"]); 
+            $postContent = addslashes($postContent); 
 
             $que = "INSERT INTO ". $board. "Threads (title)
                 VALUES('$postTitle')";
@@ -43,6 +75,7 @@
  
             $threadId = $connBoards->insert_id;
             $newTable = $board . "_" . $threadId;
+            $redirect = "frontpage.php?page=".$_GET['page'];
             $redirect .= "&TID=".$threadId;
 
             //create post table and post
@@ -74,38 +107,16 @@
                     break;
                 }
             }
-
-
-        } 
-        //new post
-        else if(!($isThread) && !empty($_POST["content"]) &&
-                strlen($_POST["content"]) < 7500){
-            $postContent = addslashes($_POST["content"]); 
-            $newTable = $board."_".$_GET["TID"];
-            $redirect .= "&TID=".$_GET["TID"];
-//echo $postContent . "<br>";
-            postComment($newTable,$postContent);
-            bumpThread($board,$_GET["TID"]);
-        } else{
-            echo strlen($_POST["title"]). " " . strlen($_POST["content"]); 
-            echo "<p> uh oh u might have typed or did something wrong </p>";
-            $time = 5000;
         }
-
-        echo '
-            <script>
-                setTimeout(function(){
-                location="'.$redirect.'";
-                }, '.$time.');
-
-            </script> 
-            <a href="'.$redirect.'">GO BACK</a>';
 
         //make error thing
         function postComment($threadTable,$content){
             global $connBoards;
+            if(!textVerify($content)){
+                echo "YOU SAID BAD WORD!!!!!<br>";
+                return;
+            }
             $content = postParser($content) . "<br>";
-            textVerify($content);
             $content = nl2br($content);
             $usrIP = ip2long(getusrIP());
             $que = "INSERT INTO ". $threadTable . "(time,content,ip) 
@@ -114,6 +125,7 @@
             else $que .= "NULL)";
 
             myQuery($connBoards,$que);
+            echo "POST SUCCESSFUL!";
         }
         function bumpThread($board,$tid){
             global $connBoards;
@@ -137,14 +149,19 @@
                       $content[$we] != "\n\r"){
                         $we++;
                 }
+
+                //check is it is a bad word
+                $word = substr($content,$ws,$we-$ws);
+                if(isBadWord($word)) return false;
+                
                 if($content[$we] != "\n" && $content[$we] != "\r" && $content[$we] != "\r\n" &&
                    $content[$we] != "\n\r"){
                         $cntNL++;
                 }
                 $ws = ++$we;
             }
-            echo "CURRENT NEWLINES: " . $cntNL . "<br>";
-            
+            //return $cntNL < 50; 
+            return true; 
         }
 
         //essentially posts 
@@ -165,7 +182,7 @@
                 }
                 //check if string is special case
                 $word = substr($content,$ws,$we-$ws);
-                echo $ws ." to " .$we . " " . $word . "<br>";
+
 
                 //[tag](URI){option}
                 //[tag](URI){option}
@@ -186,8 +203,6 @@
                         $i++;
                     } 
                     $pos[$cpo++] = $i;
-                    echo "<br>";
-                    echo $pos[($option * 2)] . " ---- " . $pos[($option * 2+1)] . "<br>";
                 }
                 if($pos[0] != -1 && $pos[1] != -1 && $pos[2] != -1 && $pos[3] != -1){
                     $tmpTYPE = substr($content,$pos[0], $pos[1]-$pos[0]);
@@ -213,6 +228,7 @@
             echo "returns" .$retStr . "<br>";
             return $retStr;
         }
+
         function parseTitle($title){
             $retStr = $title;
             $retStr = str_replace("<","&lt;",$retStr);
