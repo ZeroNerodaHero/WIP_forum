@@ -1,15 +1,14 @@
 <?php
+    echo "<div id=navHeader> Navigation </div>";
     include_once("../adminPower/login.php");
     $pagetoGo = "frontpage.php?page=";
-    echo "<a href= \"".$pagetoGo."news\">News</a> &#183 ";
-    //echo "<a href= \"".$pagetoGo."blog\">Blog</a>";
-    echo "<br>";
-
-    echo "Main Boards:<br>";
+    echo "<a href= \"".$pagetoGo. "news\">
+          <div id=NewsNavLink>[ News ]</div> </a>";
+    echo "Main Boards:";
     $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"main\"";
     getBoard($que);
     /* -----------------------------------------------------------*/
-    echo "Shit Boards:<br>";
+    echo "Shit Boards:";
     $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"shit\"";
     getBoard($que);
 
@@ -19,9 +18,9 @@
         if($res->num_rows > 0){
             while($row = $res->fetch_assoc()){
                 $bname = $row["boardName"];
-                echo "<a href= \"".$pagetoGo. $bname."\">/". $bname. "/</a> &#183 ";
+                echo "<a href= \"".$pagetoGo. $bname."\">
+                    <div class=navLink>[ " . $bname.  "]</div> </a>";
             }
-            echo "<br>";
         }
     }
 ?>

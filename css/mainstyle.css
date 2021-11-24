@@ -54,13 +54,25 @@ footer{
     border: 1px solid black;
     margin-bottom: 1%;
     margin-right: 1%;
+    padding-right: 5%;
     padding: 3px;
-    /*
-    padding-left: 1%;
-    padding-top: 1%;
-    padding-bottom: 1%;
-    */
     background-color: #808080;
+    font-size: 1.1em;
+}
+
+#NewsNavLink{
+    text-align: center;
+    font-size: 1.25em;
+}
+.navLink{
+    font-size: 1.25em;
+    margin-left: 50%;
+}
+
+#navHeader{
+    font-size: 1.5em;
+    text-align: center;
+    color: #ff9999;
 }
 
 .newsPost_title{
@@ -96,7 +108,7 @@ footer{
 }
 
 .headTitle{
-    font-size: 20px; 
+    font-size: 1.5em; 
     font-weight: bold; 
     margin-left: 2%;
     margin-right: 2%;
