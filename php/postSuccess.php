@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
-    <body>
+    <head>
+        <link rel="stylesheet" href="../css/mainstyle.css">
+        <link rel="icon" href="../../res/icon/icon_0.png">
+        <title>PeePo</title>
+    </head>
 
-    <p id="redirect">
-        REDIRECTING BACK IN 5 sec.
-    </p>
+    <body class=postSuccessBody>
 
     <?php
-        error_reporting(-1);
-        ini_set('display_errors',1);
+//debug
+/*
+error_reporting(-1);
+ini_set('display_errors',1);
+ */
 
         include_once("../adminPower/login.php");
 
@@ -21,7 +26,7 @@
 
         if(checkBan(ip2long(getusrIP()))){
             $time = 5000;
-            echo "you're banned<br>";
+            printPage("You're banned");
         }
         //new thread
         else if($isThread && !empty($_POST["title"]) && 
@@ -36,19 +41,12 @@
 
             manageNewPost($_POST["content"],$board,$_GET["TID"]);
         } else{
-            echo strlen($_POST["title"]). " " . strlen($_POST["content"]); 
-            echo "<p> uh oh u might have typed or did something wrong </p>";
+            $ppstr = strlen($_POST["title"]). " " . strlen($_POST["content"]) .
+                    "<br> uh oh u might have typed or did something wrong";
+            printPage($ppstr);
             $time = 5000;
         }
 
-        echo '
-            <script>
-                setTimeout(function(){
-                location="'.$redirect.'";
-                }, '.$time.');
-
-            </script> 
-            <a href="'.$redirect.'">GO BACK</a>';
         function manageNewPost($postContent,$board,$TID){
             $postContent = addslashes($postContent); 
             $newTable = $board."_".$TID;
@@ -63,7 +61,7 @@
             global $connBoards,$maxThreads;
             $postTitle = addslashes($postTitle); 
             if(!textVerify($postTitle)){
-                echo "YOU SAID BAD WORD!!!!!<br>";
+                printPage("YOU SAID BAD WORD!!!");
                 return;
             }
             $postTitle = parseTitle($postTitle);
@@ -113,7 +111,7 @@
         function postComment($threadTable,$content){
             global $connBoards;
             if(!textVerify($content)){
-                echo "YOU SAID BAD WORD!!!!!<br>";
+                printPage("YOU SAID BAD WORD!!!");
                 return;
             }
             $content = postParser($content) . "<br>";
@@ -125,7 +123,7 @@
             else $que .= "NULL)";
 
             myQuery($connBoards,$que);
-            echo "POST SUCCESSFUL!";
+            printPage("POST SUCCESSFUL!");
         }
         function bumpThread($board,$tid){
             global $connBoards;
@@ -225,7 +223,6 @@
                 //what is wrong with this. i dont rememberdoing it like this
                 $ws = ++$we;
             }
-            echo "returns" .$retStr . "<br>";
             return $retStr;
         }
 
@@ -234,6 +231,34 @@
             $retStr = str_replace("<","&lt;",$retStr);
             $retStr = str_replace(">","&gt;",$retStr);
             return $retStr;
+        }
+        function printPage($msg){
+            global $totalBury;
+            $redirect = "frontpage.php?page=".$_GET['page'];
+            $buryPic = rand()%$totalBury;
+            echo "<div class=postSuccessHeader> " . $msg ."</div>";
+            
+            echo '<p class=buryQuote> 
+                    You have been blessed with Bury#'.$buryPic.'.<br><br>
+                    <a href="'.$redirect.'">
+                        <img src = "../res/buries/bury_'.$buryPic.'.png" 
+                        class=postSuccessIMG>
+                    </a><br></p>';
+
+            echo '
+                <p id="postSuccessRedirect">
+                    REDIRECTING BACK IN 5 sec . . . 
+                    <a href="'.$redirect.'" class=redLink>GO BACK</a>
+                </p> ';
+            
+            echo '
+                <script>
+                    setTimeout(function(){
+                    location="'.$redirect.'";
+                    }, 50000);
+
+                </script> ';
+
         }
         class myPair{
             public $first;

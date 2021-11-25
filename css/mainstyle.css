@@ -136,3 +136,30 @@ img {
 img:hover {
     width: 100%;
 }
+
+/* start for the POST SUCCESS */
+.postSuccessBody{
+    text-align:center;
+}
+
+.postSuccessHeader{
+    margin-top: 5%;
+    font-size: 2em; 
+    color: #ffffff;
+}
+#postSuccessRedirect{
+    color: #f2f2f2;
+}
+.postSuccessIMG{
+    width: 40%;
+}
+.postSuccessIMG:hover{
+    width: 40%;
+}
+.buryQuote{
+    color: #ffffff;
+    font-style: italic;
+}
+.redLink{
+    color: #ff00ff;
+}

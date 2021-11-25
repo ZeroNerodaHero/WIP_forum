@@ -19,7 +19,7 @@
             while($row = $res->fetch_assoc()){
                 $bname = $row["boardName"];
                 echo "<a href= \"".$pagetoGo. $bname."\">
-                    <div class=navLink>[ " . $bname.  "]</div> </a>";
+                    <div class=navLink>[ " . $bname.  " ]</div> </a>";
             }
         }
     }
