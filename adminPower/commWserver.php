@@ -1,15 +1,4 @@
 <?php
-    //admin logins
-    $admin_ppassword="ilikepi";
-    $mod_ppassword="poppy";
-    $servername = "localhost";
-    $user = "eve";
-    $pass = "PrinzKai177Kai";
-
-    //site settings
-    $maxThreads = 15;
-    $totalBury = 5;
-
     $data = "peepo";
     $conn = mysqli_connect($servername,$user,$pass,$data) 
         or die("can't connect to mySql");
