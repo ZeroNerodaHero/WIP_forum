@@ -1,5 +1,5 @@
 <?php
-    include_once("login.php");
+    include_once("reuse.php");
 
     $redirect = "wordBan.php";
 

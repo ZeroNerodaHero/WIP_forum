@@ -3,7 +3,7 @@
     include_once("../adminPower/login.php");
     $pagetoGo = "frontpage.php?page=";
     echo "<a href= \"".$pagetoGo. "news\">
-          <div id=NewsNavLink>[ News ]</div> </a>";
+          <div id=NewsNavLink>[News]</div> </a>";
     echo "Main Boards:";
     $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"main\"";
     getBoard($que);
@@ -19,7 +19,7 @@
             while($row = $res->fetch_assoc()){
                 $bname = $row["boardName"];
                 echo "<a href= \"".$pagetoGo. $bname."\">
-                    <div class=navLink>[ " . $bname.  " ]</div> </a>";
+                    <div class=navLink>[" . $bname.  "]</div> </a>";
             }
         }
     }

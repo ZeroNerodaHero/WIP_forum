@@ -1,10 +1,14 @@
-<h> BAN LIST </h>
 <?php
-    include_once("login.php");
+        include_once("reuse.php");
+?>
+
+<?php
+
+    echo " <h1> BAN LIST </h1>";
 
     $que = "SELECT * FROM ipBans";
     $res = $conn->query($que);
-    $unBan = "unBanUsr.php?ip=";
+    $unBan = "updateUnBanUsr.php?ip=";
 
     echo "<table><tr><th>IP</th><th>REASON</th><th>START</th><th>END</th></tr>";
     if(!empty($res) && $res->num_rows > 0){

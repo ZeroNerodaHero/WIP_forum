@@ -1,10 +1,14 @@
 <?php
-    include_once("login.php");
+    include_once("reuse.php");
+
+
+    echo "<h1>Banned Words</h1>";
 
     $que = "SELECT * FROM badWord";
     $res = $conn->query($que);
-    $unBan = "wordBanFrom.php?";
+    $unBan = "updateWordBanFrom.php?";
 
+    echo "<div class=listTable><br>";
     echo "<table><tr><th>banned words</th></tr>";
     if(!empty($res) && $res->num_rows > 0){
         while($row = $res->fetch_assoc()){
@@ -18,12 +22,13 @@
                 </tr> "; 
         }
     }
-    echo "</table>";
+    echo "</table><br>";
+    echo "</div>";
 
-    echo "ADD WORD:  
+
+    echo "<div>ADD WORD:  
             <form action=".$unBan."add=1 method='post'>
             WORD: <input type='text' name='newWord' size='5'> 
             PASSWD: <input type='text' name='pword' size='5'> 
-            <input type='submit' value='->'/> </form>
-    ";
+            <input type='submit' value='->'/> </form></div>";
 ?>

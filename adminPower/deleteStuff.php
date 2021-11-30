@@ -1,15 +1,8 @@
  <!DOCTYPE html>
 <html>
-    <head>
-    <title>Moderation Board</title>
-
-    <style>
-        .tit{
-            width: 40%;
-        }
-        
-    </style>
-    </head>
+    <?php
+        include_once("reuse.php");
+    ?>
 
     <body>
         <h1>Moderating Board</h1>
@@ -26,8 +19,6 @@
         ini_set("display_errors",1);
         ini_set("display_startup_errors",1);
         error_reporting(E_ALL);
-
-        include_once("login.php");
 
         //ex url = ...?board=...&tid=...
         //can exist or not
