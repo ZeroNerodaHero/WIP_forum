@@ -1,7 +1,9 @@
 res/
 misc/
+bkup/
 
 # ignore log files and databases
+*.swp
 login.php
 gitAuthKeyStupidDumbShit
 thisISEVE
