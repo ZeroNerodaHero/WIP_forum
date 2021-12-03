@@ -53,7 +53,7 @@ ini_set('display_errors',1);
             $redirect = "frontpage.php?page=".$_GET['page'];
             $redirect = "&TID=".$TID;
 
-            postComment($newTable,$postContent);
+            postComment($board,$TID,$postContent);
             bumpThread($board,$TID);
         }
 
@@ -85,7 +85,7 @@ ini_set('display_errors',1);
                         PRIMARY KEY(postId)
                     )";
             myQuery($connBoards,$que);
-            postComment($newTable,$postContent);
+            postComment($board,$threadId,$postContent);
 
             $que = "SELECT * FROM ". $board."Threads ORDER BY time ASC";
             $res = $connBoards->query($que);
@@ -108,12 +108,17 @@ ini_set('display_errors',1);
         }
 
         //make error thing
-        function postComment($threadTable,$content){
+        function postComment($page,$TID,$content){
             global $connBoards;
+            $threadTable = $page . "_".$TID; 
+            $redirect = "frontpage.php?page=".$page."&TID=".$TID;
             if(!textVerify($content)){
-                printPage("YOU SAID BAD WORD!!!");
+                printPage("YOU SAID BAD WORD!!!",$redirect);
                 return;
             }
+            $content = str_replace("<","&lt;",$content);
+            $content = str_replace(">","&gt;",$content);
+
             $content = postParser($content) . "<br>";
             $content = nl2br($content);
             $usrIP = ip2long(getusrIP());
@@ -123,7 +128,7 @@ ini_set('display_errors',1);
             else $que .= "NULL)";
 
             myQuery($connBoards,$que);
-            printPage("POST SUCCESSFUL!");
+            printPage("POST SUCCESSFUL!",$redirect);
         }
         function bumpThread($board,$tid){
             global $connBoards;
@@ -232,9 +237,11 @@ ini_set('display_errors',1);
             $retStr = str_replace(">","&gt;",$retStr);
             return $retStr;
         }
-        function printPage($msg){
+        function printPage($msg,$redirect=""){
             global $totalBury;
-            $redirect = "frontpage.php?page=".$_GET['page'];
+            if($redirect == ""){
+                $redirect = "frontpage.php?page=".$_GET['page'];
+            }
             $buryPic = rand()%$totalBury;
             echo "<div class=postSuccessHeader> " . $msg ."</div>";
             
