@@ -108,9 +108,9 @@
         
     function postComment($content,$UID,$time,$PID,$board,$TID){
         if(empty($UID)) $UID = 0;
-        $id_sel = "p".$UID."_".$PID;
         $UID = (($UID%1000000)^($TID^($TID<<16)));
-        echo "<postEncap>";
+        $id_sel = "p".$UID."_".$PID;
+        echo "<div class=postEncap id=pd".$PID.">";
         echo "<style> #".$id_sel." { background-color:#".$UID."; } </style>";
         echo "<span class=UID id='$id_sel'>" . $UID . "</span>";
         echo "<span class=threadInfo>" . $time . " :::: PID: " .
@@ -118,7 +118,7 @@
         echo "</span>";
         echo "<p class=postContent>" . $content . "</p>";
         echo "<hr>";
-        echo "</postEncap>";
+        echo "</div>";
     }
 
     function createNewThread($board){

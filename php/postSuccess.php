@@ -168,6 +168,11 @@ ini_set('display_errors',1);
         }
 
         //essentially posts 
+        //this uses a terrible way to parse the text
+        //first i got and find cases of "##"
+        //then i use it to find "[?]()
+        //it is slow of course
+        //optimize
         function postParser($content){
             $ws = 0; $we = 0;
             $clen = strlen($content);
@@ -175,6 +180,7 @@ ini_set('display_errors',1);
 
             //counts new lines
             $cntNL = 0;
+
             while($ws < $clen){
                 //i canot understadn what character html uses for newlines wtf
                 //i do have a problem where the skips for characters are wrong
@@ -186,6 +192,18 @@ ini_set('display_errors',1);
                 //check if string is special case
                 $word = substr($content,$ws,$we-$ws);
 
+                $wlen = strlen($word);
+                //dont forget escape character after anything wtf
+                if($wlen > 2 && $word[0] == "#" && $word[1] == "#"){
+                    $goTo= substr($word,2);
+                    $replace = "<a href=\'javascript:jumpPost(\"pd$goTo\")\'>" .
+                        $word . "</a>";
+
+                    $retStr = str_replace($word,$replace,$retStr);
+                    
+                    $ws = ++$we;
+                    continue;
+                }
 
                 //[tag](URI){option}
                 //[tag](URI){option}
@@ -195,8 +213,6 @@ ini_set('display_errors',1);
                 $rightChar = array(']',')','}');
                 $pos = array(-1,-1,-1,-1,-1,-1);
                 //search and find next `
-                // for for for
-                // for
                 for($i = $ws; $i < $we; $i++,$option++){
                     while($i < $we && $content[$i] != $leftChar[$option]){
                         $i++;
@@ -218,9 +234,11 @@ ini_set('display_errors',1);
                     } else if($tmpTYPE == "LNK"){
                         $newStr = '<a href='.$tmpLNK.'>'.$tmpLNK.'</a>';
                     }
-                    //$retStr = str_replace($retStr,substr($content,$ws,$we-$ws), $newStr);
-                    $retStr = str_replace(substr($content,$ws,$we-$ws), $newStr,$retStr);
-
+                    //so what happens here is bc the way i made this is that the endpoints are not
+                    //counted...have to add 2
+                    //old ver that replaces the whole word
+                    //$retStr = str_replace(substr($content,$ws,$we-$ws), $newStr,$retStr);
+                    $retStr = str_replace(substr($content,$pos[0]-1,$pos[3]-$pos[0]+2), $newStr,$retStr);
                 }
 
                 

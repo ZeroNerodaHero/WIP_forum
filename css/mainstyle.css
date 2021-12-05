@@ -102,6 +102,10 @@ footer{
     float: right;
 }
 
+.postEncap(){
+    margin-top: 0px;
+}
+
 .postContent{
     margin-top: 12px;
     margin-bottom: 8px;
