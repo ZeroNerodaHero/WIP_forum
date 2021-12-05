@@ -3,6 +3,7 @@
     <head>
         <link rel="stylesheet" href="../css/mainstyle.css">
         <link rel="icon" href="../../res/icon/icon_0.png">
+        <script type="text/javascript" src="../css/jscrap.js"></script>
         <title>PeePo</title>
     </head>
 

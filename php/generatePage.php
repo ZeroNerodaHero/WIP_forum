@@ -114,7 +114,7 @@
         echo "<style> #".$id_sel." { background-color:#".$UID."; } </style>";
         echo "<span class=UID id='$id_sel'>" . $UID . "</span>";
         echo "<span class=threadInfo>" . $time . " :::: PID: " .
-            $PID . "<br>";
+            "<a href='javascript:quotePost($PID)'>".  sprintf("%'.07d\n",$PID) . "</a><br>";
         echo "</span>";
         echo "<p class=postContent>" . $content . "</p>";
         echo "<hr>";

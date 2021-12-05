@@ -1,3 +1,4 @@
-function textUnfuck(oriSTR){
-    console.log
+function quotePost(val){
+    console.log("post is " + val);
+    document.getElementById("textArea").value += ">>>"+ val+"\n";
 }
