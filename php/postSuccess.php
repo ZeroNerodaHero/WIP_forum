@@ -233,7 +233,12 @@ ini_set('display_errors',1);
                         
                     } else if($tmpTYPE == "LNK"){
                         $newStr = '<a href='.$tmpLNK.'>'.$tmpLNK.'</a>';
-                    }
+                    } else if($tmpTYPE == "YTB"){
+						$youtubeRegex = "/https:\/\/www.youtube.com\/watch\?v=/i";
+						$youtubeId = preg_replace($youtubeRegex, "", $tmpLNK);
+						$newStr = '<div><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$youtubeId.'" allowfullscreen></iframe> </div>';
+					}
+
                     //so what happens here is bc the way i made this is that the endpoints are not
                     //counted...have to add 2
                     //old ver that replaces the whole word

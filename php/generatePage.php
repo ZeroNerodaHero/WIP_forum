@@ -158,7 +158,7 @@
             <textarea id="textArea" name="content" rows="6" cols="30" ></textarea> <br>
             <button onclick="addImg()" type="button"> ADD IMG </button>
             <button onclick="addLink()" type="button"> ADD LNK </button>
-
+			<button onclick="addYTB()" type="button"> ADD YTB </button>
         ';
     }
 
@@ -175,5 +175,8 @@
     }
     function addLink(){
         document.getElementById("textArea").value += "[LNK]()";
+    }
+    function addYTB(){
+        document.getElementById("textArea").value += "[YTB]()";
     }
 </script>
