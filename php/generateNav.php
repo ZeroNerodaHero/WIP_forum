@@ -4,11 +4,11 @@
     $pagetoGo = "frontpage.php?page=";
     echo "<a href= \"".$pagetoGo. "news\">
           <div id=NewsNavLink>[News]</div> </a>";
-    echo "Main Boards:";
+    echo "<div class=navCategory>Main Boards:</div>";
     $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"main\"";
     getBoard($que);
     /* -----------------------------------------------------------*/
-    echo "Shit Boards:";
+    echo "<div class=navCategory>Shit Boards:</div>";
     $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"shit\"";
     getBoard($que);
 
