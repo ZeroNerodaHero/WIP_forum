@@ -74,12 +74,21 @@
     }
         
     function postThreads($title,$time,$TID){
+		/*
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
-        echo "<div class=thread_title>" . $title;
+        echo "<div onclick='threadRedirect(\"$newLink\")' class=thread_title>" . $title;
         echo "<span class=threadInfo>" . $time . " :::: TID: " .
             $TID . " | ";
         echo "<a href='$newLink'> >>> </a>";
-        echo "</span></div><br><hr>";
+        echo "</span><br><br><hr></div>";
+		*/
+
+        $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
+        echo "<div onclick='threadRedirect(\"$newLink\")'>";
+        echo "<span class=threadInfo>" . $time . " :::: TID: " .
+            $TID . " | <a href='$newLink'> >>> </a></span>";
+		echo "<div class=thread_title>" . $title . "</div>";
+        echo "<br><hr></div>";
     }
 
     function generateThread($board,$TID){

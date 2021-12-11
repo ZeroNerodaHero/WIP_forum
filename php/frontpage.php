@@ -17,7 +17,7 @@
     </div>
 
     <div class = "wrap">
-        <div class = "board">
+        <div id = "board">
             <?php
                 error_reporting(-1);
                 ini_set('display_errors',1); 
@@ -34,14 +34,14 @@
             </footer>
         </div>
 
-        <div class = "nav">
-            <?php
-                include_once('generateNav.php');
-            ?>
-        </div>  
+		<div id="rightEncap">
+        	<div class = "nav">
+            	<?php include_once('generateNav.php'); ?>
+        	</div>  
 
-        <div class = "advert">
-            <img src="../res/bulletin/bull_0.png" class="advertImg">
+        	<div class = "advert">
+            	<img src="../res/bulletin/bull_0.png" class="advertImg">
+        	</div>
         </div>
 
     </div>
