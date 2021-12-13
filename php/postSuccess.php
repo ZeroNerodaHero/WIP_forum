@@ -14,7 +14,6 @@
 error_reporting(-1);
 ini_set('display_errors',1);
  */
-
         include_once("../adminPower/login.php");
 
         $redirect = "frontpage.php?page=".$_GET['page'];
@@ -121,7 +120,8 @@ ini_set('display_errors',1);
 
             $content = postParser($content) . "<br>";
             $content = nl2br($content);
-            $usrIP = ip2long(getusrIP());
+            //$usrIP = ip2long(getusrIP());
+            $usrIP = getusrIP();
             $que = "INSERT INTO ". $threadTable . "(time,content,ip) 
                     VALUES( CURRENT_TIMESTAMP,'$content',";
             if(!empty($usrIP)) $que .= $usrIP.")";

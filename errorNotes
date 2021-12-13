@@ -24,3 +24,6 @@ BASICALLY ALL THE ERRORS
     add it
 
 3. WHEN ADDING LINKS/IMGS, IF THERE IS NO SPACE THEN WORD IS DELETED
+
+4. IPv6 sucks
+    Whenever ipv4 fails, it will try ipv6. However, one of the problems is that there needs a way to hash or change that into a long int. php doesn't provide a function so will have to write one later. Currently all broken ips just get an ip of 0 or Null.
