@@ -1,0 +1,38 @@
+body{
+    background-color: #404040;
+}
+
+/* start for the POST SUCCESS */
+.postSuccessBody{
+    text-align:center;
+}
+
+.postSuccessHeader{
+	margin-top: 5%;
+    font-size: 2em; 
+    color: #ffffff;
+}
+#postSuccessRedirect{
+    color: #f2f2f2;
+}
+#postSuccessIMG{
+    height: 60%;
+}
+#postSuccessIMG:hover{
+    height: 60%;
+}
+.buryQuote{
+    color: #ffffff;
+    font-style: italic;
+}
+.redLink{
+    color: #ff00ff;
+}
+
+#postFine{
+	background-color: #ffccff;
+}
+
+#postBad{
+	background-color: #ff0000;
+}

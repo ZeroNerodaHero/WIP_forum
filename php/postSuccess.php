@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="../css/mainstyle.css">
+        <link rel="stylesheet" href="../css/postSuccess.css">
         <link rel="icon" href="../../res/icon/icon_0.png">
         <title>PeePo</title>
     </head>
@@ -13,7 +13,7 @@
 /*
 error_reporting(-1);
 ini_set('display_errors',1);
- */
+*/
         include_once("../adminPower/login.php");
 
         $redirect = "frontpage.php?page=".$_GET['page'];
@@ -40,9 +40,8 @@ ini_set('display_errors',1);
 
             manageNewPost($_POST["content"],$board,$_GET["TID"]);
         } else{
-            $ppstr = strlen($_POST["title"]). " " . strlen($_POST["content"]) .
-                    "<br> uh oh u might have typed or did something wrong";
-            printPage($ppstr);
+            $ppstr = "uh oh u might have typed or did something wrong";
+            printPage($ppstr,true);
             $time = 5000;
         }
 
@@ -60,7 +59,7 @@ ini_set('display_errors',1);
             global $connBoards,$maxThreads;
             $postTitle = addslashes($postTitle); 
             if(!textVerify($postTitle)){
-                printPage("YOU SAID BAD WORD!!!");
+                printPage("YOU SAID BAD WORD!!!",true);
                 return;
             }
             $postTitle = parseTitle($postTitle);
@@ -112,7 +111,7 @@ ini_set('display_errors',1);
             $threadTable = $page . "_".$TID; 
             $redirect = "frontpage.php?page=".$page."&TID=".$TID;
             if(!textVerify($content)){
-                printPage("YOU SAID BAD WORD!!!",$redirect);
+                printPage("YOU SAID BAD WORD!!!",true,$redirect);
                 return;
             }
             $content = str_replace("<","&lt;",$content);
@@ -128,7 +127,7 @@ ini_set('display_errors',1);
             else $que .= "NULL)";
 
             myQuery($connBoards,$que);
-            printPage("POST SUCCESSFUL!",$redirect);
+            printPage("POST SUCCESSFUL!",false,$redirect);
         }
         function bumpThread($board,$tid){
             global $connBoards;
@@ -260,19 +259,21 @@ ini_set('display_errors',1);
             $retStr = str_replace(">","&gt;",$retStr);
             return $retStr;
         }
-        function printPage($msg,$redirect=""){
+        function printPage($msg,$error=false,$redirect=""){
             global $totalBury;
             if($redirect == ""){
                 $redirect = "frontpage.php?page=".$_GET['page'];
             }
             $buryPic = rand()%$totalBury;
-            echo "<div class=postSuccessHeader> " . $msg ."</div>";
+			$messageError = (!$error) ? "postFine" : "postBad";
+            echo "<div class=postSuccessHeader><mark id=".$messageError."> "
+					. $msg ."</mark></div>";
             
             echo '<p class=buryQuote> 
                     You have been blessed with Bury#'.$buryPic.'.<br><br>
                     <a href="'.$redirect.'">
                         <img src = "../res/buries/bury_'.$buryPic.'.png" 
-                        class=postSuccessIMG>
+                        id=postSuccessIMG>
                     </a><br></p>';
 
             echo '
