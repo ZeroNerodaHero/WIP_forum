@@ -7,7 +7,7 @@
         <title>PeePo</title>
     </head>
 
-    <div class = "PageHeader">
+    <div id = "PageHeader">
         <?php 
             error_reporting(-1);
             ini_set('display_errors',1); 

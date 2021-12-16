@@ -50,6 +50,13 @@ function getCookie(cname) {
 }
 
 function threadRedirect(redirect){
-	console.log(redirect);
 	window.location = redirect;
+}
+
+function headerRedirect(page){
+	document.getElementById("PageHeader").addEventListener("click",
+		function()
+		{
+			window.location = "frontpage.php?page="+page;
+		});
 }

@@ -21,7 +21,7 @@
                     echo "<div class=headTitle>".$row["title"]." </div>";
                 }
             }
-
+			echo "<script type='text/javascript'>headerRedirect('$pageTitle')</script>";
             $pageTitle = '<a href="frontpage.php?page='.$pageTitle.'">'.$pageTitle.'</a>';
             echo "<div>/".$pageTitle."/</div>";
         } else{
