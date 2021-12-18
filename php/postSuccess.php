@@ -28,22 +28,30 @@ ini_set('display_errors',1);
             printPage("You're banned");
         }
         //new thread
-        else if($isThread && !empty($_POST["title"]) && 
-                !empty($_POST["content"]) && strlen($_POST["title"]) < 300 
-                && strlen($_POST["content"]) < 7500){
-
+        else if($isThread && testString($_POST["title"],301) && 
+                testString($_POST["content"],7500)){
             manageNewThread($_POST["title"],$_POST["content"],$board);
         } 
         //new post
-        else if(!($isThread) && !empty($_POST["content"]) &&
-                strlen($_POST["content"]) < 7500){
-
+        else if(!($isThread) && testString($_POST["content"],7500)){
             manageNewPost($_POST["content"],$board,$_GET["TID"]);
         } else{
             $ppstr = "uh oh u might have typed or did something wrong";
             printPage($ppstr,true);
             $time = 5000;
         }
+
+		function testString($strr,$maxLen){
+			if(empty($strr) || strlen($strr) > $maxLen)
+				return false;
+
+			$lenTit = strlen($strr);
+			$i = 0;
+			for(; $i < $lenTit; $i++){
+				if($strr[$i] != ' ') break;
+			}
+			return $lenTit !=  $i;
+		}
 
         function manageNewPost($postContent,$board,$TID){
             $postContent = addslashes($postContent); 
