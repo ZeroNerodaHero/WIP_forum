@@ -12,9 +12,10 @@
         //echo "IP IS " . sprintf("%u",ip2long(getIP())) . "<br>";
         $curPage = $_GET["page"];
         if($curPage == "news"){
+			echo "<script>showFuncButtons(0);</script>";
             generateNews();            
         } else if($curPage == "blog"){
-
+			
         } else {
             $que = "SELECT * FROM boards WHERE boardName = '$curPage'";
             $res = $conn->query($que);

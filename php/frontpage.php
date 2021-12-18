@@ -16,6 +16,12 @@
         
     </div>
 
+	<div id = functionButtonCont>
+		<a href="javascript:buttonUp()" class=funcButton>&uarr;</a>
+		<br><br>
+		<a href="javascript:buttonDown()" class=funcButton>&darr;</a> <br>
+	</div> 
+
     <div class = "wrap">
         <div id = "board">
             <?php

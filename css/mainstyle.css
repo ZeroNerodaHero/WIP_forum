@@ -7,7 +7,7 @@ footer{
     font-size: small;
 }
 
-.PageHeader{
+#PageHeader{
     text-align: center;
     border: 2px solid black;
     margin-top: 1%;
@@ -162,18 +162,17 @@ img:hover {
 }
 
 .postSuccessHeader{
-    margin-top: 5%;
     font-size: 2em; 
     color: #ffffff;
 }
 #postSuccessRedirect{
     color: #f2f2f2;
 }
-.postSuccessIMG{
-    width: 40%;
+#postSuccessIMG{
+    height: 40%;
 }
-.postSuccessIMG:hover{
-    width: 40%;
+#postSuccessIMG:hover{
+    height: 40%;
 }
 .buryQuote{
     color: #ffffff;
@@ -186,4 +185,17 @@ img:hover {
 /* start for settings */
 #edit_settings{
     float: right;
+}
+
+/* for buttons */
+#functionButtonCont{
+    background-color: #808080;
+	position:fixed;
+	margin-left:76.5%;
+	padding:1px;
+}
+.funcButton{
+    background-color: #808080;
+	filter: brightness(75%);
+	padding:2px;
 }

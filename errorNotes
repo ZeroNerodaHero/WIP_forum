@@ -27,3 +27,6 @@ BASICALLY ALL THE ERRORS
 
 4. IPv6 sucks
     Whenever ipv4 fails, it will try ipv6. However, one of the problems is that there needs a way to hash or change that into a long int. php doesn't provide a function so will have to write one later. Currently all broken ips just get an ip of 0 or Null.
+
+
+5. The buttons for up down terrible for not very wide screens. Phones mas o menos.

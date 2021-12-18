@@ -60,3 +60,24 @@ function headerRedirect(page){
 			window.location = "frontpage.php?page="+page;
 		});
 }
+
+function buttonUp(){
+    var ele = document.getElementById("board");
+    var top = ele.offsetTop;
+    window.scrollTo(0,top-10);
+}
+function buttonDown(){
+    var ele = document.getElementById("board");
+    var bot = ele.offsetHeight;
+    window.scrollTo(0,bot-10);
+}
+
+function showFuncButtons(val){
+    var ele = document.getElementById("functionButtonCont");
+	//what is the difference between inline and block?
+	if(val){
+		ele.style.display = "inline";	
+	} else{
+		ele.style.display = "none";	
+	}
+}

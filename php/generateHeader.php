@@ -6,9 +6,6 @@
     } else if($pageTitle == "news"){
         echo "<div class=headTitle>WELCOME TO PEEPO</div><br>";
         echo "<div class=headText>News</div>";
-    } else if($pageTitle == "blog"){
-        echo "<div class=headTitle>WELCOME TO PEEPO</div><br>";
-        echo "<div class=headText>Blog</div>";
     } else{
         if(!empty($_GET["TID"])){
             $TID=$_GET["TID"];
