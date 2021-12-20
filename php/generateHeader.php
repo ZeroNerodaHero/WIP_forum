@@ -1,6 +1,6 @@
 <?php
     include_once("../adminPower/login.php");
-    $pageTitle = $_GET["page"];
+    $pageTitle = (empty($_GET["page"])) ? "news" : $_GET["page"];
     if(empty($pageTitle)){
         echo "<div class=headTitle>WELCOME TO PEEPO</div>";
     } else if($pageTitle == "news"){
@@ -19,7 +19,7 @@
                 }
             }
 			echo "<script type='text/javascript'>headerRedirect('$pageTitle')</script>";
-            $pageTitle = '<a href="frontpage.php?page='.$pageTitle.'">'.$pageTitle.'</a>';
+            $pageTitle = '<a href="?page='.$pageTitle.'">'.$pageTitle.'</a>';
             echo "<div>/".$pageTitle."/</div>";
         } else{
             echo "<div class=headTitle>/".$pageTitle."/</div>";

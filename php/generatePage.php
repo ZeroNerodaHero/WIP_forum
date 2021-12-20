@@ -1,16 +1,12 @@
 <?php
     include_once("../adminPower/login.php");
 
-
     function generatePage(){
-        if(empty($_GET["page"])){
-            echo "GET BACK IN LINE";
-            return NULL;
-        }
         global $conn;
-        //echo "UR ON " . $_GET["page"] . "<br>";
-        //echo "IP IS " . sprintf("%u",ip2long(getIP())) . "<br>";
-        $curPage = $_GET["page"];
+		$curPage = "news";
+        if(!empty($_GET["page"])){
+        	$curPage = $_GET["page"];
+        }
         if($curPage == "news"){
 			echo "<script>showFuncButtons(0);</script>";
             generateNews();            

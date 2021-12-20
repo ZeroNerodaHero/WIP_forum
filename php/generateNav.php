@@ -1,7 +1,7 @@
 <?php
     echo "<div id=navHeader> Navigation </div>";
     include_once("../adminPower/login.php");
-    $pagetoGo = "frontpage.php?page=";
+    $pagetoGo = "?page=";
     echo "<a href= \"".$pagetoGo. "news\">
           <div id=NewsNavLink>[News]</div> </a>";
     echo "<div class=navCategory>Main Boards:</div>";

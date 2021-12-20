@@ -1,0 +1,78 @@
+body{
+    background-color: #404040;
+}
+
+footer{
+    text-align: center;
+    font-size: small;
+}
+
+#title{
+	text-align:center;
+}
+#titleImg{
+	width:80%;
+}
+#toSite{
+	padding:3px;
+    background-color: #606060;
+    text-align: center;
+	border: 2px solid black;
+    background-color: #ea82df;
+}
+#linkSite{
+    text-align: center;
+}
+#disclaimer{
+    text-align: center;
+	font-size:0.7em;
+	margin-left: 20%;
+	margin-right: 20%;
+	margin-top: 1%;
+	margin-bottom: 1%;
+}
+
+#content{
+	margin-left:5%;
+	margin-right:5%;
+	border: 2px solid black;
+}
+#topStatus{
+    background-color: #ea82df;
+	padding-top: 5px;
+	padding-left: 1%;
+	padding-right: 1%;
+	border: 2px solid black;
+}
+.rebutton{
+	float: right;
+	margin-left:20px;
+	margin-right:20px;
+}
+#notoRules{
+	color: #7a2222;
+}
+#acceptRules{
+	color: #197500;
+}
+
+#rules{
+    background-color: #606060;
+	padding:1%;
+	color: white;
+}
+.phead{
+	font-size: 1.2em;	
+}
+.pcontent{
+	padding: 1%;
+}
+#ruleRe{
+    text-align: center;
+	font-size: 1.2em;	
+}
+#ruleLnk{
+    background-color: #ea82df;
+	padding: 4px;
+	border: 2px solid black;
+}

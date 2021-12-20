@@ -57,7 +57,7 @@ function headerRedirect(page){
 	document.getElementById("PageHeader").addEventListener("click",
 		function()
 		{
-			window.location = "frontpage.php?page="+page;
+			window.location = "?page="+page;
 		});
 }
 

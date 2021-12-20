@@ -16,7 +16,7 @@ ini_set('display_errors',1);
 */
         include_once("../adminPower/login.php");
 
-        $redirect = "frontpage.php?page=".$_GET['page'];
+        $redirect = "php/?page=".$_GET['page'];
 
         $isThread = empty($_GET["TID"]);
 
@@ -56,7 +56,7 @@ ini_set('display_errors',1);
         function manageNewPost($postContent,$board,$TID){
             $postContent = addslashes($postContent); 
             $newTable = $board."_".$TID;
-            $redirect = "frontpage.php?page=".$_GET['page'];
+            $redirect = "/php/?page=".$_GET['page'];
             $redirect = "&TID=".$TID;
 
             postComment($board,$TID,$postContent);
@@ -79,7 +79,7 @@ ini_set('display_errors',1);
  
             $threadId = $connBoards->insert_id;
             $newTable = $board . "_" . $threadId;
-            $redirect = "frontpage.php?page=".$_GET['page'];
+            $redirect = "/php/?page=".$_GET['page'];
             $redirect .= "&TID=".$threadId;
 
             //create post table and post
@@ -117,7 +117,7 @@ ini_set('display_errors',1);
         function postComment($page,$TID,$content){
             global $connBoards;
             $threadTable = $page . "_".$TID; 
-            $redirect = "frontpage.php?page=".$page."&TID=".$TID;
+            $redirect = "/php/?page=".$page."&TID=".$TID;
             if(!textVerify($content)){
                 printPage("YOU SAID BAD WORD!!!",true,$redirect);
                 return;
@@ -270,7 +270,7 @@ ini_set('display_errors',1);
         function printPage($msg,$error=false,$redirect=""){
             global $totalBury;
             if($redirect == ""){
-                $redirect = "frontpage.php?page=".$_GET['page'];
+                $redirect = "/php/?page=".$_GET['page'];
             }
             $buryPic = rand()%$totalBury;
 			$messageError = (!$error) ? "postFine" : "postBad";
