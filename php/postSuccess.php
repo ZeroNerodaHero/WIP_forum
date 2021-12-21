@@ -3,7 +3,7 @@
     <head>
         <link rel="stylesheet" href="../css/postSuccess.css">
         <link rel="icon" href="../../res/icon/icon_0.png">
-        <title>PeePo</title>
+        <title>FUNCEL.XYZ</title>
     </head>
 
     <body class=postSuccessBody>

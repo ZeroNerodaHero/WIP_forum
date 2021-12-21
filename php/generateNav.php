@@ -1,5 +1,4 @@
 <?php
-    echo "<div id=navHeader> Navigation </div>";
     include_once("../adminPower/login.php");
     $pagetoGo = "?page=";
     echo "<a href= \"".$pagetoGo. "news\">

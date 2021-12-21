@@ -7,9 +7,13 @@
         if(!empty($_GET["page"])){
         	$curPage = $_GET["page"];
         }
+
         if($curPage == "news"){
 			echo "<script>showFuncButtons(0);</script>";
-            generateNews();            
+
+			$newsNo = 0;
+			if(!empty($_GET["newsNo"])) $newsNo = $_GET["newsNo"];
+            generateNews($newsNo);            
         } else if($curPage == "blog"){
 			
         } else {
@@ -28,11 +32,11 @@
         }
     }
 
-    function generateNews(){
+    function generateNews($newsNo){
         global $conn;
 
-        $BEGIN = 0;
-        $END = 10;
+        $BEGIN = $newsNo*10;
+        $END = $newsNo*10+10;
         $que = "SELECT * FROM frontNews ORDER BY id DESC LIMIT $BEGIN,$END";
         //echo "'$que'<br>";
          

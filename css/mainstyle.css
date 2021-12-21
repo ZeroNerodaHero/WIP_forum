@@ -7,6 +7,35 @@ footer{
     font-size: small;
 }
 
+#boardHeader{
+    padding: 3px;
+    padding-left: 5px;
+    padding-bottom: 2px;
+	color: black;
+	background-color:#ea82df;
+	border: 1px solid black;
+	margin: 0%;
+    word-wrap: break-word;
+
+	top:0;
+	position: -webkit-sticky;
+	position: sticky;
+
+	-webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.25); 
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.25);
+}
+
+#newsNavCont{
+	float: right;
+}
+.newsNavPart{
+/*
+	margin-right: 10px;
+	*/
+}
+.newsNavLink{
+}
+
 #PageHeader{
     text-align: center;
     border: 2px solid black;
@@ -17,6 +46,9 @@ footer{
     padding-top: 2%;
     padding-bottom: 2%;
     background-color: #b3b3b3;
+
+	-webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5); 
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5);
 }
 
 #upperNav{
@@ -29,14 +61,19 @@ footer{
     color: white;
 }
 
-#board{
+#leftEncap{
     float:left;
-    width: 74%;
+    width: 76%;
+    margin-left: 1%;
+}
+
+#board{
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 1%;
     background-color: #808080;
-    margin-left: 1%;
+	margin-bottom: 3%;
+	padding-bottom: 3%;
 }
 
 #rightEncap{
@@ -48,6 +85,11 @@ footer{
 .advert{
     height: 400px;
     padding: 3px;
+	margin-top: 7px;
+
+	box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.5); 
+	-webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5); 
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5);
 }
 
 .advertImg{
@@ -57,13 +99,12 @@ footer{
 .nav{
     border: 1px solid black;
     margin-bottom: 1%;
-    padding-right: 5%;
-    padding: 3px;
     background-color: #808080;
     font-size: 1.1em;
 }
 
 .navCategory{
+    padding: 3px;
 	margin-left: 2%;
 }
 
@@ -77,12 +118,20 @@ footer{
 .navLink{
     font-size: 1.25em;
     margin-left: 50%;
+	margin-bottom: 2%;
 }
 
 #navHeader{
-    font-size: 1.5em;
-    text-align: center;
-    color: #ff9999;
+    padding: 3px;
+    padding-left: 5px;
+    padding-bottom: 2px;
+	color: black;
+	background-color:#ea82df;
+	border-bottom: 1px solid black;
+	margin-bottom: 6px;
+
+	-webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.25); 
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.25);
 }
 
 .newsPost_title{
