@@ -62,9 +62,10 @@ function headerRedirect(page){
 }
 
 function buttonUp(){
-    var ele = document.getElementById("boardHeader");
+    var ele = document.getElementById("board");
+	var ele2 = document.getElementById("boardHeader").offsetHeight;
     var top = ele.offsetTop;
-    window.scrollTo(0,top-10);
+    window.scrollTo(0,top-ele2-10);
 }
 function buttonDown(){
     var ele = document.getElementById("board");

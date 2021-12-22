@@ -30,7 +30,7 @@
 			$que = "SELECT title FROM ".$pageN."Threads where threadId='$threadN'";
 			$res = $connBoards->query($que);
 
-			$theadTitle = "ERROR: THREAD DOESN'T EXIST";
+			$threadTitle = "ERROR: THREAD DOESN'T EXIST";
 			if(!empty($res) && $res->num_rows > 0){
 				while($row = $res->fetch_assoc()){
 					$threadTitle = $row["title"];

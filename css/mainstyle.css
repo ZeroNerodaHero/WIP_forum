@@ -86,14 +86,12 @@ footer{
     height: 400px;
     padding: 3px;
 	margin-top: 7px;
-
-	box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.5); 
-	-webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5); 
-	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5);
 }
 
 .advertImg{
     width: 100%;
+	-webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5); 
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75), 0px 3px 5px 4px rgba(0,0,0,0.5);
 }
 
 .nav{

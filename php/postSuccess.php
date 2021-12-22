@@ -3,6 +3,7 @@
     <head>
         <link rel="stylesheet" href="../css/postSuccess.css">
         <link rel="icon" href="../../res/icon/icon_0.png">
+		<script type="text/javascript" src="../css/jscrap.js"></script>
         <title>FUNCEL.XYZ</title>
     </head>
 
@@ -274,6 +275,8 @@ ini_set('display_errors',1);
             }
             $buryPic = rand()%$totalBury;
 			$messageError = (!$error) ? "postFine" : "postBad";
+
+			echo "<div id=psEncap onclick='threadRedirect(\"$redirect\")'>";
             echo "<div class=postSuccessHeader><mark id=".$messageError."> "
 					. $msg ."</mark></div>";
             
@@ -289,12 +292,13 @@ ini_set('display_errors',1);
                     REDIRECTING BACK IN 5 sec . . . 
                     <a href="'.$redirect.'" class=redLink>GO BACK</a>
                 </p> ';
+			echo "</div>";
             
             echo '
                 <script>
                     setTimeout(function(){
                     location="'.$redirect.'";
-                    }, 50000);
+                    }, 500000);
 
                 </script> ';
 
