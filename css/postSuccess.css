@@ -49,3 +49,12 @@ body{
 #postBad{
 	background-color: #ff0000;
 }
+
+#conEncap{
+	margin-top:5%;
+}
+#conData{
+	margin:1%;
+	font-size: 0.1em;
+}
+

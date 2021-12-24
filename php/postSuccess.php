@@ -66,6 +66,7 @@ ini_set('display_errors',1);
 
         function manageNewThread($postTitle,$postContent,$board){
             global $connBoards,$maxThreads;
+
             $postTitle = addslashes($postTitle); 
             if(!textVerify($postTitle)){
                 printPage("YOU SAID BAD WORD!!!",true);
@@ -117,6 +118,7 @@ ini_set('display_errors',1);
         //make error thing
         function postComment($page,$TID,$content){
             global $connBoards;
+
             $threadTable = $page . "_".$TID; 
             $redirect = "/php/?page=".$page."&TID=".$TID;
             if(!textVerify($content)){
@@ -165,14 +167,13 @@ ini_set('display_errors',1);
                 $word = substr($content,$ws,$we-$ws);
                 if(isBadWord($word)) return false;
                 
-                if($content[$we] != "\n" && $content[$we] != "\r" && $content[$we] != "\r\n" &&
-                   $content[$we] != "\n\r"){
+                if($content[$we] == "\n" ||content[$we] == "\r\n" || 
+                   $content[$we] == "\n\r"){
                         $cntNL++;
                 }
                 $ws = ++$we;
             }
-            //return $cntNL < 50; 
-            return true; 
+            return $cntNL < 30; 
         }
 
         //essentially posts 
@@ -293,6 +294,12 @@ ini_set('display_errors',1);
                     <a href="'.$redirect.'" class=redLink>GO BACK</a>
                 </p> ';
 			echo "</div>";
+
+			if(!empty($_POST["content"])){
+				echo "<div id=conEncap>
+						Ur post if something goes wrong:<div id=conData>".
+					$_POST["content"] . "</div></div>";
+			}
             
             echo '
                 <script>
