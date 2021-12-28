@@ -28,13 +28,6 @@ footer{
 #newsNavCont{
 	float: right;
 }
-.newsNavPart{
-/*
-	margin-right: 10px;
-	*/
-}
-.newsNavLink{
-}
 
 #PageHeader{
     text-align: center;
@@ -121,10 +114,15 @@ footer{
 .genNavLink{
     font-size: .8em;
 }
-.navLink{
+.navLinkCont{
     font-size: 1.25em;
-    margin-left: 50%;
-	margin-bottom: 2%;
+}
+
+.navLink{
+	color: #a51896;
+}
+.navLink:hover{
+	color: #b12020;
 }
 
 #navHeader{
@@ -142,6 +140,20 @@ footer{
 
 #navActLink{
 	color:#ea82df;
+}
+
+.navFlexCont{
+	display: flex;
+  	flex-wrap: wrap;
+	text-align: center;
+	justify-content: center;
+	margin: 0px 12px;
+	gap: 0px 2px;
+	margin-bottom: 2%;
+}
+
+.navFlexCont > a {
+	text-align: center;
 }
 
 .newsPost_title{
@@ -215,10 +227,6 @@ img:hover {
     width: 100%;
 }
 
-/* start for settings */
-#edit_settings{
-    float: right;
-}
 
 /* for buttons */
 #functionButtonCont{

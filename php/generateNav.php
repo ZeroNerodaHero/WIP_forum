@@ -8,30 +8,35 @@
 	if($cPage == "news"){
     	echo "<div class=NewsNavLink id=navActLink>[News]</div>";
 	} else{
-    	echo "<a href= \"".$pagetoGo. "news\">
-          <div class=NewsNavLink>[News]</div> </a>";
+    	echo " <div class=NewsNavLink>
+			<a href= \"".$pagetoGo. "news\" class=navLink>[News]</a></div>";
 	}
     echo "<div class=navCategory>Main Boards:</div>";
-    $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"main\"";
-    getBoard($que,$cPage);
+    getBoard("main",$cPage);
     /* -----------------------------------------------------------*/
-    echo "<div class=navCategory>Shit Boards:</div>";
-    $que = "SELECT boardName FROM boards WHERE typeOfBoard=\"shit\"";
-    getBoard($que,$cPage);
 
-    function getBoard($boardquery,$cPage){
+    echo "<div class=navCategory>Shit Boards:</div>";
+    getBoard("shit",$cPage);
+    /* -----------------------------------------------------------*/
+
+    function getBoard($board,$cPage){
+    	echo "<div class=navFlexCont>";
+    	$boardquery = "SELECT boardName FROM boards WHERE typeOfBoard=\"$board\"";
+
         global $conn,$pagetoGo;
         $res = $conn->query($boardquery);
         if($res->num_rows > 0){
             while($row = $res->fetch_assoc()){
                 $bname = $row["boardName"];
 				if($bname == $cPage){
-                	echo "<div class=navLink id=navActLink>[" . $bname.  "]</div>";
+                	echo "<div class=navLinkCont id=navActLink>[" . $bname.  "]</div>";
 					continue;
 				}
-                echo "<a href= \"".$pagetoGo. $bname."\">
-                    <div class=navLink>[" . $bname.  "]</div> </a>";
+                echo " <div class=navLinkCont>
+					<a href= \"".$pagetoGo. $bname."\" class=navLink> [" . $bname.  "]
+					</a></div>";
             }
         }
+    	echo "</div>";
     }
 ?>
