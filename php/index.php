@@ -50,8 +50,7 @@
 				<div id=navHeader>
 					<span id=navHeaderTit>Navigation</span> 
 					<span id=navHeaderCol>
-						<a href="javascript:toggleNav()">
-							^^^
+						<a href="javascript:toggleNav()" id=navCollapseText class="chevron">
 						</a>
 					</span> 
 

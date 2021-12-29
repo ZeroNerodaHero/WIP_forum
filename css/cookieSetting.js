@@ -15,9 +15,18 @@ function toggleNav(toggleOrNot=1){
 	if(document.cookie != ""){
 		ot = getCookie("settings");
 	}
-	ot = (ot^(toggleOrNot<<0));
+	ot = (ot^(toggleOrNot<<0))&1;
 	setCookie("settings", ot);
 	togglePage("navContainer",ot)
+
+	var ele = document.getElementById("navCollapseText");
+	if(ot){
+		ele.classList.add("bottom");
+		ele.classList.remove("top");
+	}else{
+		ele.classList.remove("bottom");
+		ele.classList.add("top");
+	}
 }
 
 function togglePage(docId,sig){

@@ -23,9 +23,7 @@ function threadRedirect(redirect){
 function headerRedirect(page){
 	document.getElementById("PageHeader").addEventListener("click",
 		function()
-		{
-			window.location = "?page="+page;
-		});
+		{ window.location = "?page="+page; });
 }
 
 function buttonUp(){
