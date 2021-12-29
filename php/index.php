@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="../css/mainstyle.css">
         <link rel="icon" href="../res/icon/icon_0.png">
         <script type="text/javascript" src="../css/jscrap.js"></script>
+        <script type="text/javascript" src="../css/cookieSetting.js"></script>
         <title>FUNCEL.XYZ</title>
     </head>
 
@@ -46,8 +47,20 @@
 
 		<div id="rightEncap">
         	<div class = "nav">
-				<div id=navHeader> Navigation </div>
-            	<?php include_once('generateNav.php'); ?>
+				<div id=navHeader>
+					<span id=navHeaderTit>Navigation</span> 
+					<span id=navHeaderCol>
+						<a href="javascript:toggleNav()">
+							^^^
+						</a>
+					</span> 
+
+				</div>
+
+				<div id=navContainer>
+            		<?php include_once('generateNav.php'); ?>
+					<script>toggleNav(0);</script>
+				</div>
         	</div>  
 
         	<div class = "advert">

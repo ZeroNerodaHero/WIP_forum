@@ -61,12 +61,23 @@
 
     function generateBoard($board){
         global $connBoards;
+		//post pinned threads
+        $que = "SELECT * FROM ".$board."Threads 
+				WHERE tags='pin' ORDER BY threadId ASC";
+        $res = $connBoards->query($que); 
+        if(!empty($res) && $res->num_rows > 0){
+            while($row = $res->fetch_assoc()){
+                postThreads($row["title"],$row["time"],$row["threadId"],"pin");
+            }
+        }
+
+		//post normal threads
         $que = "SELECT * FROM ".$board."Threads ORDER BY time DESC";
-//echo $que."<br>";
 
         $res = $connBoards->query($que); 
         if(!empty($res) && $res->num_rows > 0){
             while($row = $res->fetch_assoc()){
+				if($row["tags"]=="pin") continue;
                 postThreads($row["title"],$row["time"],$row["threadId"]);
             }
         } else{
@@ -74,21 +85,12 @@
         }
     }
         
-    function postThreads($title,$time,$TID){
-		/*
-        $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
-        echo "<div onclick='threadRedirect(\"$newLink\")' class=thread_title>" . $title;
-        echo "<span class=threadInfo>" . $time . " :::: TID: " .
-            $TID . " | ";
-        echo "<a href='$newLink'> >>> </a>";
-        echo "</span><br><br><hr></div>";
-		*/
-
+    function postThreads($title,$time,$TID,$classTag=""){
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
         echo "<div onclick='threadRedirect(\"$newLink\")'>";
         echo "<span class=threadInfo>" . $time . " :::: TID: " .
             $TID . " | <a href='$newLink'> >>> </a></span>";
-		echo "<div class=thread_title>" . $title . "</div>";
+		echo "<div class='thread_title $classTag'>" . $title . "</div>";
         echo "<br><hr></div>";
     }
 

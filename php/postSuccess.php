@@ -98,10 +98,15 @@ ini_set('display_errors',1);
             $que = "SELECT * FROM ". $board."Threads ORDER BY time ASC";
             $res = $connBoards->query($que);
 
-            //deletes tables when > 15
+            //deletes tables when > maxThreads
             if(!empty($res) && $res->num_rows > $maxThreads){
+				$diff = max($res->num_rows-$maxThreads-1,0);
+				echo "diff ". $diff . "<br>";
+
                 while($row = $res->fetch_assoc()){
+					if($diff <= 0) continue;
                     if($row['tags'] == 'pin') continue;
+					echo "current row ".$row["threadId"];
 
                     $que = "DROP TABLE ".$board."_".$row["threadId"];
                     myQuery($connBoards,$que);
@@ -110,7 +115,7 @@ ini_set('display_errors',1);
                     $que = "DELETE FROM ".$board."Threads 
                             WHERE threadId=".$row["threadId"];
                     myQuery($connBoards,$que);
-                    break;
+					$diff--;
                 }
             }
         }
