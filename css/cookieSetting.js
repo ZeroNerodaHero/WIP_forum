@@ -11,11 +11,11 @@ xxxx xxxx xx...
 */
 
 function toggleNav(toggleOrNot=1){
-	var ot = 1;
+	var ot = 0;
 	if(document.cookie != ""){
 		ot = getCookie("settings");
+		ot = (ot^(toggleOrNot<<0))&1;
 	}
-	ot = (ot^(toggleOrNot<<0))&1;
 	setCookie("settings", ot);
 	togglePage("navContainer",ot)
 
