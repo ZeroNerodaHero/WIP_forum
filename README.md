@@ -51,8 +51,8 @@ create TABLE peepoAds(
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 	linkToImg varchar(1024), 
 	linkToSite varchar(1024) , 
-	totalLoads int, 
-	totalClicks int, 
+	totalLoads int default 0, 
+	totalClicks int default 0, 
 	maxPoints int, 
 	boardLimited varchar(255), 
 	dateAdded timestamp);
