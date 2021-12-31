@@ -21,6 +21,7 @@ ul {
 
 .topTools{
     color: pink;
+	margin-bottom: 2%;
 }
 
 
@@ -28,3 +29,9 @@ ul {
     text-align: center; 
 }
 
+img{
+	width: 100px;
+}
+img:hover{
+	width: 100%;
+}
