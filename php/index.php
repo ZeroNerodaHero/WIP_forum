@@ -63,7 +63,7 @@
         	</div>  
 
         	<div class = "advert">
-            	<img src="../res/bulletin/bull_0.png" class="advertImg">
+				<?php include_once('generateAdvert.php'); ?>
         	</div>
         </div>
 

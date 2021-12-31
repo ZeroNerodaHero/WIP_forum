@@ -37,7 +37,7 @@
 					SET linkToImg = '$linkToImg',
 						linkToSite = '$linkToSite',
 						maxPoints = $maxPoints,
-						boardLimited = ".($boardLimited == NULL?"NULL":$boardLimited)."
+						boardLimited = '$boardLimited'
 					WHERE id=$id";
 			echo $que;
 			myQuery($conn,$que);
