@@ -5,7 +5,7 @@
 
 	if(!empty($_GET["page"]) && $_GET["page"] != "news"){
 		$page = $_GET["page"];
-		$que = "SELECT * FROM boards WHERE boardName=".$page;
+		$que = "SELECT * FROM boards WHERE boardName='".$page."'";
 		$res = $conn->query($que); 
 
 		if($res->num_rows > 0){
