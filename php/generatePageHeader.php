@@ -14,11 +14,23 @@
 			}
 		}
 		$title = "[".$page."]";
+
+		if(!empty($_GET["TID"])){
+			$que = "SELECT title FROM ".$page."Threads
+					WHERE threadId=".$_GET["TID"];
+			$res = $connBoards->query($que); 
+
+			if($res->num_rows > 0){
+				while($row = $res->fetch_assoc()){
+					$title .= " ".$row["title"];
+				}
+			}	
+		}
 	} else{
 		$descript .= "Welcome.";
 	}
 
-	echo "<title>$title</title>";
+	echo "<title>$title : FUNCEL.XYZ</title>";
 	echo "<meta name='description' content='$descript'>";
 ?>
 

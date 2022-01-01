@@ -36,3 +36,9 @@ BASICALLY ALL THE ERRORS
 	COOKIE_STR - Total points - cooldown time - login/password
 	if cookie doesn't exist bc user edited cookie renew cookie. always make sure the cookie exists inthe system.
 	getUsrIp -> getUsrId
+
+7. To much MySql calls.
+	Maybe slows down the laoding proccess.
+
+B
+
