@@ -14,6 +14,9 @@
 
         <form action="updateBoard.php" method="post">
             Board Name: <input type="text" name="boardName" class="tit"> <br>
+            Description: <br>
+                <textarea name="descript" rows="2" cols="100" ></textarea>
+            <br>
             Post Title: <input type="text" name="pinTit" class="tit"> <br>
             Pinned Post: <br>
                 <textarea name="pinned" rows="6" cols="100" ></textarea>

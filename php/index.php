@@ -5,13 +5,19 @@
         <link rel="icon" href="../res/icon/icon_0.png">
         <script type="text/javascript" src="../css/jscrap.js"></script>
         <script type="text/javascript" src="../css/cookieSetting.js"></script>
-        <title>FUNCEL.XYZ</title>
+
+		<?php
+			include_once('generatePageHeader.php');
+		?>
+
     </head>
 
     <div id = "PageHeader">
         <?php 
+			/*
             error_reporting(-1);
             ini_set('display_errors',1); 
+			*/
             include_once('generateHeader.php');
         ?>
         

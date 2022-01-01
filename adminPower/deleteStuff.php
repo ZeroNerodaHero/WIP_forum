@@ -70,7 +70,7 @@
         } else if(!empty($_GET["board"])){
             //case 2 navigating board threads
             $curBoard = $_GET["board"];
-            $que = "SELECT * FROM ".$curBoard."Threads";
+            $que = "SELECT * FROM ".$curBoard."Threads ORDER BY time DESC";
             $res = $connBoards->query($que);
             $deleteRed .= "?board=".$curBoard;
 
@@ -106,16 +106,27 @@
 
             if($res->num_rows > 0){
                 echo "<table>";
-                echo "<th>Board Name</th><th>TYPE</th><th>GOTO</th>";
+                echo "<th>Board Name</th><th>TYPE</th><th>GOTO</th><th>EDIT DESC</th>";
                 while($row = $res->fetch_assoc()){
                     echo "<tr>";
                     $bname = $row["boardName"];
+					$descript = $row["descript"];
+					$lnkToGo = "updateBoardDesc.php?board=".$bname;
                     $tmp = $redirect."?board=".$bname;
                     echo "
                         <th>".$bname."</th>
                         <th>".$row["typeOfBoard"]."</th>
                         <th><a href=".$tmp."> > </a></th>"; 
+
+                    echo '<th> <form action='.$lnkToGo.' method="post">
+                            <input type="text" name="descript" size="25"
+								value="'.$descript.'">
+                            <input type="text" name="pword" size="5"> 
+                            <input type="submit" value="O"/> </form>
+                         </th>';
+
                     echo "</tr>";
+
                 }
                 echo "</table>";
             } 

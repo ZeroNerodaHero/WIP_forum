@@ -14,6 +14,7 @@
         $pinnedTit = addslashes($_POST["pinTit"]);
         $pinnedPost = addslashes($_POST["pinned"]);
         $ppassword = $_POST["password"];
+		$boardDescript = $_POST["descript"];
         if($boardName && $pinnedTit && $pinnedPost && $ppassword && 
            $ppassword==$admin_ppassword){
             /************************************************/
@@ -39,8 +40,8 @@ myQuery($connBoards,$que);
 
             /************************************************/
 
-            $que = "INSERT INTO boards(typeOfBoard,boardName)
-                    VALUES(\"shit\",'$boardName')";
+            $que = "INSERT INTO boards(typeOfBoard,boardName,descript)
+                    VALUES(\"shit\",'$boardName','$boardDescript')";
             echo $que . "<br>";
  myQuery($conn,$que);
 
