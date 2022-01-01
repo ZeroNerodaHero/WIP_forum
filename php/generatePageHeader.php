@@ -1,7 +1,7 @@
 <?php
     include_once("../adminPower/login.php");
 	$descript = "FUNCEL.XYZ is an anonymous text-board. ";
-	$title = "FUNCEL.XYZ";
+	$title = "[news]";
 
 	if(!empty($_GET["page"]) && $_GET["page"] != "news"){
 		$page = $_GET["page"];
