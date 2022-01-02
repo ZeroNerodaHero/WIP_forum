@@ -2,29 +2,35 @@
 Test
 
 structures of MYSQL database:
-#DATA1(peepo):
+# DATA1(peepo):
 ------
+
 TABLE badWord
 SCHEMA
+```
 +-------+--------------+------+-----+---------+-------+
 | Field | Type         | Null | Key | Default | Extra |
 +-------+--------------+------+-----+---------+-------+
 | word  | varchar(100) | YES  | UNI | NULL    |       |
 +-------+--------------+------+-----+---------+-------+
+```
 NOTES:
 	probably can use a text file instead
 ------
 TABLE boards
 SCHEMA
+```
 +-------------+-------------+------+-----+---------+-------+
 | Field       | Type        | Null | Key | Default | Extra |
 +-------------+-------------+------+-----+---------+-------+
 | typeOfBoard | varchar(10) | NO   |     | NULL    |       |
 | boardName   | varchar(10) | NO   |     | NULL    |       |
 +-------------+-------------+------+-----+---------+-------+
+```
 ------
 TABLE frontNews
 SCHEMA
+```
 +--------------+--------------+------+-----+-------------------+-----------------------------+
 | Field        | Type         | Null | Key | Default           | Extra                       |
 +--------------+--------------+------+-----+-------------------+-----------------------------+
@@ -33,9 +39,11 @@ SCHEMA
 | post_time    | timestamp    | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
 | news_content | mediumtext   | YES  |     | NULL              |                             |
 +--------------+--------------+------+-----+-------------------+-----------------------------+
+```
 ------
 TABLE ipBans
 SCHEMA
+```
 +--------+--------------+------+-----+---------------------+-----------------------------+
 | Field  | Type         | Null | Key | Default             | Extra                       |
 +--------+--------------+------+-----+---------------------+-----------------------------+
@@ -44,6 +52,7 @@ SCHEMA
 | time   | timestamp    | NO   |     | CURRENT_TIMESTAMP   | on update CURRENT_TIMESTAMP |
 | expire | timestamp    | NO   |     | 0000-00-00 00:00:00 |                             |
 +--------+--------------+------+-----+---------------------+-----------------------------+
+```
 ------
 NEW TABLE:
 create TABLE peepoAds(
@@ -56,7 +65,7 @@ create TABLE peepoAds(
 	maxPoints int, 
 	boardLimited varchar(255), 
 	dateAdded timestamp);
-
+```
 +--------------+---------------+------+-----+-------------------+-----------------------------+
 | Field        | Type          | Null | Key | Default           | Extra                       |
 +--------------+---------------+------+-----+-------------------+-----------------------------+
@@ -70,7 +79,7 @@ create TABLE peepoAds(
 | boardLimited | varchar(255)  | YES  |     | NULL              |                             |
 | dateAdded    | timestamp     | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
 +--------------+---------------+------+-----+-------------------+-----------------------------+
-
+```
 
 #DATA2(peepoPost):
 Two tables structures are used
@@ -79,6 +88,7 @@ Two tables structures are used
 ------
 TABLE [BOARDNAME]Threads
 SCHEMA
+```
 +----------+--------------+------+-----+-------------------+-----------------------------+
 | Field    | Type         | Null | Key | Default           | Extra                       |
 +----------+--------------+------+-----+-------------------+-----------------------------+
@@ -87,9 +97,11 @@ SCHEMA
 | time     | timestamp    | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
 | tags     | varchar(50)  | YES  |     | NULL              |                             |
 +----------+--------------+------+-----+-------------------+-----------------------------+
+```
 ------
 TABLE [BOARDNAME]
 SCHEMA
+```
 +---------+---------------+------+-----+---------+----------------+
 | Field   | Type          | Null | Key | Default | Extra          |
 +---------+---------------+------+-----+---------+----------------+
@@ -98,4 +110,4 @@ SCHEMA
 | content | varchar(7500) | YES  |     | NULL    |                |
 | ip      | bigint(20)    | YES  |     | NULL    |                |
 +---------+---------------+------+-----+---------+----------------+
-
+```
