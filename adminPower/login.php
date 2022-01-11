@@ -107,8 +107,7 @@ ini_set('display_errors',1);
 
     function updateUsrTime($usr_ID){
         global $conn;
-        $que = "UPDATE usrList SET lastPost=CURRENT_TIME
-                WHERE usrId=".$usr_ID;
+        $que = "UPDATE usrList SET lastPost=CURRENT_TIMESTAMP WHERE usrId=".$usr_ID;
         myQuery($conn,$que);
     }
 
