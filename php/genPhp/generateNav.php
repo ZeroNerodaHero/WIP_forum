@@ -1,16 +1,15 @@
 <?php
-    include_once("../adminPower/login.php");
-	$cPage = "news";
-	if(!empty($_GET["page"])) $cPage = $_GET["page"];
+    $cPage = "news";
+    if(!empty($_GET["page"])) $cPage = $_GET["page"];
 
     $pagetoGo = "?page=";
 
-	if($cPage == "news"){
-    	echo "<div class=NewsNavLink id=navActLink>[News]</div>";
-	} else{
+    if($cPage == "news"){
+        echo "<div class=NewsNavLink id=navActLink>[News]</div>";
+    } else{
     	echo " <div class=NewsNavLink>
-			<a href= \"".$pagetoGo. "news\" class=navLink>[News]</a></div>";
-	}
+            <a href= \"".$pagetoGo. "news\" class=navLink>[News]</a></div>";
+    }
     echo "<div class=navCategory>Main Boards:</div>";
     getBoard("main",$cPage);
     /* -----------------------------------------------------------*/
@@ -28,13 +27,13 @@
         if($res->num_rows > 0){
             while($row = $res->fetch_assoc()){
                 $bname = $row["boardName"];
-				if($bname == $cPage){
-                	echo "<div class=navLinkCont id=navActLink>[" . $bname.  "]</div>";
-					continue;
-				}
+	        if($bname == $cPage){
+                    echo "<div class=navLinkCont id=navActLink>[" . $bname.  "]</div>";
+		    continue;
+		}
                 echo " <div class=navLinkCont>
-					<a href= \"".$pagetoGo. $bname."\" class=navLink> [" . $bname.  "]
-					</a></div>";
+		    <a href= \"".$pagetoGo. $bname."\" class=navLink> [" . $bname.  "]
+		    </a></div>";
             }
         }
     	echo "</div>";

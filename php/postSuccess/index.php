@@ -1,22 +1,19 @@
+<?php
+    include_once("../../adminPower/login.php");
+    $posterId = getUsrID();
+?>
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="../css/postSuccess.css">
-        <link rel="icon" href="../../res/icon/icon_0.png">
-		<script type="text/javascript" src="../css/jscrap.js"></script>
+        <link rel="stylesheet" href="../../css/postSuccess.css">
+        <link rel="icon" href="../../../res/icon/icon_0.png">
+		<script type="text/javascript" src="../../css/jscrap.js"></script>
         <title>FUNCEL.XYZ</title>
     </head>
 
     <body class=postSuccessBody>
 
     <?php
-//debug
-/*
-error_reporting(-1);
-ini_set('display_errors',1);
-*/
-        include_once("../adminPower/login.php");
-
         $redirect = "php/?page=".$_GET['page'];
 
         $isThread = empty($_GET["TID"]);
@@ -24,9 +21,9 @@ ini_set('display_errors',1);
         $board = $_GET["page"];
         $time = 5000;
 
-        if(checkBan(ip2long(getusrIP()))){
+        if(checkBan($posterId)){
             $time = 5000;
-            printPage("You're banned");
+            printPage("You're banned",true);
         }
         //new thread
         else if($isThread && testString($_POST["title"],301) && 
@@ -42,17 +39,17 @@ ini_set('display_errors',1);
             $time = 5000;
         }
 
-		function testString($strr,$maxLen){
-			if(empty($strr) || strlen($strr) > $maxLen)
-				return false;
+        function testString($strr,$maxLen){
+	    if(empty($strr) || strlen($strr) > $maxLen)
+	        return false;
 
-			$lenTit = strlen($strr);
-			$i = 0;
-			for(; $i < $lenTit; $i++){
-				if($strr[$i] != ' ') break;
-			}
-			return $lenTit !=  $i;
-		}
+            $lenTit = strlen($strr);
+	    $i = 0;
+	    for(; $i < $lenTit; $i++){
+	        if($strr[$i] != ' ') break;
+	    }
+	    return $lenTit !=  $i;
+	}
 
         function manageNewPost($postContent,$board,$TID){
             $postContent = addslashes($postContent); 
@@ -122,7 +119,7 @@ ini_set('display_errors',1);
 
         //make error thing
         function postComment($page,$TID,$content){
-            global $connBoards;
+            global $connBoards,$posterId;
 
             $threadTable = $page . "_".$TID; 
             $redirect = "/php/?page=".$page."&TID=".$TID;
@@ -135,15 +132,15 @@ ini_set('display_errors',1);
 
             $content = postParser($content) . "<br>";
             $content = nl2br($content);
-            //$usrIP = ip2long(getusrIP());
-            $usrIP = getusrIP();
             $que = "INSERT INTO ". $threadTable . "(time,content,ip) 
-                    VALUES( CURRENT_TIMESTAMP,'$content',";
-            if(!empty($usrIP)) $que .= $usrIP.")";
-            else $que .= "NULL)";
+                    VALUES( CURRENT_TIMESTAMP,'$content','$posterId')";
 
             myQuery($connBoards,$que);
             printPage("POST SUCCESSFUL!",false,$redirect);
+
+            //update mysql variables
+            updateUsrScore($posterId,10);
+            updateUsrTime($posterId);
         }
         function bumpThread($board,$tid){
             global $connBoards;
@@ -172,7 +169,7 @@ ini_set('display_errors',1);
                 $word = substr($content,$ws,$we-$ws);
                 if(isBadWord($word)) return false;
                 
-                if($content[$we] == "\n" ||content[$we] == "\r\n" || 
+                if($content[$we] == "\n" || $content[$we] == "\r\n" || 
                    $content[$we] == "\n\r"){
                         $cntNL++;
                 }
@@ -248,10 +245,10 @@ ini_set('display_errors',1);
                     } else if($tmpTYPE == "LNK"){
                         $newStr = '<a href='.$tmpLNK.'>'.$tmpLNK.'</a>';
                     } else if($tmpTYPE == "YTB"){
-						$youtubeRegex = "/https:\/\/www.youtube.com\/watch\?v=/i";
-						$youtubeId = preg_replace($youtubeRegex, "", $tmpLNK);
-						$newStr = '<div><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$youtubeId.'" allowfullscreen></iframe> </div>';
-					}
+		        $youtubeRegex = "/https:\/\/www.youtube.com\/watch\?v=/i";
+		        $youtubeId = preg_replace($youtubeRegex, "", $tmpLNK);
+		        $newStr = '<div><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$youtubeId.'" allowfullscreen></iframe> </div>';
+		    }
 
                     //so what happens here is bc the way i made this is that the endpoints are not
                     //counted...have to add 2
@@ -280,16 +277,16 @@ ini_set('display_errors',1);
                 $redirect = "/php/?page=".$_GET['page'];
             }
             $buryPic = rand()%$totalBury;
-			$messageError = (!$error) ? "postFine" : "postBad";
+	    $messageError = (!$error) ? "postFine" : "postBad";
 
-			echo "<div id=psEncap onclick='threadRedirect(\"$redirect\")'>";
+	    echo "<div id=psEncap onclick='threadRedirect(\"$redirect\")'>";
             echo "<div class=postSuccessHeader><mark id=".$messageError."> "
-					. $msg ."</mark></div>";
+	        . $msg ."</mark></div>";
             
             echo '<p class=buryQuote> 
                     You have been blessed with Bury#'.$buryPic.'.<br><br>
                     <a href="'.$redirect.'">
-                        <img src = "../res/buries/bury_'.$buryPic.'.png" 
+                        <img src = "../../res/buries/bury_'.$buryPic.'.png" 
                         id=postSuccessIMG>
                     </a><br></p>';
 
@@ -298,13 +295,13 @@ ini_set('display_errors',1);
                     REDIRECTING BACK IN 5 sec . . . 
                     <a href="'.$redirect.'" class=redLink>GO BACK</a>
                 </p> ';
-			echo "</div>";
+            echo "</div>";
 
-			if(!empty($_POST["content"])){
-				echo "<div id=conEncap>
-						Ur post if something goes wrong:<div id=conData>".
-					$_POST["content"] . "</div></div>";
-			}
+	    if(!empty($_POST["content"])){
+	        echo "<div id=conEncap>
+	            Ur post if something goes wrong:<div id=conData>".
+		    $_POST["content"] . "</div></div>";
+            }
             
             echo '
                 <script>

@@ -1,5 +1,11 @@
 <?php
-	include_once("commWserver.php");
+
+if(0){
+error_reporting(-1);
+ini_set('display_errors',1);
+}
+
+    include_once("commWserver.php");
 
     $data = "peepo";
     $conn = mysqli_connect($servername,$user,$pass,$data) 
@@ -18,17 +24,34 @@
         }
     }
 
-    function getusrIP(){
-        if(!empty($_SERVER['REMOTE_ADDR'])){
-       	    return ip2long($_SERVER['REMOTE_ADDR']);
-		}
-        if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-	    	return 0;
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-		return 0;
-        return $_SERVER['HTTP_CLIENT_IP'];
-    }
+    //this techinically is usr id but eh what am i to sya
+    //becareful. u can only call this before html bc W3 says 
+    //so and im not about to commit a crime
+    function getUsrID(){
+        global $conn;
+        if(!isset($_COOKIE["usrId"])){
+            /*
+             * beacuse the number is so large i don't think
+             * this is needed. no collisions should happen here
+            while(1){
+                $usrId = rand() << 32 | rand();
+                $que = "SELECT * FROM usrList WHERE usrId =".$usrId;
+                $res = $conn-query($que);
+
+                if(empty($res) || $res->num_rows == 0) break;
+            }
+             */
+            $usrId = rand() << 32 | rand();
+            $que = "INSERT INTO usrList(usrId) VALUES($usrId)";
+            myQuery($conn,$que);
+            setcookie("usrId",$usrId,time()+(86400 * 365 * 5),"/");
+            return $usrId;
+        } 
+        //i initially threw away that first return $usrId uptop
+        //but PHP believes someshit about not being able to find the cookie
+        //dont know why but above wroks
+        return $_COOKIE["usrId"];
+    } 
 
     function checkBan($usr_IP){
         global $conn;
@@ -41,7 +64,9 @@
         if(!empty($res) && $res->num_rows != 0){
             while($row = $res->fetch_assoc()){
                 echo $curTime. " ::::: " . $row["expire"] . "<br>";
+                echo "Reason for ban: " . $row["reason"] . "<br>";
                 if($curTime > $row['expire']){
+                    echo "BAN HAS BEEN LIFTED<br>";
                     $que = "DELETE FROM ipBans WHERE ip='$usr_IP'";
                     myQuery($conn,$que);
                     return false;
@@ -53,13 +78,16 @@
         } 
         return false;
     }
-    function banUsr($usr_IP,$reason,$expire_time){
+
+    function banUsr($usr_ID,$reason,$expire_time){
         global $conn;
         $que = "INSERT INTO ipBans(ip,reason,expire)
-                VALUES ('$usr_IP','$reason',
+                VALUES ('$usr_ID','$reason',
                 ADDTIME(CURRENT_TIMESTAMP,'$expire_time'))";
         myQuery($conn,$que); 
+        updateUsrScore($usr_ID,-100);
     }
+
     function isBadWord($word){
         global $conn;
 
@@ -68,4 +96,20 @@
 
         return !empty($res) && $res->num_rows != 0; 
     }
+
+    function updateUsrScore($usr_ID,$cnt){
+        global $conn;
+
+        $que = "UPDATE usrList SET totalPoints=totalPoints+'$cnt'
+                WHERE usrId=".$usr_ID;
+        myQuery($conn,$que);
+    }
+
+    function updateUsrTime($usr_ID){
+        global $conn;
+        $que = "UPDATE usrList SET lastPost=CURRENT_TIME
+                WHERE usrId=".$usr_ID;
+        myQuery($conn,$que);
+    }
+
 ?>

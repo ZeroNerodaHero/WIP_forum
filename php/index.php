@@ -6,42 +6,42 @@
         <script type="text/javascript" src="../css/jscrap.js"></script>
         <script type="text/javascript" src="../css/cookieSetting.js"></script>
 
-		<?php
-			include_once('generatePageHeader.php');
-		?>
+        <?php
+            include_once('genPhp/generatePageHeader.php');
+	?>
 
     </head>
 
     <div id = "PageHeader">
         <?php 
-			/*
+	/*
             error_reporting(-1);
             ini_set('display_errors',1); 
-			*/
-            include_once('generateHeader.php');
+	*/
+            error_reporting(-1);
+            ini_set('display_errors',1); 
+        include_once('genPhp/generateHeader.php');
         ?>
         
     </div>
-
-	<div id = functionButtonCont>
-		<a href="javascript:buttonUp()" class=funcButton>&uarr;</a>
-		<br><br>
-		<a href="javascript:buttonDown()" class=funcButton>&darr;</a> <br>
-	</div> 
-
+    <div id = functionButtonCont>
+        <a href="javascript:buttonUp()" class=funcButton>&uarr;</a>
+        <br><br>
+        <a href="javascript:buttonDown()" class=funcButton>&darr;</a> <br>
+    </div> 
     <div class = "wrap">
-		<div id="leftEncap">
-			<div id=boardHeader>
-				<?php
-					include_once("generateBoardHeader.php");
-				?>
-			</div>
-        	<div id = "board">
+	<div id="leftEncap">
+	    <div id=boardHeader>
+	        <?php
+	        include_once("genPhp/generateBoardHeader.php");
+		?>
+	    </div>
+            <div id = "board">
             	<?php
-                	include_once('generatePage.php');
-                	generatePage();
+                include_once('genPhp/generatePage.php');
+                generatePage();
             	?>
-			</div>
+	    </div>
 
             <footer>
                 <p> 
@@ -51,26 +51,24 @@
             </footer>
         </div>
 
-		<div id="rightEncap">
-        	<div class = "nav">
-				<div id=navHeader>
-					<span id=navHeaderTit>Navigation</span> 
-					<span id=navHeaderCol>
-						<a href="javascript:toggleNav()" id=navCollapseText class="chevron">
-						</a>
-					</span> 
+	<div id="rightEncap">
+            <div class = "nav">
+	        <div id=navHeader>
+		    <span id=navHeaderTit>Navigation</span> 
+		    <span id=navHeaderCol>
+		    <a href="javascript:toggleNav()" id=navCollapseText class="chevron"> </a>
+		    </span> 
 
-				</div>
+	        </div>
+	        <div id=navContainer>
+                    <?php include_once('genPhp/generateNav.php'); ?>
+		    <script>toggleNav(0);</script>
+		</div>
+            </div>  
 
-				<div id=navContainer>
-            		<?php include_once('generateNav.php'); ?>
-					<script>toggleNav(0);</script>
-				</div>
-        	</div>  
-
-        	<div class = "advert">
-				<?php include_once('generateAdvert.php'); ?>
-        	</div>
+            <div class = "advert">
+	        <?php include_once('genPhp/generateAdvert.php'); ?>
+            </div>
         </div>
 
     </div>

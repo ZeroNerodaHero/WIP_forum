@@ -1,18 +1,16 @@
 <?php
-    include_once("../adminPower/login.php");
-
     function generatePage(){
         global $conn;
-		$curPage = "news";
+        $curPage = "news";
         if(!empty($_GET["page"])){
-        	$curPage = $_GET["page"];
+            $curPage = $_GET["page"];
         }
 
         if($curPage == "news"){
-			echo "<script>showFuncButtons(0);</script>";
+	    echo "<script>showFuncButtons(0);</script>";
 
-			$newsNo = 0;
-			if(!empty($_GET["newsNo"])) $newsNo = $_GET["newsNo"];
+	    $newsNo = 0;
+	    if(!empty($_GET["newsNo"])) $newsNo = $_GET["newsNo"];
             generateNews($newsNo);            
         } else if($curPage == "blog"){
 			
@@ -135,7 +133,8 @@
 
     function createNewThread($board){
         //$redirect = $_SERVER['REQUEST_URI'];
-        $redirect = 'postSuccess.php?page=' . $board;
+        //$redirect = 'postSuccess.php?page=' . $board;
+        $redirect = 'postSuccess/index.php?page=' . $board;
         echo 
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">
@@ -147,7 +146,8 @@
         </form></div>'; 
     }
     function createNewComment($board,$TID){
-        $redirect = 'postSuccess.php?page='.$board."&TID=".$TID;
+        //$redirect = 'postSuccess.php?page='.$board."&TID=".$TID;
+        $redirect = 'postSuccess/index.php?page='.$board."&TID=".$TID;
         echo 
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">

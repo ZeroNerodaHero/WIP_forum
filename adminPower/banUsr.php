@@ -19,7 +19,7 @@
         $res = $connBoards->query($que);
         if(!empty($res) && $res->num_rows > 0){
             while($row = $res->fetch_assoc()){
-                echo "ip is: " .$row["ip"] . "<br>";
+                echo "ID: " .$row["ip"] . "<br>";
                 banUsr($row["ip"],$_POST["reason"],"1 0:0:0");
                 //banUsr($row["ip"],$_POST["reason"],"0 0:0:0");
             }

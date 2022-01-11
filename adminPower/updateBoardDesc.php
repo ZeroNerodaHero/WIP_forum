@@ -21,6 +21,6 @@
 	<script>
 		setTimeout(function(){
 			location="deleteStuff.php";
-			}, 500); 
+			}, 5000); 
 	</script>
 </html> 
