@@ -11,6 +11,9 @@
         $msg = $_POST["content"];
         $ppassword = $_POST["password"];
 
+        $msg = nl2br($msg);
+        $msg = addslashes($msg);
+
         if($title && $msg && $ppassword && $ppassword==$admin_ppassword){
             $que = "INSERT INTO frontNews(news_title,post_time,news_content) VALUES('$title',CURRENT_TIMESTAMP(),'$msg')";
             //echo $que . "<br><br>";
