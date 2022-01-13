@@ -1,5 +1,6 @@
 <?php
     include_once("../../adminPower/login.php");
+    include_once("integration.php");
     $posterId = getUsrID();
 ?>
 <!DOCTYPE html>
@@ -101,9 +102,9 @@
 				echo "diff ". $diff . "<br>";
 
                 while($row = $res->fetch_assoc()){
-					if($diff <= 0) continue;
+		    if($diff <= 0) continue;
                     if($row['tags'] == 'pin') continue;
-					echo "current row ".$row["threadId"];
+		    echo "current row ".$row["threadId"];
 
                     $que = "DROP TABLE ".$board."_".$row["threadId"];
                     myQuery($connBoards,$que);
@@ -112,7 +113,7 @@
                     $que = "DELETE FROM ".$board."Threads 
                             WHERE threadId=".$row["threadId"];
                     myQuery($connBoards,$que);
-					$diff--;
+		    $diff--;
                 }
             }
         }
@@ -159,7 +160,8 @@
             //counts new lines
             $cntNL = 0;
             while($ws < $clen){
-                while($we < $clen && $content[$we] != ' ' && $content[$we] != "\n" &&
+                while($we < $clen && $content[$we] != ' ' 
+                      && $content[$we] != "\n" &&
                       $content[$we] != "\r" && $content[$we] != "\r\n" &&
                       $content[$we] != "\n\r"){
                         $we++;
@@ -234,31 +236,42 @@
                     } 
                     $pos[$cpo++] = $i;
                 }
-                if($pos[0] != -1 && $pos[1] != -1 && $pos[2] != -1 && $pos[3] != -1){
+                if($pos[0] != -1 && $pos[1] != -1 && 
+                        $pos[2] != -1 && $pos[3] != -1){
                     $tmpTYPE = substr($content,$pos[0], $pos[1]-$pos[0]);
                     $tmpLNK = substr($content,$pos[2], $pos[3]-$pos[2]);
+
+                    $tmpOPT = ""; 
+                    if($pos[5] != -1){
+                        $tmpOPT= substr($content,$pos[4],$pos[5]-$pos[4]);
+                    } else{
+                        //have to set pos[5] as pos[3] bc the str replace
+                        //changes
+                        $pos[5] = $pos[3];
+                    }
+
                     $newStr = substr($content,$ws,$we-$ws);
+                    echo $newStr." ".$tmpTYPE . "<br>" . $tmpLNK . "<br>"
+                        . $tmpOPT . "<br>";
 
                     if($tmpTYPE == "IMG"){
-                        $newStr = '<img src='.$tmpLNK.'>';
-                        
+                        $newStr = integrate_IMG($tmpLNK,$tmpOPT);
                     } else if($tmpTYPE == "LNK"){
-                        $newStr = '<a href='.$tmpLNK.'>'.$tmpLNK.'</a>';
+                        $newStr = integrate_LNK($tmpLNK,$tmpOPT);
                     } else if($tmpTYPE == "YTB"){
-		        $youtubeRegex = "/https:\/\/www.youtube.com\/watch\?v=/i";
-		        $youtubeId = preg_replace($youtubeRegex, "", $tmpLNK);
-		        $newStr = '<div><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$youtubeId.'" allowfullscreen></iframe> </div>';
-		    }
+                        $newStr = integrate_YTB($tmpLNK,$tmpOPT);
+                    } else if($tmpTYPE == "TXT"){
+                        $newStr = integrate_TXT($tmpLNK,$tmpOPT);
+                    }
 
-                    //so what happens here is bc the way i made this is that the endpoints are not
+                    //so what happens here is bc the way 
+                    //i made this is that the endpoints are not
                     //counted...have to add 2
                     //old ver that replaces the whole word
-                    //$retStr = str_replace(substr($content,$ws,$we-$ws), $newStr,$retStr);
-                    $retStr = str_replace(substr($content,$pos[0]-1,$pos[3]-$pos[0]+2), $newStr,$retStr);
+                    $findStr = substr($content,$pos[0]-1,$pos[5]-$pos[0]+2); 
+                    echo "REPLACE " . $findStr ." ".$newStr."<br>";
+                    $retStr = str_replace($findStr, $newStr,$retStr);
                 }
-
-                
-            
                 //what is wrong with this. i dont rememberdoing it like this
                 $ws = ++$we;
             }
