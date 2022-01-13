@@ -44,10 +44,15 @@ function integrate_TXT($tmpTXT,$option=""){
             //switches to is value
             $isProperty = 0;
         } else if($option[$i] == ','){
+            //to lower
+            $curProperty = strtolower($curProperty);
+            $curValue = strtolower($curValue);
+
             //is a css property
             if(!$isProperty){
                 if(validProperty($curProperty,$curValue)){
-                    $style .= $curProperty.":".$curValue.";";
+                    $style .= convertProperty($curProperty).":".
+                        convertValue($curProperty,$curValue).";";
                 }
             }
             //is a html tag
@@ -70,12 +75,31 @@ function integrate_TXT($tmpTXT,$option=""){
 
     $newStr = $tagLeft."<span style=\'".$style."\'>".$tmpTXT .
             "</span>".$tagRight;
-    echo "new style = " .$style . "<br>";
     return $newStr;
 }
 
+function convertProperty($property){
+    $properList = array(
+        "color" => "color",
+        "size" => "font-size"
+    );
+    return $properList[$property];
+}
+
+function convertValue($property,$value){
+    if($property == "size"){
+        if($value == "xsmall")
+            return "0.5rem";
+        if($value == "small")
+            return "0.75rem";
+        if($value == "large")
+            return "1.5rem";
+        return "1.0rem";
+    } 
+    return $value;
+}
+
 function validProperty($property,$value){
-    $property = strtolower($property);
     /*
     if($property == "size"){
         value 
@@ -83,11 +107,12 @@ function validProperty($property,$value){
     }
      */
     return 
-        ($property == "color");
+        ($property == "color") ||
+        ($property == "size" && ($value == "xsmall" ||
+            $value == "small" || $value == "large"));
 }
 
 function validTag($tag){
-    $tag = strtolower($tag);
     return ($tag == "b") ||
         ($tag == "i");
 }

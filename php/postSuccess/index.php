@@ -219,7 +219,6 @@
                 }
 
                 //[tag](URI){option}
-                //[tag](URI){option}
 
                 $option = 0; $cpo = 0;
                 $leftChar = array('[','(','{');
@@ -251,8 +250,6 @@
                     }
 
                     $newStr = substr($content,$ws,$we-$ws);
-                    echo $newStr." ".$tmpTYPE . "<br>" . $tmpLNK . "<br>"
-                        . $tmpOPT . "<br>";
 
                     if($tmpTYPE == "IMG"){
                         $newStr = integrate_IMG($tmpLNK,$tmpOPT);
@@ -269,7 +266,6 @@
                     //counted...have to add 2
                     //old ver that replaces the whole word
                     $findStr = substr($content,$pos[0]-1,$pos[5]-$pos[0]+2); 
-                    echo "REPLACE " . $findStr ." ".$newStr."<br>";
                     $retStr = str_replace($findStr, $newStr,$retStr);
                 }
                 //what is wrong with this. i dont rememberdoing it like this
