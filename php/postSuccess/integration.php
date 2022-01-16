@@ -1,17 +1,52 @@
 <?php
 function integrate_IMG($tmpLNK,$option=""){
-    return '<img src='.$tmpLNK.'>';
+    $retML = "";
+    $curLNK = "";
+
+    $tmpLNK .= ",";
+    for($i = 0; $i < strlen($tmpLNK); $i++){
+        if($tmpLNK[$i] == ','){
+            $retML .= "<img src=\'" . $curLNK . "\'>";
+            $curLNK = "";
+        }  else{
+            $curLNK .= $tmpLNK[$i];
+        }
+    }
+    return "<div style=\'display:inline-flex;flex-wrap:wrap;gap:6px;\'>" 
+        . $retML 
+        . "</div><br>";
 }
+
+/* ------------------IMG ENDS----------------------*/
+
 function integrate_LNK($tmpLNK,$option=""){
-    return '<a href='.$tmpLNK.'>'.$tmpLNK.'</a>';
+    $tmpLNK.=",";
+    $retML="";
+    $curLNK="";
+    $LNKcnt=0;
+
+    for($i = 0; $i < strlen($tmpLNK); $i++){
+        if($tmpLNK[$i] == ',' && $curLNK != ''){
+            if($LNKcnt++ > 0) $retML .= "<br>";
+            $retML .= "<a href=\'" . $curLNK . "\'>"
+                    . $curLNK . "</a>";
+            $curLNK = "";
+        }  else{
+            $curLNK .= $tmpLNK[$i];
+        }
+    }
+    return ($LNKcnt > 1 ? "<br>":"").
+        '<span class="linkLIST">'.$retML.'</span>'.
+        ($LNKcnt > 1 ? "<br>":"");
 }
+/* ------------------LNK ENDS----------------------*/
 function integrate_YTB($tmpLNK,$option=""){
     $youtubeRegex = "/https:\/\/www.youtube.com\/watch\?v=/i";
     $youtubeId = preg_replace($youtubeRegex, "", $tmpLNK);
     $newStr = '<div><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$youtubeId.'" allowfullscreen> </iframe> </div>';
     return $newStr;
 }
-
+/* ------------------YTB ENDS----------------------*/
 function integrate_TXT($tmpTXT,$option=""){
     //mysql call to check if the usrPoints is enough
     //inb4 cringe
@@ -116,4 +151,6 @@ function validTag($tag){
     return ($tag == "b") ||
         ($tag == "i");
 }
+
 ?>
+

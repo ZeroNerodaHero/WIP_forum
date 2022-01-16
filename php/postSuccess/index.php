@@ -229,11 +229,13 @@
                     while($i < $we && $content[$i] != $leftChar[$option]){
                         $i++;
                     }
-                    $pos[$cpo++] = ++$i;
+                    if($content[$i] == $leftChar[$option])
+                        $pos[$cpo++] = ++$i;
                     while($i < $we && $content[$i] != $rightChar[$option]){
                         $i++;
                     } 
-                    $pos[$cpo++] = $i;
+                    if($content[$i] == $rightChar[$option])
+                        $pos[$cpo++] = $i;
                 }
                 if($pos[0] != -1 && $pos[1] != -1 && 
                         $pos[2] != -1 && $pos[3] != -1){
@@ -266,7 +268,8 @@
                     //counted...have to add 2
                     //old ver that replaces the whole word
                     $findStr = substr($content,$pos[0]-1,$pos[5]-$pos[0]+2); 
-                    $retStr = str_replace($findStr, $newStr,$retStr);
+
+                    $retStr = str_replace($findStr,$newStr,$retStr);
                 }
                 //what is wrong with this. i dont rememberdoing it like this
                 $ws = ++$we;
