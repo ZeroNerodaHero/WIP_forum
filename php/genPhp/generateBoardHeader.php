@@ -1,6 +1,6 @@
 <?php
     $reLnk = '/php';
-    $navStr = "<a href='$reLnk' id=bheaderLnk>FUNCEL.XYZ</a>";
+    $navStr = "<a href='$reLnk' class=bheaderLnk>FUNCEL.XYZ</a>";
 
     if(empty($_GET["page"]) || $_GET["page"] == "news"){
         $newsPg = 0;
@@ -21,15 +21,15 @@
     } else {
         $pageN = $_GET["page"];
         $reLnk .= "?page=".$pageN;
-        $navStr .= " > <a href='$reLnk' id=bheaderLnk>".$pageN."</a>";
+        $navStr .= " > <a href='$reLnk' class=bheaderLnk>".$pageN."</a>";
 
         if(!empty($_GET["TID"])){
             $threadN = $_GET["TID"];
 	    $reLnk .= "&TID=".$threadN;
 
-	    $navStr .= " > <a href='$reLnk' id=bheaderLnk>".
+	    $navStr .= " > <a href='$reLnk' class=bheaderLnk>".
 	            " ThreadNo".$threadN." : ".$threadTitle."</a>";
         }
     } 
-    echo $navStr;
+    echo $navStr." &#x21bb";
 ?>

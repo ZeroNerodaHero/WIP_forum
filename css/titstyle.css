@@ -50,54 +50,56 @@ footer{
 }
 #disclaimer{
     text-align: center;
-	font-size:0.7em;
-	margin-left: 20%;
-	margin-right: 20%;
-	margin-top: 1%;
-	margin-bottom: 1%;
+    font-size:0.7em;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 
 #content{
-	margin-left:5%;
-	margin-right:5%;
-	border: 2px solid black;
-	box-shadow: rgba(149, 157, 165, 1) 0px 8px 24px;
-	margin-bottom:5%;
+    margin-left:5%;
+    margin-right:5%;
+    border: 2px solid black;
+    box-shadow: rgba(149, 157, 165, 1) 0px 8px 24px;
+    margin-bottom:5%;
 }
 #topStatus{
     background-color: #ea82df;
-	padding: 5px;
-	border-bottom: 2px solid black;
+    padding: 5px;
+    border-bottom: 2px solid black;
+}
+
+#ruleAgree{
+    display: inline-flex;
+    float: right;
 }
 .rebutton{
-	float: right;
-	margin-left:20px;
-	margin-right:20px;
 }
 #notoRules{
-	color: #7a2222;
+    color: #7a2222;
 }
 #acceptRules{
-	color: #197500;
+    color: #197500;
 }
 
 #rules{
     background-color: #606060;
-	padding:1%;
-	color: white;
+    padding:1%;
+    color: white;
 }
 .phead{
-	font-size: 1.2em;	
+    font-size: 1.2em;	
 }
 .pcontent{
-	padding: 1%;
+    padding: 1%;
 }
 #ruleRe{
     text-align: center;
-	font-size: 1.2em;	
+    font-size: 1.2em;	
 }
 #ruleLnk{
     background-color: #ea82df;
-	padding: 4px;
-	border: 2px solid black;
+    padding: 4px;
+    border: 2px solid black;
 }

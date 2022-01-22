@@ -15,6 +15,7 @@
         } else if($curPage == "blog"){
 			
         } else {
+            //just to verify if this is fine
             $que = "SELECT * FROM boards WHERE boardName = '$curPage'";
             $res = $conn->query($que);
             if($res->num_rows > 0){
@@ -59,23 +60,22 @@
 
     function generateBoard($board){
         global $connBoards;
-		//post pinned threads
+	//post pinned threads
         $que = "SELECT * FROM ".$board."Threads 
-				WHERE tags='pin' ORDER BY threadId ASC";
+		WHERE tags='pin' ORDER BY threadId ASC";
         $res = $connBoards->query($que); 
         if(!empty($res) && $res->num_rows > 0){
             while($row = $res->fetch_assoc()){
                 postThreads($row["title"],$row["time"],$row["threadId"],"pin");
             }
-        }
+        } 
 
-		//post normal threads
+        //post normal threads
         $que = "SELECT * FROM ".$board."Threads ORDER BY time DESC";
-
         $res = $connBoards->query($que); 
         if(!empty($res) && $res->num_rows > 0){
             while($row = $res->fetch_assoc()){
-				if($row["tags"]=="pin") continue;
+                if($row["tags"]=="pin") continue;
                 postThreads($row["title"],$row["time"],$row["threadId"]);
             }
         } else{

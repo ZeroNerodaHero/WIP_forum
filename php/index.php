@@ -52,17 +52,42 @@
         </div>
 
 	<div id="rightEncap">
-            <div class = "nav">
-	        <div id=navHeader>
-		    <span id=navHeaderTit>Navigation</span> 
-		    <span id=navHeaderCol>
+            <div class=sideBarElement id="nav">
+	        <div class=sideBarHeader id=navHeader>
+		    <span class=sideBarTitle id=navHeaderTit>Navigation</span> 
+		    <span class=sideBarCol id=navHeaderCol>
 		    <a href="javascript:toggleNav()" id=navCollapseText class="chevron"> </a>
 		    </span> 
-
 	        </div>
-	        <div id=navContainer>
+	        <div class=sideBarContainer id=navContainer>
                     <?php include_once('genPhp/generateNav.php'); ?>
 		    <script>toggleNav(0);</script>
+		</div>
+            </div>  
+
+            <div class=sideBarElement id=recentThread>
+	        <div class=sideBarHeader id=recentThreadHeader>
+                    <span class=sideBarTitle id=recentThreadTitle>
+                        Recent Thread
+                    </span> 
+		    <span class=sideBarCol id=recentThreadCol>
+                        <a href="javascript:toggleRecent()" 
+                        id=recentThreadCollapseText class="chevron"> </a>
+		    </span> 
+	        </div>
+	        <div class=sideBarContainer id=recentThreadContainer>
+                    <?php
+                        include_once('genPhp/generateRecent.php'); 
+                        //this is not a great way but yea
+                        if(!empty($_GET["page"]) && !empty($_GET["TID"]))
+                            echo "<script> recentAnimateAll(); </script>";
+                        else
+                            echo "<script> closeRecent(); </script>";
+                    ?>
+
+                    <script>
+                        toggleRecent(0);
+                    </script>
 		</div>
             </div>  
 
