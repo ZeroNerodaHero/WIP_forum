@@ -53,7 +53,6 @@
 	}
 
         function manageNewPost($postContent,$board,$TID){
-            $postContent = addslashes($postContent); 
             $newTable = $board."_".$TID;
             $redirect = "/php/?page=".$_GET['page'];
             $redirect = "&TID=".$TID;
@@ -98,8 +97,8 @@
 
             //deletes tables when > maxThreads
             if(!empty($res) && $res->num_rows > $maxThreads){
-				$diff = max($res->num_rows-$maxThreads-1,0);
-				echo "diff ". $diff . "<br>";
+                $diff = max($res->num_rows-$maxThreads-1,0);
+	        //echo "diff ". $diff . "<br>";
 
                 while($row = $res->fetch_assoc()){
 		    if($diff <= 0) continue;
@@ -133,6 +132,7 @@
 
             $content = postParser($content) . "<br>";
             $content = nl2br($content);
+            $content = addslashes($content); 
             $que = "INSERT INTO ". $threadTable . "(time,content,ip) 
                     VALUES( CURRENT_TIMESTAMP,'$content','$posterId')";
 
@@ -195,6 +195,24 @@
             $cntNL = 0;
 
             while($ws < $clen){
+                //this is used for pink text
+                if($content[$ws] == "~"){
+                    while($we < $clen && $content[$we] != "\n" &&
+                      $content[$we] != "\r" && $content[$we] != "\r\n" &&
+                      $content[$we] != "\n\r"){
+                        $we++;      
+                    }
+                    //>hello -> <div style="color:pink">hello</div>
+                    $tobeReplace = substr($content,$ws,$we-$ws);
+                    $retStr = str_replace($tobeReplace,
+                        //"<div style='color:pink'>".$tobeReplace."</div>",$retStr);
+                        "<span style='color:pink'>".$tobeReplace."</span>",$retStr);
+                        //problem here is that there is an extra return. 
+                        //hopefully the users are not retarded
+                    $ws = ++$we;
+                    continue;
+                }
+
                 //i canot understadn what character html uses for newlines wtf
                 //i do have a problem where the skips for characters are wrong
                 while($we < $clen && $content[$we] != ' ' && $content[$we] != "\n" &&
