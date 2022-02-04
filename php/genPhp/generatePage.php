@@ -118,7 +118,8 @@
         
     function postComment($content,$UID,$time,$PID,$board,$TID){
         if(empty($UID)) $UID = 0;
-        $UID = (($UID%1000000)^($TID^($TID<<16)));
+        $boardHash = ord($board[0]);
+        $UID = (($UID%1000000)^($TID^($TID<<16))^$boardHash);
         $id_sel = "p".$UID."_".$PID;
         echo "<div class=postEncap id=pd".$PID.">";
         echo "<style> #".$id_sel." { background-color:#".$UID."; } </style>";
