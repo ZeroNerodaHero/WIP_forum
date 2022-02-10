@@ -28,7 +28,7 @@ function integrate_LNK($tmpLNK,$option=""){
     for($i = 0; $i < strlen($tmpLNK); $i++){
         if($tmpLNK[$i] == ',' && $curLNK != ''){
             if($LNKcnt++ > 0) $retML .= "<br>";
-            $retML .= "<a href=\'" . $curLNK . "\'>"
+            $retML .= "<a href='" . $curLNK . "'>"
                     . $curLNK . "</a>";
             $curLNK = "";
         }  else{
