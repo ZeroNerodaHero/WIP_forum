@@ -6,7 +6,7 @@ function integrate_IMG($tmpLNK,$option=""){
     $tmpLNK .= ",";
     for($i = 0; $i < strlen($tmpLNK); $i++){
         if($tmpLNK[$i] == ','){
-            $retML .= "<img src=\'" . $curLNK . "\'>";
+            $retML .= "<img src='" . $curLNK . "'>";
             $curLNK = "";
         }  else{
             $curLNK .= $tmpLNK[$i];
@@ -14,7 +14,7 @@ function integrate_IMG($tmpLNK,$option=""){
     }
     return "<div style=\'display:inline-flex;flex-wrap:wrap;gap:6px;\'>" 
         . $retML 
-        . "</div><br>";
+        . "</div>";
 }
 
 /* ------------------IMG ENDS----------------------*/
