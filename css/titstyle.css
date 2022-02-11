@@ -75,6 +75,7 @@ footer{
     float: right;
 }
 .rebutton{
+    margin-right: 10px;
 }
 #notoRules{
     color: #7a2222;
