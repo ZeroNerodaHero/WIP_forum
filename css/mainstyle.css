@@ -306,3 +306,13 @@ img:hover {
         transform: translateX(100px);
     } 
 }
+
+/* ERROR CONTENT */
+.errorContent{
+    text-align: center;
+    margin-top: 2%;
+    font-size: 2rem;
+}
+.errorImgContent{
+    width: 90%;
+}

@@ -5,35 +5,41 @@
 
     $threadTitle = "ERROR: THREAD DOESN'T EXIST";
 
-    $que = "SELECT * FROM boards";
-    $allBoards = $conn->query($que);
-
     $boardPageName = "news";
     if(!empty($_GET["page"]))
         $boardPageName = $_GET["page"];
+
+    $que = "SELECT * FROM boards";;
+    $res = $conn->query($que);
+    $allBoards = array();
+    while($row = $res->fetch_assoc())
+        $allBoards[] = $row;
+            
+
 
     //if page is board = 0
     //if page is thread = 1
     $typeOfPage=($boardPageName != "news" && !empty($_GET["TID"]));
     $threadID = ($typeOfPage == 1) ? $_GET["TID"] : -1;
-    $boardThreads = NULL;
+    $boardThreads = array();
     if($boardPageName != "news"){
-        $que = "SELECT * FROM ".$boardPageName."Threads";
+        $que = "SELECT * FROM ".$boardPageName."Threads ORDER BY time DESC";
         $res = $connBoards->query($que);
 
         //never have to check this again? or use null
 	if($res->num_rows > 0){
-            $boardThreads = $res; 
+            while($row = $res->fetch_assoc())
+                $boardThreads[] = $row; 
         }
     }
-
-    $threadContent = NULL;
+    $threadContent = array();
     if($typeOfPage == 1){
         $que = "SELECT * FROM ".$boardPageName."_".$threadID;
         $res = $connBoards->query($que);
         
 	if($res->num_rows > 0){
-            $threadContent = $res; 
+            while($row = $res->fetch_assoc())
+                $threadContent[] = $row; 
         }
     }
     /*
@@ -44,16 +50,17 @@
      *      user touch
      */
     if($boardPageName != "news"){
-	while($row = $allBoards->fetch_assoc()){
+	foreach($allBoards as $row){
             if($row["boardName"] == $boardPageName){
 	        $descript .= $row["descript"];
+                break;
             }
 	}
 	$tabTitle = "[".$boardPageName."]";
 
         //essentially is a thread
 	if($typeOfPage == 1 && $boardThreads != NULL){
-	    while($row = $boardThreads->fetch_assoc()){
+	    foreach($boardThreads as $row){
                 if($row["threadId"] == $threadID){
                     $threadTitle = $row["title"];
 	            $tabTitle .= " ".$row["title"];

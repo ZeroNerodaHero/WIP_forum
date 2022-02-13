@@ -13,7 +13,7 @@
         $que .= " LIMIT 1 OFFSET $ran";
         $res = $conn->query($que);
         while($row = $res->fetch_assoc()){
-            echoImg($row["linkToImg"],$row["linkToSite"]);
+            echoImg($row["linkToImg"],$row["linkToSite"],"advertImg");
 	    if($row["totalLoads"] > $row["maxPoints"]){
 	        deleteAd($row["id"]);
 	    } else{
@@ -24,11 +24,6 @@
 	}
     } else{
         echoImg("/var/www/html/res/bulletin/bull_0.png","");
-    }
-	
-    function echoImg($src,$toGo){
-        echo "<a href='$toGo'>
-            <img src='$src' class='advertImg'> </a>";
     }
     function deleteAd($id){
         global $conn;

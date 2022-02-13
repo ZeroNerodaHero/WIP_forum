@@ -1,6 +1,6 @@
 <?php
     function generatePage(){
-        global $conn;
+        global $allBoards,$boardPageName;
         $curPage = "news";
         if(!empty($_GET["page"])){
             $curPage = $_GET["page"];
@@ -16,9 +16,14 @@
 			
         } else {
             //just to verify if this is fine
-            $que = "SELECT * FROM boards WHERE boardName = '$curPage'";
-            $res = $conn->query($que);
-            if($res->num_rows > 0){
+            $hasBoard = 0;
+            foreach($allBoards as $row){
+                if($row["boardName"] == $boardPageName){
+                    $hasBoard = 1;
+                    break;
+                }
+            }
+            if($hasBoard){
                 if(!empty($_GET["TID"])){
                     $TID = $_GET["TID"];
                     generateThread($curPage,$TID);
@@ -27,7 +32,9 @@
                     generateBoard($curPage);
                     createNewThread($curPage);
                 }
-            } 
+            } else{
+                echoError("BOARD DOESN'T EXIST");
+            }
         }
     }
 
@@ -46,7 +53,7 @@
                     $row["news_content"]);
             }
         } else{
-            echo "no news or something went wrong lmao <br>";
+            echoError("no news or something went wrong lmao");
         }
     }
 
@@ -59,28 +66,18 @@
     }
 
     function generateBoard($board){
-        global $connBoards;
+        global $boardThreads;
 	//post pinned threads
-        $que = "SELECT * FROM ".$board."Threads 
-		WHERE tags='pin' ORDER BY threadId ASC";
-        $res = $connBoards->query($que); 
-        if(!empty($res) && $res->num_rows > 0){
-            while($row = $res->fetch_assoc()){
+        foreach($boardThreads as $row){
+            if($row["tags"] == "pin")
                 postThreads($row["title"],$row["time"],$row["threadId"],"pin");
-            }
         } 
 
         //post normal threads
-        $que = "SELECT * FROM ".$board."Threads ORDER BY time DESC";
-        $res = $connBoards->query($que); 
-        if(!empty($res) && $res->num_rows > 0){
-            while($row = $res->fetch_assoc()){
-                if($row["tags"]=="pin") continue;
-                postThreads($row["title"],$row["time"],$row["threadId"]);
-            }
-        } else{
-            echo "no threads or something went wrong lmao <br>";
-        }
+        foreach($boardThreads as $row){
+            if($row["tags"]=="pin") continue;
+            postThreads($row["title"],$row["time"],$row["threadId"]);
+        } 
     }
         
     function postThreads($title,$time,$TID,$classTag=""){
@@ -93,26 +90,15 @@
     }
 
     function generateThread($board,$TID){
-        global $connBoards;
-        $table = $board."\_" . $TID;
-        $que = "SHOW TABLES LIKE '$table'";
-        //echo $que . "<br>";
+        global $threadContent;
+        $errorThread = 0;
 
-        $res = $connBoards->query($que);
-        if(empty($res) || $res->num_rows < 1){
-            echo "ERROR: thread didn't show or doesn't exist";
-            return NULL;
-        }
-
-        $que = "SELECT * FROM ".$board."_".$TID;
-        //echo $que . "<br>";
-        $res = $connBoards->query($que);
-        if(!empty($res) && $res->num_rows > 0){
-            while($row = $res->fetch_assoc()){
-                postComment($row["content"],$row["ip"],$row["time"],$row["postId"],$board,$TID);
-            }
-        } else{
-            echo "something went wrong lmao <br>";
+        foreach($threadContent as $row){
+            postComment($row["content"],$row["ip"],$row["time"],$row["postId"],$board,$TID);
+            $errorThread = 1;
+        } 
+        if(!($errorThread)){
+            echoError("something went wrong lmao");
         }
     }
         
@@ -170,6 +156,11 @@
         //use some sort of encryption
         //right now random stuff
         return ($ip % 100000);
+    }
+    function echoError($msg){
+        echo "<div class=errorContent> $msg <br>";
+        echoImg('/res/random/final.gif','/php',"errorImgContent");
+        echo "</div>";
     }
 ?>
 
