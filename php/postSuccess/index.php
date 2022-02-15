@@ -227,7 +227,7 @@
                 //dont forget escape character after anything wtf
                 if($wlen > 2 && $word[0] == "#" && $word[1] == "#"){
                     $goTo= substr($word,2);
-                    $replace = "<a href=\'javascript:jumpPost(\"pd$goTo\")\'>" .
+                    $replace = "<a href='javascript:jumpPost(\"pd$goTo\")'>" .
                         $word . "</a>";
 
                     $retStr = str_replace($word,$replace,$retStr);
