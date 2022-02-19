@@ -252,9 +252,12 @@ footer{
 img {
     width: 100px;
 }
+/* RIP REPLACED BY JS */
+/*
 img:hover {
     width: 100%;
 }
+*/
 
 
 /* for buttons */

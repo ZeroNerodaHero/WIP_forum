@@ -18,8 +18,6 @@
             error_reporting(-1);
             ini_set('display_errors',1); 
 	*/
-            error_reporting(-1);
-            ini_set('display_errors',1); 
         include_once('genPhp/generateHeader.php');
         ?>
         
@@ -95,6 +93,7 @@
 	        <?php include_once('genPhp/generateAdvert.php'); ?>
             </div>
         </div>
-
     </div>
+
+    <script> expandImg() </script>
 </html>

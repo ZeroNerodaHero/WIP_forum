@@ -17,18 +17,18 @@ function jumpPost(val){
 }
 
 function threadRedirect(redirect){
-	window.location = redirect;
+    window.location = redirect;
 }
 
 function headerRedirect(page){
     document.getElementById("PageHeader").addEventListener("click",
-    function()
-    { window.location = "?page="+page; });
+        function() { window.location = "?page="+page; }
+    );
 }
 
 function buttonUp(){
     var ele = document.getElementById("board");
-	var ele2 = document.getElementById("boardHeader").offsetHeight;
+    var ele2 = document.getElementById("boardHeader").offsetHeight;
     var top = ele.offsetTop;
     window.scrollTo(0,top-ele2-10);
 }
@@ -94,4 +94,15 @@ function recentAnimateAll(){
 function closeRecent(){
     var ele = document.getElementById("recentThread");
     ele.style.display = "none";
+}
+
+function expandImg(){
+    var allImg = document.getElementsByTagName("img");
+
+    for(let it of allImg){
+        it.addEventListener("click",function(){
+            console.log(it.style.width);
+            it.style.width=(it.style.width != "100%") ?"100%":"100px";}
+        );
+    }
 }
