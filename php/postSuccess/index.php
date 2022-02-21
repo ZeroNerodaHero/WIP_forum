@@ -60,7 +60,6 @@
             postComment($board,$TID,$postContent);
             //bumpThread($board,$TID);
             //swaped for update
-            updatePostCnt($board,$TID);
         }
 
         function manageNewThread($postTitle,$postContent,$board){
@@ -144,6 +143,7 @@
             //update mysql variables
             updateUsrScore($posterId,10);
             updateUsrTime($posterId);
+            updatePostCnt($page,$TID);
         }
         function bumpThread($board,$tid){
             global $connBoards;
