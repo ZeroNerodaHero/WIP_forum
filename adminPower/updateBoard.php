@@ -14,7 +14,7 @@
         $pinnedTit = addslashes($_POST["pinTit"]);
         $pinnedPost = addslashes($_POST["pinned"]);
         $ppassword = $_POST["password"];
-		$boardDescript = $_POST["descript"];
+        $boardDescript = $_POST["descript"];
         if($boardName && $pinnedTit && $pinnedPost && $ppassword && 
            $ppassword==$admin_ppassword){
             /************************************************/
@@ -24,6 +24,7 @@
                         threadId int NOT NULL AUTO_INCREMENT,
                         time TIMESTAMP,
                         tags VARCHAR(50) NULL,
+                        postCnt int NOT NULL DEFAULT 0,
                         PRIMARY KEY(threadId)
                     )";
 
@@ -58,7 +59,7 @@ myQuery($connBoards,$que);
             echo $que . "<br>";
  myQuery($connBoards,$que);
 
-            $usrIP = ip2long(getusrIP()); 
+            $usrIP = getusrIP(); 
             echo "ip is " .$usrIP . " and " . empty($usrIP) ."<br>";
             $que = "INSERT INTO ". $newTable . "(
                         content,ip) VALUES( '$pinnedPost',";

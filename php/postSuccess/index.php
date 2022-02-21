@@ -58,7 +58,9 @@
             $redirect = "&TID=".$TID;
 
             postComment($board,$TID,$postContent);
-            bumpThread($board,$TID);
+            //bumpThread($board,$TID);
+            //swaped for update
+            updatePostCnt($board,$TID);
         }
 
         function manageNewThread($postTitle,$postContent,$board){

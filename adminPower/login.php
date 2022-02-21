@@ -116,4 +116,18 @@ ini_set('display_errors',1);
         echo "<a href='$toGo'>
             <img src='$src' class='$imgClass'> </a>";
     }
+
+    //use after post gets updated. not before. retard
+    //also serves as a time updater
+    function updatePostCnt($board,$TID){
+        global $connBoards;
+        $que = "SELECT * FROM $board"."_".$TID;
+        $res = $connBoards->query($que);
+
+        $newPostCnt = $res->num_rows;
+        $que = "UPDATE $board"."Threads
+                SET postCnt = $newPostCnt
+                WHERE threadId = $TID";
+        myQuery($connBoards,$que);
+    }
 ?>

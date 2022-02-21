@@ -70,21 +70,22 @@
 	//post pinned threads
         foreach($boardThreads as $row){
             if($row["tags"] == "pin")
-                postThreads($row["title"],$row["time"],$row["threadId"],"pin");
+                postThreads($row["title"],$row["time"],$row["threadId"],$row["postCnt"],"pin");
         } 
 
         //post normal threads
         foreach($boardThreads as $row){
             if($row["tags"]=="pin") continue;
-            postThreads($row["title"],$row["time"],$row["threadId"]);
+            postThreads($row["title"],$row["time"],$row["threadId"],$row["postCnt"]);
         } 
     }
         
-    function postThreads($title,$time,$TID,$classTag=""){
+    function postThreads($title,$time,$TID,$postCnt,$classTag=""){
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
         echo "<div onclick='threadRedirect(\"$newLink\")'>";
         echo "<span class=threadInfo>" . $time . " :::: TID: " .
-            $TID . " | <a href='$newLink'> >>> </a></span>";
+            $TID . " | (<span class=$TID>".$postCnt."</span>) 
+            <a href='$newLink'> >>> </a></span>";
 		echo "<div class='thread_title $classTag'>" . $title . "</div>";
         echo "<br><hr></div>";
     }
