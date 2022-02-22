@@ -56,11 +56,17 @@ function iterateCnter(board){
 
 function updateLastThread(board,TID,pCnt){
     var strData = getBoardJson(board);
+    var cmpTmp = strData;
     if(strData == '[]') return;
+
     var rep = '"TID":'+TID+',"postCnt":[0-9]{0,9}';
     var nstr= '"TID":'+TID+',"postCnt":'+pCnt;
-    //strData.replace(new RegExp(rep,'i'),'"TID":'+TID+',"postCnt":'+pCnt);
     strData = strData.replace(new RegExp(rep),nstr);
+
+    if(strData == cmpTmp){
+        strData = strData.replace("]",",{"+nstr+"}]");
+    }
+
     setBoardJson(board,strData);
 }
 
