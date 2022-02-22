@@ -5,6 +5,7 @@
         <link rel="icon" href="../res/icon/icon_0.png">
         <script type="text/javascript" src="../css/jscrap.js"></script>
         <script type="text/javascript" src="../css/cookieSetting.js"></script>
+        <script type="text/javascript" src="../css/lastView.js"></script>
 
         <?php
             include_once('genPhp/generatePageHeader.php');
@@ -95,5 +96,18 @@
         </div>
     </div>
 
-    <script> expandImg() </script>
+    <!--for variables and stuff -->
+    <?php
+        if($typeOfPage == 1){
+            echo "<script>
+                var totalContent=".sizeof($threadContent)."
+                updateLastThread('$boardPageName',$threadID,totalContent);
+                </script>";
+        } else {
+            echo "<script>iterateCnter('$boardPageName')</script>";
+        }
+    ?>
+    <script>
+        expandImg() 
+    </script>
 </html>

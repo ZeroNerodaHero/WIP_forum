@@ -319,3 +319,11 @@ img:hover {
 .errorImgContent{
     width: 90%;
 }
+
+/* pDiff colors */
+.pDiff_pos{
+    color: #30ff30;
+}
+.pDiff_na{
+    color: #ff0000;
+}
