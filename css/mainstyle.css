@@ -68,7 +68,7 @@ footer{
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 1%;
-    background-color: #808080;
+    background-color: #808080e3;
     margin-bottom: 3%;
     padding-bottom: 3%;
 
@@ -327,3 +327,37 @@ img:hover {
 .pDiff_na{
     color: #ff0000;
 }
+
+/* topBarFunctions */
+#topRowCont{
+    margin-top: -4px;
+    margin-right: 1%;
+    float: right;
+}
+.topRowButton{
+    color: #ea82df;
+}
+.topRowButton::hover{
+    font-size: 1.1em;
+}
+.topRowButton> div {
+    color: white;
+    position: absolute;
+    right: 2.5%;
+    top: 1%;
+    padding: 2px 3px;
+
+    border: 2px double black;
+    background-color: grey;
+    z-index: 2;
+}
+details > summary{
+    display: block;
+}
+.topRowSubmit{
+    float: right;
+}
+.topRowSlider{
+    margin-left: 10%;
+}
+

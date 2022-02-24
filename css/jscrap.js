@@ -106,3 +106,10 @@ function expandImg(){
         );
     }
 }
+
+function precentToHex(p){
+    var percent = Math.max(0,Math.min(p,100));
+    var intVal = Math.round(p/100 * 255);
+    var hexval = intVal.toString(16);
+    return hexval.padStart(2,'0').toUpperCase();
+}

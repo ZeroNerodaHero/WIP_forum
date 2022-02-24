@@ -13,6 +13,36 @@
 
     </head>
 
+    <span id=topRowCont>
+        <details class=topRowButton title="Settings">
+            <summary>&#9881</summary>
+            <div>
+            Settings <br>
+            Background Type: <br>
+                <input type=radio id=bkgType_img name=bkgType value=Image onclick=chngBkgType(0)>
+                    <label for=bkgType_img>Image</label>
+                <input type=radio id=bkgType_color name=bkgType value=Color onclick=chngBkgType(1)>
+                    <label for=bkgType_Color>Color</label>
+                <br>
+            Image Link: 
+                <input type=submit class=topRowSubmit id=imgLnkSubmit 
+                    value=x onclick=imgLnkButton()><br>
+                <input type=text id=bkgImgLnk name=bkgImgLnk><br>
+            Background Color: 
+                <input type=submit class=topRowSubmit id=colorSubmit 
+                    value=x onclick=colorButton()><br>
+                <input type=text id=bkgColor name=bkgColor><br>
+            Board Opacity: (WIP)<br>
+                <input type=range id=board_opacity class=topRowSlider 
+                    name=board_opacity min=0 max=100> <br> 
+            Font Size(in rem): (WIP)<br>
+                <input type=range id=fontSize class=topRowSlider
+                    name=font_size min=0 max=4><br>
+            </div>
+        </details>
+        <script>
+        </script>
+    </span>
     <div id = "PageHeader">
         <?php 
 	/*
@@ -60,7 +90,6 @@
 	        </div>
 	        <div class=sideBarContainer id=navContainer>
                     <?php include_once('genPhp/generateNav.php'); ?>
-		    <script>toggleNav(0);</script>
 		</div>
             </div>  
 
@@ -84,9 +113,6 @@
                             echo "<script> closeRecent(); </script>";
                     ?>
 
-                    <script>
-                        toggleRecent(0);
-                    </script>
 		</div>
             </div>  
 
@@ -108,6 +134,7 @@
         }
     ?>
     <script>
-        expandImg() 
+        generatePageStyle();
+        expandImg();
     </script>
 </html>
