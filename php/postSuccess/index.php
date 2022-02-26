@@ -35,7 +35,7 @@
             $time = 5000;
             printPage("You're banned",true);
         }
-	else if(!devPuter || !hasCaptcha || !$responseKeys["success"]){
+	else if($devPuter && (!$hasCaptcha || !$responseKeys["success"])){
 	    printPage("Bad Captcha ",true);
 	}
         //new thread
