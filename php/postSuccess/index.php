@@ -18,6 +18,15 @@
         $redirect = "php/?page=".$_GET['page'];
 
         $isThread = empty($_GET["TID"]);
+	$hasCaptcha = isset( $_POST["g-recaptcha-response"]);
+        $responseKeys;
+	if($hasCaptcha){
+		$captcha = $_POST["g-recaptcha-response"];
+		$url = 'https://www.google.com/recaptcha/api/siteverify?secret=' 
+		      . urlencode($captchaAPIkey) .  '&response=' . urlencode($captcha);
+        	$response = file_get_contents($url);
+        	$responseKeys = json_decode($response,true);
+	}
 
         $board = $_GET["page"];
         $time = 5000;
@@ -25,11 +34,10 @@
         if(checkBan($posterId)){
             $time = 5000;
             printPage("You're banned",true);
-        } else if($_POST["g-recaptcha-response"]->success == false){
-            $time = 5000;
-            printPage("You failed the captcha. 
-                Sorry, but captcha is needed for now. :(((( four chins",true);
         }
+	else if(!devPuter || !hasCaptcha || !$responseKeys["success"]){
+	    printPage("Bad Captcha ",true);
+	}
         //new thread
         else if($isThread && testString($_POST["title"],301) && 
                 testString($_POST["content"],7500)){
