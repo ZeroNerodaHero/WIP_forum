@@ -362,3 +362,11 @@ details > summary{
     margin-left: 10%;
 }
 
+/* captcha */
+#pcaptcha{
+    display: inline-block;
+}
+#captchaCont{
+    text-align: center;
+    margin-top: 3px;
+}

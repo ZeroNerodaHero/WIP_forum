@@ -25,6 +25,10 @@
         if(checkBan($posterId)){
             $time = 5000;
             printPage("You're banned",true);
+        } else if($_POST["g-recaptcha-response"]->success == false){
+            $time = 5000;
+            printPage("You failed the captcha. 
+                Sorry, but captcha is needed for now. :(((( four chins",true);
         }
         //new thread
         else if($isThread && testString($_POST["title"],301) && 

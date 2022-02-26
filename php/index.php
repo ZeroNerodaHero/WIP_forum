@@ -6,11 +6,11 @@
         <script type="text/javascript" src="../css/jscrap.js"></script>
         <script type="text/javascript" src="../css/cookieSetting.js"></script>
         <script type="text/javascript" src="../css/lastView.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
         <?php
             include_once('genPhp/generatePageHeader.php');
 	?>
-
     </head>
 
     <span id=topRowCont>

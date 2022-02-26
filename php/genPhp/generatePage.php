@@ -128,10 +128,12 @@
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">
             Title: <input type="text" name="title" class="tit" size="65"> 
-            <input type="submit" value="Post"> <br>
+            <input type="submit" value="Post">.
             Message: <br> ' .
             showTextArea() .
-            '<br>
+            '<div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
+                data-sitekey="6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_">
+            </div></div><br>
         </form></div>'; 
     }
     function createNewComment($board,$TID){
@@ -140,9 +142,12 @@
         echo 
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">
-            Message: <input type="submit" value="Post"> <br> ' .
+            Message: <input type="submit" value="Post"> <br> '.
             showTextArea() .
-        '</form></div>'; 
+            '<div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
+                data-sitekey="6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_">
+            </div></div>'.
+            '</form></div>'; 
     }
 
     function showTextArea(){
