@@ -9,10 +9,15 @@ function jumpPost(val){
     window.scrollTo(0,top-10);
     
     var oldColor= ele.style.backgroundColor;
-    ele.style.backgroundColor = "#606060";
+    ele.style.backgroundColor = "rgba(238,130,238,0.2)";
+    ele.style.boxShadow = "0px -3px 1px 5px rgba(238,130,238,0.2)";
+    ele.style.webkitBoxShadow = "0px -3px 1px 5px rgba(238,130,238,0.2)";
+    console.log(oldColor);
 
     setTimeout(function() {
         ele.style.backgroundColor = oldColor;
+        ele.style.boxShadow = "";
+        ele.style.webkitBoxShadow = "";
     },500);
 }
 
