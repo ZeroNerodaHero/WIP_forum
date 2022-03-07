@@ -112,6 +112,26 @@ function integrate_TXT($tmpTXT,$option=""){
             "</span>".$tagRight;
     return $newStr;
 }
+/* ------------------VIDEO ENDS----------------------*/
+function integrate_VIDEO($tmpTXT,$option=""){
+    //gets the .xxxx whatever that may be
+    //can only support webm or mp4 
+    //maybe .ogg too
+    $s = strlen($tmpTXT)-1; 
+    while($tmpTXT[$s] != '.') $s--; 
+
+    $type = substr($tmpTXT,$s+1);
+    if($type != "webm" && $type != "mp4" && $type != "ogg"){
+        return "ERROR";
+    }
+    return "<video width='400' controls>
+        <source src='$tmpTXT' type='video/$type'>
+        You can't play this. Browser or something broken.></video> 
+        <div class=videoRed><a href='$tmpTXT'>redirect: ".$tmpTXT.
+        "</a></div>";
+}
+
+
 
 function convertProperty($property){
     $properList = array(

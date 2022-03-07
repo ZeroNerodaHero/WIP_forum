@@ -153,9 +153,11 @@
     function showTextArea(){
         return '
             <textarea id="textArea" name="content" rows="6" cols="30" ></textarea> <br>
-            <button onclick="addImg()" type="button"> ADD IMG </button>
-            <button onclick="addLink()" type="button"> ADD LNK </button>
-			<button onclick="addYTB()" type="button"> ADD YTB </button>
+            ADD: 
+            <button onclick="addImg()" type="button"> IMG </button>
+            <button onclick="addLink()" type="button"> LNK </button>
+	    <button onclick="addYTB()" type="button"> YTB </button>
+	    <button onclick="addVIDEO()" type="button"> VIDEO </button>
         ';
     }
 
@@ -180,5 +182,8 @@
     }
     function addYTB(){
         document.getElementById("textArea").value += "[YTB]()";
+    }
+    function addVIDEO(){
+        document.getElementById("textArea").value += "[VIDEO]()";
     }
 </script>

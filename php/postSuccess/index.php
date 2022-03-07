@@ -17,9 +17,9 @@
     <?php
         $redirect = "php/?page=".$_GET['page'];
 
-    $isThread = empty($_GET["TID"]);
+        $isThread = empty($_GET["TID"]);
 	$hasCaptcha = isset( $_POST["g-recaptcha-response"]);
-    $responseKeys;
+        $responseKeys;
 	if($hasCaptcha){
 		$captcha = $_POST["g-recaptcha-response"];
 		$url = 'https://www.google.com/recaptcha/api/siteverify?secret=' 
@@ -28,13 +28,13 @@
         	$responseKeys = json_decode($response,true);
 	}
 
-    $board = $_GET["page"];
-    $time = 5000;
-
-    if(checkBan($posterId)){
+        $board = $_GET["page"];
         $time = 5000;
-        printPage("You're banned",true);
-    }
+
+        if(checkBan($posterId)){
+            $time = 5000;
+            printPage("You're banned",true);
+        }
 	else if(!$devPuter && (!$hasCaptcha || !$responseKeys["success"])){
 	    printPage("Bad Captcha ",true);
 	}
@@ -293,6 +293,8 @@
                         $newStr = integrate_YTB($tmpLNK,$tmpOPT);
                     } else if($tmpTYPE == "TXT"){
                         $newStr = integrate_TXT($tmpLNK,$tmpOPT);
+                    } else if($tmpTYPE == "VIDEO"){
+                        $newStr = integrate_VIDEO($tmpLNK,$tmpOPT);
                     }
 
                     //so what happens here is bc the way 

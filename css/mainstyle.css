@@ -376,3 +376,7 @@ details > summary{
     text-align: center;
     margin-top: 3px;
 }
+/* VIDEO */
+.videoRed{
+    font-size: 0.75rem;
+}
