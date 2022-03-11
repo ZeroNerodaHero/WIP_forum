@@ -126,7 +126,7 @@ ini_set('display_errors',1);
 
         $newPostCnt = $res->num_rows;
         $que = "UPDATE $board"."Threads
-                SET postCnt = $newPostCnt
+                SET postCnt = $newPostCnt, time=CURRENT_TIMESTAMP
                 WHERE threadId = $TID";
         myQuery($connBoards,$que);
     }
