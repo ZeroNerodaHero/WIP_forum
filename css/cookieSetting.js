@@ -17,8 +17,37 @@ xxxx xxxx xx...
 
 0: collapseNav?
 1: collapseRecent
+//wtf is 2?
 3: bkg is img or color
+4: mainboards collapsed?
+5: shitboards collapsed?
 */
+
+function toggleNavList(type,toggleOrNot){
+    var position = -1;
+    if(type == "main") position = 4;
+    if(type == "shit") position = 5;
+    if(position == -1) return;
+
+    var fullSetting = getSettings("settings");
+    fullSetting.setting = (fullSetting.setting^(toggleOrNot<<position));
+    var ot = fullSetting.setting& (1<<position);
+    setCookie("settings", JSON.stringify(fullSetting));
+      
+    var eleText=document.getElementById(type+"NavToggle");
+    var eleFlex=document.getElementById(type+"flexList");
+    if(ot){
+        eleText.text="Close";
+        eleFlex.style.display="flex";
+    } else{
+        eleText.text="Open";
+        eleFlex.style.display="none";
+    }
+}
+
+function navListClick(type){
+    toggleNavList(type,1);
+}
 
 function toggleNav(toggleOrNot=1){
     togglePage(0,"navContainer","navCollapseText",toggleOrNot);
@@ -37,7 +66,6 @@ function getSettings(){
 }
 function togglePage(position,docCont,docColText,toggleOrNot){
     var fullSetting = getSettings("settings");
-
     fullSetting.setting = (fullSetting.setting^(toggleOrNot<<position));
 
     var ot = fullSetting.setting& (1<<position);
@@ -143,9 +171,12 @@ function regenerateBody(){
         ele.style.backgroundImage = "url("+fullSetting.imgLnk+")";
     }
 }
+
 function generatePageStyle(){
     toggleNav(0);
     toggleRecent(0);
+    toggleNavList('shit',0);
+    toggleNavList('main',0);
     regenerateBody();
 }
 

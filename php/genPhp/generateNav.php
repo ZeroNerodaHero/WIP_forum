@@ -9,17 +9,19 @@
     	echo " <div class=NewsNavLink>
             <a href='?page=news' class=navLink>[News]</a></div>";
     }
-    echo "<div class=navCategory>Main Boards:</div>";
+    echo "<div class=navCategory id=mainNavList> Main Boards: 
+        [ <a href=javascript:navListClick('main') id=mainNavToggle></a> ]</div>";
     getBoard("main",$cPage);
     /* -----------------------------------------------------------*/
 
-    echo "<div class=navCategory>Shit Boards:</div>";
+    echo "<div class=navCategory id=shitNavList> Shit Boards: 
+        [ <a href=javascript:navListClick('shit') id=shitNavToggle></a> ]</div>";
     getBoard("shit",$cPage);
     /* -----------------------------------------------------------*/
 
     function getBoard($boardType,$cPage){
         global $allBoards;
-    	echo "<div class=navFlexCont>";
+    	echo "<div class=navFlexCont id=".$boardType."flexList>";
 
         $pagetoGo = "?page=";
         foreach($allBoards as $row){
