@@ -36,7 +36,7 @@ function toggleNavList(type,toggleOrNot){
       
     var eleText=document.getElementById(type+"NavToggle");
     var eleFlex=document.getElementById(type+"flexList");
-    if(ot){
+    if(!ot){
         eleText.text="Close";
         eleFlex.style.display="flex";
     } else{
