@@ -6,12 +6,11 @@
             $curPage = $_GET["page"];
         }
 
+	$pageNo = 0;
+	if(!empty($_GET["pgN"])) $pageNo = $_GET["pgN"];
         if($curPage == "news"){
 	    echo "<script>showFuncButtons(0);</script>";
-
-	    $newsNo = 0;
-	    if(!empty($_GET["newsNo"])) $newsNo = $_GET["newsNo"];
-            generateNews($newsNo);            
+            generateNews($pageNo);            
         } else if($curPage == "blog"){
 			
         } else {
@@ -66,17 +65,13 @@
     }
 
     function generateBoard($board){
-        global $boardThreads;
+        global $boardThreads,$pgN,$threadsPerPage;
 	//post pinned threads
-        foreach($boardThreads as $row){
-            if($row["tags"] == "pin")
-                postThreads($row["title"],$row["time"],$row["threadId"],$row["postCnt"],"pin");
-        } 
-
-        //post normal threads
-        foreach($boardThreads as $row){
-            if($row["tags"]=="pin") continue;
-            postThreads($row["title"],$row["time"],$row["threadId"],$row["postCnt"]);
+        for($i = $pgN * $threadsPerPage, $j = 0; $j < $threadsPerPage && 
+         $i < count($boardThreads); $i++, $j++){
+            $row = $boardThreads[$i]; 
+            postThreads($row["title"],$row["time"],$row["threadId"],
+                $row["postCnt"],($row["tags"]=="pin" ? "pin" : ""));
         } 
     }
         

@@ -29,8 +29,17 @@ footer{
     box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.25);
 }
 
-#newsNavCont{
+#pageNavCont{
     float: right;
+}
+#curPageNav{
+    font-size:1.1rem;
+}
+.pageNavLinkFar{
+    font-size:0.75rem;
+}
+.pageNavLinkNear{
+    font-size:0.9rem;
 }
 
 #PageHeader{

@@ -4,6 +4,7 @@
     $tabTitle = "[news]";
 
     $threadTitle = "ERROR: THREAD DOESN'T EXIST";
+    $pgN = 0;
 
     $boardPageName = "news";
     if(!empty($_GET["page"]))
@@ -23,7 +24,17 @@
     $threadID = ($typeOfPage == 1) ? $_GET["TID"] : -1;
     $boardThreads = array();
     if($boardPageName != "news"){
-        $que = "SELECT * FROM ".$boardPageName."Threads ORDER BY time DESC";
+        //first the pin then everything else bc no need for double for loops
+        $que = "SELECT * FROM ".$boardPageName."Threads WHERE tags='pin'";
+        $res = $connBoards->query($que);
+
+        //never have to check this again? or use null
+	if($res->num_rows > 0){
+            while($row = $res->fetch_assoc())
+                $boardThreads[] = $row; 
+        }
+        $que = "SELECT * FROM ".$boardPageName."Threads WHERE tags IS NULL 
+                ORDER BY time DESC";
         $res = $connBoards->query($que);
 
         //never have to check this again? or use null

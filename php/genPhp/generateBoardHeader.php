@@ -1,24 +1,32 @@
 <?php
     $reLnk = '/php';
     $navStr = "<a href='$reLnk' class=bheaderLnk>FUNCEL.XYZ</a>";
+    //defined elsewhere
+    //$pgN = 0;
 
-    if(empty($_GET["page"]) || $_GET["page"] == "news"){
-        $newsPg = 0;
-        if(!empty($_GET["newsNo"])) $newsPg=$_GET["newsNo"];
+    if(empty($_GET["TID"]) ){
+        if(!empty($_GET["pgN"])) $pgN=$_GET["pgN"];
 
-        $leftN=max($newsPg-1,0);
-        $rightN=min($newsPg+1,$maxNews);
+        $maxPg = ($boardPageName == "news" ? $maxNews : 
+            intdiv(count($boardThreads)+$threadsPerPage-1, $threadsPerPage));
+        $leftN=max($pgN-1,0);
+        $rightN=min($pgN+1,$maxPg);
 
-        echo " <div id=newsNavCont> <span class=newsNavPart>".
-            (($newsPg != 0) ? 
-	    "<a href='?newsNo=".$leftN."' class=newsNavLink> <<< </a>" :
-	    " <<< " ).
-	    "</span> <span class=newsNavPart>" .
-	    (($newsPg+1 < $maxNews) ? 
-	    "<a href='?newsNo=".$rightN."' class=newsNavLink> >>> </a>" :
-	    " >>> ").
+        $redUrl="?page=".$boardPageName."&pgN=";
+        echo " <div id=pageNavCont> <span class=pageNavPart> Page: ".
+            (($pgN != 0) ? 
+	    "<a href='$redUrl"."0' class=pageNavLinkFar><<(First) </a>
+	    | <a href='$redUrl".$leftN."' class=pageNavLinkNear>".($leftN+1)." </a>" :
+            "<strike class=pageNavLinkFar> <<(First) </strike>" ). 
+            "<span id=curPageNav> [".($pgN+1) . "] </span>".
+	    "</span> <span class=pageNavPart>" .
+	    (($pgN+1 < $maxPg) ? 
+	    "<a href='$redUrl".$rightN."' class=pageNavLinkNear>".($rightN+1)." </a>
+	    | <a href='$redUrl".($maxPg-1)."' class=pageNavLinkFar> (Last)>> </a>" :
+	    "<strike class=pageNavLinkFar> (Last)>> </strike>").
 	    "</span> </div> ";
-    } else {
+    } 
+    if(!empty($_GET["page"]) ){ 
         $pageN = $_GET["page"];
         $reLnk .= "?page=".$pageN;
         $navStr .= " > <a href='$reLnk' class=bheaderLnk>".$pageN."</a>";
