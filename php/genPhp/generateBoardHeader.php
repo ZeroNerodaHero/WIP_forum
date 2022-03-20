@@ -7,8 +7,9 @@
     if(empty($_GET["TID"]) ){
         if(!empty($_GET["pgN"])) $pgN=$_GET["pgN"];
 
+        //intdiv doesn't work bc servers have different versions
         $maxPg = ($boardPageName == "news" ? $maxNews : 
-            intdiv(count($boardThreads)+$threadsPerPage-1, $threadsPerPage));
+            (int)((count($boardThreads)+$threadsPerPage-1)/$threadsPerPage));
         $leftN=max($pgN-1,0);
         $rightN=min($pgN+1,$maxPg);
 
