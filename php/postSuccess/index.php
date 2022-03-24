@@ -15,25 +15,34 @@
     <body class=postSuccessBody>
 
     <?php
-        $redirect = "php/?page=".$_GET['page'];
 
-        $isThread = empty($_GET["TID"]);
 	$hasCaptcha = isset( $_POST["g-recaptcha-response"]);
         $responseKeys;
 	if($hasCaptcha){
-		$captcha = $_POST["g-recaptcha-response"];
-		$url = 'https://www.google.com/recaptcha/api/siteverify?secret=' 
-		      . urlencode($captchaAPIkey) .  '&response=' . urlencode($captcha);
-        	$response = file_get_contents($url);
-        	$responseKeys = json_decode($response,true);
+            $captcha = $_POST["g-recaptcha-response"];
+	    $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' 
+	            . urlencode($captchaAPIkey) .  '&response=' . urlencode($captcha);
+            $response = file_get_contents($url);
+            $responseKeys = json_decode($response,true);
 	}
-
+        $isThread = empty($_GET["TID"]);
         $board = $_GET["page"];
+        $TID = NULL;
+        $redirect = "php/?page=".$board;
+
+        if(!($isThread)){
+            $TID = $_GET["TID"];
+            $redirect .= "&TID=".$TID;
+        }
         $time = 5000;
+        $resetPostTime = usrCanPost($posterId);
 
         if(checkBan($posterId)){
             $time = 5000;
             printPage("You're banned",true);
+        }
+        else if($resetPostTime != NULL){
+             printPage("You're posting too fast. Wait: ".$resetPostTime,true);
         }
 	else if(!$devPuter && (!$hasCaptcha || !$responseKeys["success"])){
 	    printPage("Bad Captcha ",true);
@@ -45,7 +54,7 @@
         } 
         //new post
         else if(!($isThread) && testString($_POST["content"],7500)){
-            manageNewPost($_POST["content"],$board,$_GET["TID"]);
+            manageNewPost($_POST["content"],$board,$TID);
         } else{
             $ppstr = "uh oh u might have typed or did something wrong";
             printPage($ppstr,true);
@@ -63,15 +72,9 @@
 	    }
 	    return $lenTit !=  $i;
 	}
-
+        //wtf?
         function manageNewPost($postContent,$board,$TID){
-            $newTable = $board."_".$TID;
-            $redirect = "/php/?page=".$_GET['page'];
-            $redirect = "&TID=".$TID;
-
             postComment($board,$TID,$postContent);
-            //bumpThread($board,$TID);
-            //swaped for update
         }
 
         function manageNewThread($postTitle,$postContent,$board){
@@ -320,7 +323,8 @@
         function printPage($msg,$error=false,$redirect=""){
             global $totalBury;
             if($redirect == ""){
-                $redirect = "/php/?page=".$_GET['page'];
+                $redirect = "/php/?page=".$_GET['page'].
+                    (empty($_GET['TID']) ? "":"&TID=".$_GET['TID']);
             }
             $buryPic = rand()%$totalBury;
 	    $messageError = (!$error) ? "postFine" : "postBad";
@@ -346,6 +350,7 @@
 	    if(!empty($_POST["content"])){
 	        echo "<div id=conEncap>
 	            Ur post if something goes wrong:<div id=conData>".
+                    (!empty($_POST["title"]) ? $_POST["title"]."<br>---<br>" : "").
 		    $_POST["content"] . "</div></div>";
             }
             

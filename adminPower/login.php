@@ -1,6 +1,6 @@
 <?php
 
-if(0){
+if(1){
 error_reporting(-1);
 ini_set('display_errors',1);
 }
@@ -42,7 +42,8 @@ ini_set('display_errors',1);
             }
              */
             $usrId = rand() << 32 | rand();
-            $que = "INSERT INTO usrList(usrId) VALUES($usrId)";
+            $que = "INSERT INTO usrList(usrId,lastPost) 
+                    VALUES($usrId,'0000-00-00 00:00:00')";
             myQuery($conn,$que);
             setcookie("usrId",$usrId,time()+(86400 * 365 * 5),"/");
             return $usrId;
@@ -97,6 +98,7 @@ ini_set('display_errors',1);
         return !empty($res) && $res->num_rows != 0; 
     }
 
+    //why did i combine the two?
     function updateUsrScore($usr_ID,$cnt){
         global $conn;
 
@@ -107,9 +109,32 @@ ini_set('display_errors',1);
 
     function updateUsrTime($usr_ID){
         global $conn;
-        $que = "UPDATE usrList SET lastPost=CURRENT_TIME
+        $que = "UPDATE usrList SET lastPost=CURRENT_TIMESTAMP
                 WHERE usrId=".$usr_ID;
         myQuery($conn,$que);
+    }
+    function usrCanPost($usr_ID){
+        global $conn;
+        $que = "SELECT lastPost,totalPoints FROM usrList WHERE usrId=".$usr_ID;
+
+        $res = $conn->query($que);
+        $lastPostTime = NULL;
+        $totalPoints=0;
+        if($res->num_rows > 0){
+            while($row = $res->fetch_assoc()){
+                $lastPostTime = $row["lastPost"]; 
+                $totalPoints = $row["totalPoints"];
+            }
+        }
+        if($lastPostTime == NULL) return NULL;
+        $newTime = max((750-$totalPoints)/10,0);
+        $lastTimeObj = date_create($lastPostTime);
+        $lastTimeObj->add(new DateInterval("PT".$newTime."S"));
+        $curDate = date_create();
+
+        if($lastTimeObj <= $curDate) return NULL;
+        $tmp = date_diff($lastTimeObj,$curDate);
+        return $tmp->format("%i:%s");
     }
 
     function echoImg($src,$toGo,$imgClass=''){
