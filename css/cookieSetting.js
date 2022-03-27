@@ -58,7 +58,7 @@ function toggleRecent(toggleOrNot=1){
 }
 function getSettings(){
     var settingCookieStr = getCookie("settings");
-    var fullSetting = {"setting":0,"imgLnk":"","color":"","opacity":"","font-size":"1em"};
+    var fullSetting = {"setting":4,"imgLnk":"","color":"","opacity":"","font-size":"1em"};
 
     if(settingCookieStr != "" && settingCookieStr[0] == "{")
         fullSetting = JSON.parse(settingCookieStr);
@@ -69,7 +69,6 @@ function togglePage(position,docCont,docColText,toggleOrNot){
     fullSetting.setting = (fullSetting.setting^(toggleOrNot<<position));
 
     var ot = fullSetting.setting& (1<<position);
-    //console.log(docCont + " " + ot + " " + fullSetting.setting);
     setCookie("settings", JSON.stringify(fullSetting));
 
     var ele = document.getElementById(docColText);
@@ -94,7 +93,6 @@ function setCookie(key,val){
     d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
     let expires = "expires="+d.toUTCString();
     document.cookie = key + "=" + val + ";" + expires + ";path=/";
-    console.log(document.cookie);
 }
 
 function getCookie(cname) {
@@ -121,7 +119,6 @@ function chngBkgType(opt){
     var fullSetting = getSettings("settings");
     if(opt) fullSetting.setting |= (1<<2);
     else fullSetting.setting &= (~(1<<2));
-    console.log(fullSetting.setting);
     //sets bit according to the opt
 
     setCookie("settings", JSON.stringify(fullSetting));
@@ -161,12 +158,10 @@ function regenerateBody(){
     //back to background color set the url of the img to ""
     var ele = document.getElementsByTagName("body")[0];
     if((fullSetting.setting & (1<<2))){
-        console.log("color");
         document.getElementById("bkgType_color").checked=true;
         ele.style.backgroundImage = "";
         ele.style.backgroundColor = fullSetting.color;
     } else {
-        console.log("imgLnk");
         document.getElementById("bkgType_img").checked=true;
         ele.style.backgroundImage = "url("+fullSetting.imgLnk+")";
     }

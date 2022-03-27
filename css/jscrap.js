@@ -1,5 +1,4 @@
 function quotePost(val){
-    console.log("post is " + val);
     document.getElementById("textArea").value += "##"+ val+"\n";
 }
 
@@ -21,8 +20,12 @@ function jumpPost(val){
     },500);
 }
 
-function threadRedirect(redirect){
-    window.location = redirect;
+function threadRedirect(redirect,TID){
+    var acclaim_ele = document.getElementById("acclaimTID_"+TID);
+    //console.log(acclaim_ele.matches(":hover"));
+    if(!acclaim_ele || (acclaim_ele && !acclaim_ele.matches(":hover"))){
+        window.location = redirect;
+    }
 }
 
 function headerRedirect(page){
@@ -106,7 +109,6 @@ function expandImg(){
 
     for(let it of allImg){
         it.addEventListener("click",function(){
-            console.log(it.style.width);
             it.style.width=(it.style.width != "100%") ?"100%":"100px";}
         );
     }
@@ -117,4 +119,87 @@ function precentToHex(p){
     var intVal = Math.round(p/100 * 255);
     var hexval = intVal.toString(16);
     return hexval.padStart(2,'0').toUpperCase();
+}
+
+function loadAcclaim(board,TID){
+    var xhttp = new XMLHttpRequest();
+    var ele = document.getElementById("acclaimTID_"+TID);
+
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200 && ele.innerHTML == "+"){
+        //if(this.readyState == 4 && this.status == 200){
+            ele.innerHTML = this.responseText;
+            document.addEventListener('click',function(event){
+                if(!ele.matches(":hover")){
+                    ele.innerHTML = "+"; 
+                    document.removeEventListener('click',arguments.callee);
+                    ele.style.backgroundColor="";
+                }
+            });
+        }
+    }
+
+    xhttp.open("GET","acclaimGenerator/loadAcclaim.php?board="+board+"&TID="+TID,true);
+    xhttp.send();
+}
+
+function expandEmote(ele){
+    var childImg = document.createElement("img");
+    childImg.id= "activeEmoteExpanded";
+    childImg.src= ele.src;
+
+    ele.parentElement.appendChild(childImg);
+
+    ele.style.boxShadow="0px 6px 0px -4px #000000";
+    ele.style.webkitBoxShadow="0px 6px 0px -4px #000000";
+}
+function deflateEmote(ele){
+    //assumes child exists
+    ele.parentElement.removeChild(ele.parentElement.lastChild);
+    ele.style.boxShadow="";
+    ele.style.webkitBoxShadow="";
+}
+function addEmote(ele,board,TID,opt){
+    //update the current points
+    //update the current emotes
+    var xhttp = new XMLHttpRequest();
+    var ele = document.getElementById("acclaimCont_"+TID);
+
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            //usr doesn't have enough points
+            if(this.responseText == "0"){
+                var errorBox= document.createElement("div");
+                errorBox.className= "acclaimErrorMsg";
+                errorBox.innerHTML = "ERROR: YOU DO NOT HAVE ENOUGH POINTS. "+
+                                    "NEED AT LEAST 100 FOR A EMOTE. START SLAVING BOI";
+                document.getElementById("boardHeader").appendChild(errorBox);
+                setTimeout(function(){
+                    errorBox.remove();
+                }, 2000);
+                return;
+            }
+
+            //usr has enough points
+            var eleChildren = ele.childNodes;
+            for(let it of eleChildren){
+                if(it.className=="acclaimList"){
+                    it.innerHTML = this.responseText;
+                }
+            }
+        }
+    };
+    xhttp.open("GET","acclaimGenerator/updateAcclaim.php?board="
+                +board+"&TID="+TID+"&opt="+opt,false);
+    xhttp.send();
+
+    var eleScore = document.getElementById("usrPointCount");
+
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            eleScore.innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("GET","acclaimGenerator/updateUsrScore.php",true);
+    xhttp.send();
 }
