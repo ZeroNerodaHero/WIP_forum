@@ -1,5 +1,5 @@
 <?php 
-    include_once("reuse.php");
+    include_once("../reuse.php");
     
     $que = "SELECT * FROM boards";
     $resb = $conn->query($que);
