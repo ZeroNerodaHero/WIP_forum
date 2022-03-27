@@ -2,7 +2,8 @@
     function genAcclaim($acclaimStr){
         //example str = "0:100,1:1,2:3,...
         $length = strlen($acclaimStr);
-        echo "<span class=acclaimList>";
+        echo "<span class=acclaimList".
+            ($length == 0 ? " style='background-color:#aaaaaa00'":"").">";
         for($i = 0; $i < $length; $i++){
             $key=0;$value = 0;
             while($i < $length && $acclaimStr[$i] != ":"){

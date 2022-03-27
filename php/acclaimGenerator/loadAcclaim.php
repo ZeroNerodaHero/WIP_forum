@@ -17,7 +17,7 @@
                 $totalPoints = $row["totalPoints"];
             }
         }
-        echo "<span id=usrPointCount> Points: ".$totalPoints . "</span> | ";
+        echo "Points: <span id=usrPointCount>".$totalPoints . "</span> | ";
         $totalEmotes = 3;
         for($i = 0; $i < $totalEmotes; $i++){
             echo "<img src='../../res/emotes/emote_$i.png' class=threadEmote id=threadEmote_$i
