@@ -1,6 +1,4 @@
 <?php
-    include_once("/var/www/html/adminPower/login.php");
-
     $pageTitle = (empty($_GET["page"])) ? "news" : $_GET["page"];
     if($pageTitle == "news"){
         echo "<div class=headTitle>WELCOME TO FUNCEL.XYZ</div>";

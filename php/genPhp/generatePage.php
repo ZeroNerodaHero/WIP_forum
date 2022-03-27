@@ -65,25 +65,34 @@
     }
 
     function generateBoard($board){
+        include_once("acclaimGenerator/listAcclaim_func.php");
         global $boardThreads,$pgN,$threadsPerPage;
 	//post pinned threads
         for($i = $pgN * $threadsPerPage, $j = 0; $j < $threadsPerPage && 
          $i < count($boardThreads); $i++, $j++){
             $row = $boardThreads[$i]; 
-            postThreads($row["title"],$row["time"],$row["threadId"],
-                $row["postCnt"],($row["tags"]=="pin" ? "pin" : ""));
+            //toss post acclaim here
+            postThreads($board,$row["title"],$row["time"],$row["threadId"],
+                $row["postCnt"],$row["acclaim"],($row["tags"]=="pin" ? "pin" : ""));
         } 
     }
         
-    function postThreads($title,$time,$TID,$postCnt,$classTag=""){
+    function postThreads($board,$title,$time,$TID,$postCnt,$acclaim,$classTag=""){
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
-        echo "<div id=p_$TID class=threadEncap onclick='threadRedirect(\"$newLink\")' >";
+        echo "<div id=p_$TID class=threadEncap onclick='threadRedirect(\"$newLink\",$TID)' >";
         echo "<span class=threadInfo>" . $time . " :::: TID: " .$TID. " | 
             (<span class=postCnter id=cnt_$TID> ".$postCnt." </span>) 
             <span id=pDiff_$TID></span>
             <a href='$newLink'> >>> </a></span>";
 		echo "<div class='thread_title $classTag'>" . $title . "</div>";
-        echo "<br><hr></div>";
+
+        echo "<div id=acclaimCont_$TID class=acclaimCont>";
+        genAcclaim($acclaim);
+        echo "<span id=acclaimTID_$TID class=acclaimDisplay 
+                onclick=loadAcclaim('$board',$TID)>+</span>";
+        echo "</div>";
+
+        echo "<hr></div>";
     }
 
     function generateThread($board,$TID){
