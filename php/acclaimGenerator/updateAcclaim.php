@@ -66,11 +66,12 @@
                         time='$oldTime'
                     WHERE threadId=$aTID";
             myQuery($connBoards,$que);
-    //echo $acclaimStr."<br>";
+
             $que = "UPDATE usrList 
                     SET totalPoints=".($totalPoints-100)."
                     WHERE usrId=$usrId";
             myQuery($conn,$que);
+
             genAcclaim($acclaimStr);
         }
     } else{

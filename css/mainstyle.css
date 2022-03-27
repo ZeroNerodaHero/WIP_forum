@@ -394,6 +394,7 @@ img:hover {
 .acclaimCont{
     margin-top: 1px;
     margin-bottom: 10px;
+    user-select: none;
 }
 .acclaimDisplay{
     z-index: 2;
@@ -404,6 +405,7 @@ img:hover {
     border-radius: 5px;
 
     background-color: red;
+    display: none;
 }
 .acclaimDisplay:hover{
     background-color: #ca0000;

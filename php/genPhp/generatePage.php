@@ -79,7 +79,8 @@
         
     function postThreads($board,$title,$time,$TID,$postCnt,$acclaim,$classTag=""){
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
-        echo "<div id=p_$TID class=threadEncap onclick='threadRedirect(\"$newLink\",$TID)' >";
+        echo "<div id=p_$TID class=threadEncap onclick='threadRedirect(\"$newLink\",$TID)' 
+                onmouseover=threadHover($TID) onmouseout=threadUnHover($TID) >";
         echo "<span class=threadInfo>" . $time . " :::: TID: " .$TID. " | 
             (<span class=postCnter id=cnt_$TID> ".$postCnt." </span>) 
             <span id=pDiff_$TID></span>

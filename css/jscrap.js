@@ -11,7 +11,6 @@ function jumpPost(val){
     ele.style.backgroundColor = "rgba(238,130,238,0.2)";
     ele.style.boxShadow = "0px -3px 1px 5px rgba(238,130,238,0.2)";
     ele.style.webkitBoxShadow = "0px -3px 1px 5px rgba(238,130,238,0.2)";
-    console.log(oldColor);
 
     setTimeout(function() {
         ele.style.backgroundColor = oldColor;
@@ -25,6 +24,24 @@ function threadRedirect(redirect,TID){
     //console.log(acclaim_ele.matches(":hover"));
     if(!acclaim_ele || (acclaim_ele && !acclaim_ele.matches(":hover"))){
         window.location = redirect;
+    }
+}
+
+function threadHover(TID){
+    var acclaim_ele = document.getElementById("acclaimTID_"+TID);
+    //console.log(acclaim_ele.matches(":hover"));
+    acclaim_ele.style.display = "inline";
+}
+function threadUnHover(TID){
+    var acclaim_ele = document.getElementById("acclaimTID_"+TID);
+    //console.log(acclaim_ele.matches(":hover"));
+    if(acclaim_ele.innerHTML == "+"){
+        acclaim_ele.style.display = "none";
+    } else{
+        document.addEventListener('click',function(event){
+            acclaim_ele.style.display = "none";
+            document.removeEventListener('click',arguments.callee);
+        });
     }
 }
 
@@ -184,7 +201,12 @@ function addEmote(ele,board,TID,opt){
             var eleChildren = ele.childNodes;
             for(let it of eleChildren){
                 if(it.className=="acclaimList"){
-                    it.innerHTML = this.responseText;
+                    it.outerHTML= this.responseText;
+                    if(this.responseText.length != 0){
+                        it.style.backgroundColor="#ff6ade";
+                        it.style.marginRight="10px";
+                    }
+                    break;
                 }
             }
         }
