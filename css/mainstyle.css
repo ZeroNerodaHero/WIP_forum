@@ -389,6 +389,9 @@ img:hover {
 /* VIDEO */
 .videoRed{
     font-size: 0.75rem;
+    overflow: hidden;
+    white-space: nowrap; /* Don't forget this one */
+    text-overflow: ellipsis;
 }
 /* acclaim stuff */
 .acclaimCont{
