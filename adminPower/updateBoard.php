@@ -26,6 +26,7 @@
                         tags VARCHAR(50) NULL,
                         postCnt int NOT NULL DEFAULT 0,
                         acclaim VARCHAR(999) NULL,
+                        newTag int NOT NULL DEFAULT 0,
                         PRIMARY KEY(threadId)
                     )";
 
