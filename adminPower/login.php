@@ -1,6 +1,6 @@
 <?php
 
-if(1){
+if(0){
 error_reporting(-1);
 ini_set('display_errors',1);
 }
@@ -134,7 +134,7 @@ ini_set('display_errors',1);
 
         if($lastTimeObj <= $curDate) return NULL;
         $tmp = date_diff($lastTimeObj,$curDate);
-        return $tmp->format("%i:%s");
+        return $tmp->format("%i minutes and %s seconds");
     }
 
     function echoImg($src,$toGo,$imgClass=''){
@@ -144,9 +144,9 @@ ini_set('display_errors',1);
 
     //use after post gets updated. not before. retard
     //also serves as a time updater
-    function updatePostCnt($board,$TID){
+    function updatePostCnt($board,$TID,$extra=""){
         global $connBoards;
-        $que = "SELECT * FROM $board"."_".$TID;
+        $que = "SELECT * FROM $board"."_".$TID.$extra;
         $res = $connBoards->query($que);
 
         $newPostCnt = $res->num_rows;

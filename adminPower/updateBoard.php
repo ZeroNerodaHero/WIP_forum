@@ -25,6 +25,7 @@
                         time TIMESTAMP,
                         tags VARCHAR(50) NULL,
                         postCnt int NOT NULL DEFAULT 0,
+                        acclaim VARCHAR(999) NULL,
                         PRIMARY KEY(threadId)
                     )";
 

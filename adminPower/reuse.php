@@ -17,7 +17,8 @@
                 <a href="deleteStuff.php" class=alink>Delete Stuff</a> | 
                 <a href="banList.php" class=alink>Ban List</a> </li> | 
                 <a href="wordBan.php" class=alink>Banned Words List</a> |
-                <a href="advertManager.php" class=alink>advertManager</a>
+                <a href="advertManager.php" class=alink>advertManager</a> |
+                <a href="updatemysqlPostCnt.php" class=alink>updateCnt</a>
             </div>';
     ?>
 </html> 
