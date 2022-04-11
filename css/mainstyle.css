@@ -479,17 +479,21 @@ img:hover {
 /*
  * img render
  */
-.imgRenderImage{
-    width: 100%;
+.imgContLayer{
     grid-area: reader;
+}
+.imgLayer{
+    width: 100%;
 }
 #imgCommentCont{
     grid-area: comment;
     justify-self: center;
 
-    top: 0;
+    top: 30px;
     position: -webkit-sticky;
     position: sticky;
+
+    height: fit-content;
 }
 .imgComment{
     width: 100%;

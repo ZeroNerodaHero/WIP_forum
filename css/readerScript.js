@@ -1,5 +1,6 @@
 var imgWidth = 0, imgHeight = 0, imgLeft = 0, imgTop= 0;
 var minSize = 4;
+var itCount = 0;
 
 //system matically generate all img.
 //post in succession
@@ -34,9 +35,19 @@ class commentRect{
         console.log(this.sx + ","+this.sy+" -> "+this.ex +","+this.ey);
     }
 }
+function imgRenderInit(board,threadId){
+    //for resizes
+    window.addEventListener('resize', function(){
+        if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
+            console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
+            console.log("resize "+(++itCount));
+            imgRenderInit(board,threadId);
 
-function imgRenderInit(){
-    var imgLayer = document.getElementById("imgRenderLayer");
+        }
+    });
+
+
+    var imgLayer = document.getElementById("imgContLayer");
     imgWidth = imgLayer.offsetWidth, 
     imgHeight = imgLayer.offsetHeight,
     imgLeft = (imgLayer.offsetLeft-imgLayer.style.marginLeft),
@@ -56,8 +67,7 @@ function imgRenderInit(){
     usrCanvas.height = botCanvas.height = highlightCanvas.height = imgHeight;
 
     var usrCommentEle= document.getElementById("usrCommentCont");
-    var usrCommentText= document.getElementById("usrCommentText");
-    genComments(botCtx,allComments);
+    genComments(botCtx,allComments,board,threadId);
 
     var isDown = false;
     var sx=0,sy=0,ex=0,ey=0;
@@ -79,28 +89,33 @@ function imgRenderInit(){
         } else{
             highlightRect(highlightCtx,event.offsetX,event.offsetY,allComments);
         }
-        usrCommentText.value = " " + sx + " " + sy + " " + ex+ " " +ey;
     });
     usrCanvas.addEventListener("mouseup",function(){
-        usrCommentText.value = " " + sx + " " + sy + " " + ex+ " " +ey;
         ex = event.offsetX;
         ey = event.offsetY;
         
-        if(Math.abs((ex-sx)*(ey-sy)) <= minSize){
-            //console.log(Math.abs((event.offsetX-sx)*(event.offsetY-sy)));
-            //console.log(event.offsetX+' '+sx+' '+event.offsetY+' '+sy);
-            usrCommentEle.style.display="none";
-        } else{
-            usrCommentEle.style.display="block";
-        }
+        if(isDown){
+            if(Math.abs((ex-sx)*(ey-sy)) <= minSize){
+                //console.log(Math.abs((event.offsetX-sx)*(event.offsetY-sy)));
+                //console.log(event.offsetX+' '+sx+' '+event.offsetY+' '+sy);
+                //console.log(sx+','+sy+"-->"+ex+","+ey);
+                usrCommentEle.style.display="none";
+            } else{
+                usrCommentEle.style.display="block";
+            }
 
-        drawRect(usrCtx,sx,sy,ex,ey);
-        isDown = false;
+            drawRect(usrCtx,sx,sy,ex,ey);
+            isDown = false;
+        }
     });
 
     var usrCommentButton= document.getElementById("usrCommentSubmit");
     usrCommentButton.addEventListener("click",function(){
-        postComment(sx,sy,ex,ey);
+        clearCanvas(usrCtx);
+        postComment(sx,sy,ex,ey,board,threadId);
+        clearCanvas(botCtx);
+        genComments(botCtx,allComments,board,threadId);
+        usrCommentEle.style.display="none";
     });
 }
 
@@ -112,7 +127,6 @@ function imgRenderInit(){
  * no position have to be set, function auto 
  */
 function drawRect(usrCtx,sx,sy,ex,ey,runclear=1,color="#123456a5",debug=0){
-    console.log(" " + sx + " " + sy + " " + ex+ " " +ey);
     if(runclear){
         clearCanvas(usrCtx);
     }
@@ -126,18 +140,20 @@ if(debug){
 }
 
 
-    usrCtx.fillRect(sx,sy, ex-sx,ey-sy);
-    usrCtx.strokeRect(sx,sy, ex-sx,ey-sy);
+    usrCtx.fillRect(sx,sy,ex-sx,ey-sy);
+    usrCtx.strokeRect(sx,sy,ex-sx,ey-sy);
 }
 
 function clearCanvas(ctx){
     ctx.clearRect(0,0,imgWidth, imgHeight);
 }
 
-//!!!maybe lose rectAr for an ajax call
-function genComments(ctx,rectAr){
+function genComments(ctx,rectAr,cBoard,cThread){
+    rectAr.length=0;
     const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "readerPhp/readerGetComments.php",false);
+    console.log("READER GET " + cBoard + "_"+cThread);
+    console.log("readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
+    xhttp.open("GET", "readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread,false);
     xhttp.send();
 
     var xmlDoc=xhttp.responseXML.getElementsByTagName("encap");
@@ -157,10 +173,7 @@ function genComments(ctx,rectAr){
             xmlDoc[i].getElementsByTagName("comment")[0].childNodes[0].nodeValue,
             xmlDoc[i].getElementsByTagName("time")[0].childNodes[0].nodeValue)
         );
-        rectAr[rectAr.length-1].print();
     }
-
-
 
     for(var cObj of rectAr){
         drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey,0);
@@ -172,7 +185,6 @@ function showComments(pos_x,pos_y,rectAr){
     deleteAllChildren(eleComments);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            console.log(cObj.strComment);
             var tmp = document.createElement("div");
             tmp.className = "imgComment";
             tmp.innerHTML = cObj.strComment;
@@ -196,21 +208,21 @@ function highlightRect(ctx,pos_x,pos_y,rectAr){
     }
 }
 
-function postComment(sx,sy,ex,ey){
+function postComment(sx,sy,ex,ey,cBoard,cThread){
+    console.log("POST "+cBoard + " " + cThread);
     var commentSec = document.getElementById("usrCommentText");
     var comment= commentSec.value;
-    comment += " " + sx + " " + sy + " " + ex + " " +ey;
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function() {
         //can do update or do a reload page here
         //document.getElementById("usrCommentText").value= this.responseText;
-        //maybe reuse genComments? as reload render
         console.log("COMMENT: "+this.responseText);
         commentSec.value = "";
     }
     sx = sx/imgWidth; sy = sy/imgHeight;
     ex = ex/imgWidth; ey = ey/imgHeight;
-    xhttp.open("POST", "readerPhp/readerAddCommentAjax.php");
+    xhttp.open("POST", "readerPhp/readerAddCommentAjax.php",false);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("sx="+sx+"&sy="+sy+"&ex="+ex+"&ey="+ey+"&comment="+comment);
+    xhttp.send("board="+cBoard+"&TID="+cThread+
+                "&sx="+sx+"&sy="+sy+"&ex="+ex+"&ey="+ey+"&comment="+comment);
 }

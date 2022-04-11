@@ -6,6 +6,10 @@
     $threadTitle = "ERROR: THREAD DOESN'T EXIST";
     $pgN = 0;
 
+    // threadType tells waht type
+    // 0:text, 1:anote
+    $threadType = 0;
+
     $boardPageName = "news";
     if(!empty($_GET["page"]))
         $boardPageName = $_GET["page"];
@@ -15,7 +19,6 @@
     $allBoards = array();
     while($row = $res->fetch_assoc())
         $allBoards[] = $row;
-            
 
 
     //if page is board = 0
@@ -39,12 +42,17 @@
 
         //never have to check this again? or use null
 	if($res->num_rows > 0){
-            while($row = $res->fetch_assoc())
+            while($row = $res->fetch_assoc()){
+                if($typeOfPage && $threadID == $row["threadId"]){
+                    $threadType = $row["newTag"];
+                }
                 $boardThreads[] = $row; 
+            }
         }
     }
     $threadContent = array();
-    if($typeOfPage == 1){
+    $threadContentSize = 0; 
+    if($typeOfPage == 1 && $threadType == 0){
         $que = "SELECT * FROM ".$boardPageName."_".$threadID;
         $res = $connBoards->query($que);
         
@@ -52,6 +60,11 @@
             while($row = $res->fetch_assoc())
                 $threadContent[] = $row; 
         }
+        $threadContentSize = sizeof($threadContent); 
+    } else if( $typeOfPage == 1 && $threadType == 1){
+        $que = "SELECT postId FROM ".$boardPageName."_".$threadID."_comments";
+        $res = $connBoards->query($que);
+        $threadContentSize = $res->num_rows;
     }
     /*
      *  allBoards -> done here to get the board descript and also used in nav

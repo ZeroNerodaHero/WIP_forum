@@ -1,21 +1,26 @@
 <?php
     //generate the boards 
     //overlay the image on top
-    function genImg($board,$TID){
+    function genImgThread($board,$TID){
         global $threadContent,$connBoards;
         //connect to mySql -> get all the images
         //in the while loop -> print
-        $que = "SELECT * FROM ".$board."_".$TID."_ImgLnks";
+        $que = "SELECT * FROM ".$board."_".$TID."_imgs";
         
         echo "<div id=imgRenderCont>";
-        echo "<span id=imgRenderLayer>
-                <img class=imgRenderImage src='../res/random/imgTest/p_0.jpeg'>
-                <img class=imgRenderImage src='../res/random/imgTest/p_1.jpeg'>
-                <img class=imgRenderImage src='../res/random/imgTest/p_2.jpeg'>
-                <img class=imgRenderImage src='../res/random/imgTest/p_3.jpeg'>
-                <img class=imgRenderImage src='../res/random/imgTest/p_4.jpeg'>
-              </span>";
-        echo "<span id=imgCommentCont>
+        echo "<div id=imgContLayer>";
+
+        $res = $connBoards->query($que);
+        if($res->num_rows > 0){
+            while($row = $res->fetch_assoc()){
+                echo "<img class='imgLayer' src='".$row["imgLnk"]."'>";
+            }
+        }
+        echo "</div>";
+
+        /*------------------------------------*/
+
+        echo "<div id=imgCommentCont>
                 <div id=usrCommentCont>
                     <div id=usrCommentTitle>
                         Comment:
@@ -29,34 +34,30 @@
                         Post</button>
                     </div>
                 </div>
-                <span id=otherCommentCont>
-                    <div class=imgComment>
-                    good
-                    </div>
-                </span>
-              </span>";
+                <div id=otherCommentCont>
+                </div>
+              </div>";
         echo "</div>";
 
         echo " <canvas id=lowerCanvas class=imgRenderCanvas></canvas>
                <canvas id=highlightCanvas class=imgRenderCanvas></canvas>
                <canvas id=upperCanvas class=imgRenderCanvas></canvas>";
-    
-        /*
-                <img class=imgRenderImage src='../res/emotes/emote_0.png'>
-                <img class=imgRenderImage src='../res/emotes/emote_1.png'>
-                <img class=imgRenderImage src='../res/emotes/emote_2.png'>
+        echo "<script> 
+                imgRenderInit('$board',$TID); 
 
-         */
+                //for bad img size 
+                //behavior happens bc of some reason.
+                //only a temp solution
+                setTimeout(() => {
+                    imgRenderInit('$board',$TID); 
+                }, 100);
+
+              </script>";
     }
 /* mySql table -> imgLink
  * pageNum
  * imgLink
  */
-    function genOverlayBot($query){
-        //connect to other table where all the rectangles are at
-        //generate only the rectangles and then call when usr touches
-
-    }
 /* mySql table -> imgComment
  * pId
  * userId

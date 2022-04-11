@@ -1,6 +1,7 @@
 <?php
     include_once("../../adminPower/login.php");
     include_once("integration.php");
+    include_once("postFunc.php");
     $posterId = getUsrID();
 ?>
 <!DOCTYPE html>
@@ -36,21 +37,25 @@
         }
         $time = 5000;
         $resetPostTime = usrCanPost($posterId);
+        //echo "is ".($_POST["anote"]=="yes")."<br>";
 
         if(checkBan($posterId)){
             $time = 5000;
             printPage("You're banned",true);
         }
         else if($resetPostTime != NULL){
-             printPage("You're posting too fast. Wait: ".$resetPostTime,true);
+            printPage("You're posting too fast. Wait: ".$resetPostTime,true);
         }
 	else if(!$devPuter && (!$hasCaptcha || !$responseKeys["success"])){
 	    printPage("Bad Captcha ",true);
 	}
         //new thread
         else if($isThread && testString($_POST["title"],301) && 
-                testString($_POST["content"],7500)){
-            manageNewThread($_POST["title"],$_POST["content"],$board);
+          testString($_POST["content"],7500)){
+            $opt = 0; 
+            if(!empty($_POST["anote"]) && ($_POST["anote"]=="yes"))
+                $opt = 1;
+            manageNewThread($_POST["title"],$_POST["content"],$board,$opt);
         } 
         //new post
         else if(!($isThread) && testString($_POST["content"],7500)){
@@ -61,43 +66,43 @@
             $time = 5000;
         }
 
-        function testString($strr,$maxLen){
-	    if(empty($strr) || strlen($strr) > $maxLen)
-	        return false;
-
-            $lenTit = strlen($strr);
-	    $i = 0;
-	    for(; $i < $lenTit; $i++){
-	        if($strr[$i] != ' ') break;
-	    }
-	    return $lenTit !=  $i;
-	}
         //wtf?
         function manageNewPost($postContent,$board,$TID){
             postComment($board,$TID,$postContent);
         }
 
-        function manageNewThread($postTitle,$postContent,$board){
-            global $connBoards,$maxThreads;
+        //type signifies 
+        //0 - normal text
+        //1 - anote thread
+        function manageNewThread($postTitle,$postContent,$board,$type=0){
+            global $connBoards;
 
             $postTitle = addslashes($postTitle); 
             if(!textVerify($postTitle)){
                 printPage("YOU SAID BAD WORD!!!",true);
                 return;
             }
-            $postTitle = parseTitle($postTitle);
+            $postTitle = parseText($postTitle);
             $postContent = addslashes($postContent); 
 
-            $que = "INSERT INTO ". $board. "Threads (title)
-                VALUES('$postTitle')";
+            $que = "INSERT INTO ". $board. "Threads (title".
+                ($type != 0 ? ",newTag":""). 
+                ") VALUES('$postTitle'".
+                ($type != 0 ? ",$type":"").")";
             myQuery($connBoards,$que);
  
             $threadId = $connBoards->insert_id;
-            $newTable = $board . "_" . $threadId;
-            $redirect = "/php/?page=".$_GET['page'];
+            $redirect = "/php/?page=".$board;
             $redirect .= "&TID=".$threadId;
 
+            if($type==0) manageNewTextThread($board,$threadId,$postContent);
+            else if($type==1) manageNewAnoteThread($board,$threadId,$postContent);
+        }
+            
+        function manageNewTextThread($board,$threadId,$postContent){
+            global $connBoards,$maxThreads;
             //create post table and post
+            $newTable = $board . "_" . $threadId;
             $que = "CREATE TABLE " . $newTable . "(
                         postId int NOT NULL AUTO_INCREMENT,
                         time TIMESTAMP,
@@ -165,36 +170,6 @@
             $que = "UPDATE ".$board."Threads SET time=CURRENT_TIMESTAMP
                     WHERE threadId='$tid'";
             myQuery($connBoards,$que);
-        }
-
-        //what I need to do here is make sure that no more than two newlines
-        //are used, no bed werd, uh oh stinky and new lines < 30
-        function textVerify($content){
-            $ws = 0; $we = 0;
-            $clen = strlen($content);
-            $retStr = $content;
-
-            //counts new lines
-            $cntNL = 0;
-            while($ws < $clen){
-                while($we < $clen && $content[$we] != ' ' 
-                      && $content[$we] != "\n" &&
-                      $content[$we] != "\r" && $content[$we] != "\r\n" &&
-                      $content[$we] != "\n\r"){
-                        $we++;
-                }
-
-                //check is it is a bad word
-                $word = substr($content,$ws,$we-$ws);
-                if(isBadWord($word)) return false;
-                
-                if($content[$we] == "\n" || $content[$we] == "\r\n" || 
-                   $content[$we] == "\n\r"){
-                        $cntNL++;
-                }
-                $ws = ++$we;
-            }
-            return $cntNL < 30; 
         }
 
         //essentially posts 
@@ -314,12 +289,6 @@
             return $retStr;
         }
 
-        function parseTitle($title){
-            $retStr = $title;
-            $retStr = str_replace("<","&lt;",$retStr);
-            $retStr = str_replace(">","&gt;",$retStr);
-            return $retStr;
-        }
         function printPage($msg,$error=false,$redirect=""){
             global $totalBury;
             if($redirect == ""){
@@ -363,9 +332,45 @@
                 </script> ';
 
         }
-        class myPair{
-            public $first;
-            public $second;
+
+        function manageNewAnoteThread($board,$TID,$commentStr){
+            global $connBoards;
+            echo $commentStr . "<br>";
+            $imgAr = array();
+            $CLEN = strlen($commentStr); 
+            for($i = 0; $i < $CLEN;$i++){
+                $j = $i;
+                while($j < $CLEN && $commentStr[$j] != ',') $j++;
+                array_push($imgAr,substr($commentStr,$i,($j-$i)));
+                $i = $j;
+            }
+
+            //create new table of img link, page no
+            $que = "CREATE TABLE ".$board."_".$TID."_imgs(
+                        pgNo int auto_increment,
+                        imgLnk varchar(400), 
+                        primary key(pgNo))";
+            myQuery($connBoards,$que);
+
+            foreach($imgAr as $imgLnk){
+                echo $imgLnk . "<br>";
+                $que = "INSERT INTO ".$board."_".$TID."_imgs(imgLnk)
+                        VALUES('$imgLnk')";
+                myQuery($connBoards,$que);
+            }
+            
+            $que = "CREATE TABLE ".$board."_".$TID."_comments( 
+                        postId int NOT NULL AUTO_INCREMENT, 
+                        userID long, 
+                        sx float, 
+                        sy float, 
+                        ex float, 
+                        ey float, 
+                        comment varchar(5000), 
+                        time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+                        primary key(postId))";
+            myQuery($connBoards,$que);
+            printPage("NEW ANOTE THREAD");
         }
     ?>
     </body>

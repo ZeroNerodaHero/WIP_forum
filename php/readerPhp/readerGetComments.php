@@ -1,13 +1,11 @@
 <?php
     header('Content-Type:text/xml');
     include_once("../../adminPower/login.php");
-    $connTest = mysqli_connect($servername,$user,$pass,"testDB") 
-        or die("can't connect to mySql");
 
-    $source = "imgRenderTest";
+    $source = $_GET["board"]."_".$_GET["TID"]."_comments";
     $que = "SELECT * FROM ".$source;
 
-    $res = $connTest->query($que);
+    $res = $connBoards->query($que);
     echo "<ALL>";
     if($res->num_rows > 0){
         while($row = $res->fetch_assoc()){

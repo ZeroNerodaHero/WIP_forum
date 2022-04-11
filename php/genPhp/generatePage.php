@@ -1,10 +1,7 @@
 <?php
     function generatePage(){
-        global $allBoards,$boardPageName;
-        $curPage = "news";
-        if(!empty($_GET["page"])){
-            $curPage = $_GET["page"];
-        }
+        global $allBoards,$boardPageName,$threadType;
+        $curPage = $boardPageName;
 
 	$pageNo = 0;
 	if(!empty($_GET["pgN"])) $pageNo = $_GET["pgN"];
@@ -12,7 +9,6 @@
 	    echo "<script>showFuncButtons(0);</script>";
             generateNews($pageNo);            
         } else if($curPage == "blog"){
-			
         } else {
             //just to verify if this is fine
             $hasBoard = 0;
@@ -25,8 +21,13 @@
             if($hasBoard){
                 if(!empty($_GET["TID"])){
                     $TID = $_GET["TID"];
-                    generateThread($curPage,$TID);
-                    createNewComment($curPage,$TID);
+                    if($threadType == 1){
+                        include_once("genPhp/generateImgRender.php");
+                        genImgThread($curPage,$TID); 
+                    } else{
+                        generateThread($curPage,$TID);
+                        createNewComment($curPage,$TID);
+                    }
                 } else{
                     generateBoard($curPage);
                     createNewThread($curPage);
@@ -133,10 +134,11 @@
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post">
             Title: <input type="text" name="title" class="tit" size="65"> 
-            <input type="submit" value="Post">.
+            Anote Thread: <input type="checkbox" name="anote" value="yes">
+            <input type="submit" value="Post"><br>
             Message: <br> ' .
             showTextArea() .
-            '<div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
+            ' <div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
                 data-sitekey="6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_">
             </div></div><br>
         </form></div>'; 

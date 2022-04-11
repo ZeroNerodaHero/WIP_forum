@@ -6,6 +6,7 @@
         <script type="text/javascript" src="../css/jscrap.js"></script>
         <script type="text/javascript" src="../css/cookieSetting.js"></script>
         <script type="text/javascript" src="../css/lastView.js"></script>
+        <script type="text/javascript" src="../css/readerScript.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
         <?php
@@ -126,7 +127,8 @@
     <?php
         if($typeOfPage == 1){
             echo "<script>
-                var totalContent=".sizeof($threadContent)."
+                var totalContent=".$threadContentSize.";
+                console.log('SIZE' + totalContent);
                 updateLastThread('$boardPageName',$threadID,totalContent);
                 </script>";
         } else {

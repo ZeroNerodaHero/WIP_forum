@@ -13,8 +13,7 @@ function integrate_IMG($tmpLNK,$option=""){
         }
     }
     return "<div style=\'display:inline-flex;flex-wrap:wrap;gap:6px;\'>" 
-        . $retML 
-        . "</div>";
+        . $retML . "</div>";
 }
 
 /* ------------------IMG ENDS----------------------*/
