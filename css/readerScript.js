@@ -1,5 +1,7 @@
+var global_lineWidth = 2;
 var imgWidth = 0, imgHeight = 0, imgLeft = 0, imgTop= 0;
 var minSize = 4;
+var maxX=-1,maxY=-1,minX=-1,minY=-1;
 var itCount = 0;
 
 //system matically generate all img.
@@ -39,8 +41,8 @@ function imgRenderInit(board,threadId){
     //for resizes
     window.addEventListener('resize', function(){
         if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
-            console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
-            console.log("resize "+(++itCount));
+            //console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
+            //console.log("resize "+(++itCount));
             imgRenderInit(board,threadId);
 
         }
@@ -79,12 +81,22 @@ function imgRenderInit(board,threadId){
         isDown = true;
         sx = event.offsetX;
         sy = event.offsetY;
+        maxX=sx,maxY=sy,minX=sx,minY=sy;
+
+        //clear whole canvas
+        clearCanvas(usrCtx);
         showComments(event.offsetX,event.offsetY,allComments);
     });
     usrCanvas.addEventListener("mousemove",function(){
         if(isDown){
             ex = event.offsetX;
             ey = event.offsetY;
+            maxX=Math.max(maxX,ex),maxY=Math.max(maxY,ey);
+            minX=Math.min(minX,ex),minY=Math.min(minY,ey);
+            //console.log(minX+","+minY+":::"+maxX+","+maxY);
+
+            //clear from min to max
+            clearCanvas(usrCtx,minX,minY,maxX,maxY,0);
             drawRect(usrCtx,sx,sy,event.offsetX,event.offsetY);
         } else{
             highlightRect(highlightCtx,event.offsetX,event.offsetY,allComments);
@@ -95,6 +107,9 @@ function imgRenderInit(board,threadId){
         ey = event.offsetY;
         
         if(isDown){
+            maxX=Math.max(maxX,ex),maxY=Math.max(maxY,ey);
+            minX=Math.min(minX,ex),minY=Math.min(minY,ey);
+
             if(Math.abs((ex-sx)*(ey-sy)) <= minSize){
                 //console.log(Math.abs((event.offsetX-sx)*(event.offsetY-sy)));
                 //console.log(event.offsetX+' '+sx+' '+event.offsetY+' '+sy);
@@ -104,6 +119,7 @@ function imgRenderInit(board,threadId){
                 usrCommentEle.style.display="block";
             }
 
+            clearCanvas(usrCtx,minX,minY,maxX,maxY,0);
             drawRect(usrCtx,sx,sy,ex,ey);
             isDown = false;
         }
@@ -126,12 +142,9 @@ function imgRenderInit(board,threadId){
  * max x,y
  * no position have to be set, function auto 
  */
-function drawRect(usrCtx,sx,sy,ex,ey,runclear=1,color="#123456a5",debug=0){
-    if(runclear){
-        clearCanvas(usrCtx);
-    }
+function drawRect(usrCtx,sx,sy,ex,ey,color="#123456a5",debug=0){
     usrCtx.strokeStyle = 'black';
-    usrCtx.lineWidth   = 2;
+    usrCtx.lineWidth   = global_lineWidth;
     usrCtx.fillStyle=color;
 //debug
 if(debug){
@@ -144,28 +157,34 @@ if(debug){
     usrCtx.strokeRect(sx,sy,ex-sx,ey-sy);
 }
 
-function clearCanvas(ctx){
-    ctx.clearRect(0,0,imgWidth, imgHeight);
+function clearCanvas(ctx,sx=0,sy=0,ex=imgWidth,ey=imgHeight,isCanvas=true){
+    if(!isCanvas){
+        sx=Math.max(0,sx-global_lineWidth);
+        sy=Math.max(0,sy-global_lineWidth);
+        ex=Math.min(ex+global_lineWidth, imgWidth);
+        ey=Math.min(ey+global_lineWidth, imgHeight);
+    }
+    ctx.clearRect(sx,sy,(ex-sx),(ey-sy));
 }
 
 function genComments(ctx,rectAr,cBoard,cThread){
     rectAr.length=0;
     const xhttp = new XMLHttpRequest();
-    console.log("READER GET " + cBoard + "_"+cThread);
-    console.log("readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
+    //console.log("READER GET " + cBoard + "_"+cThread);
+    //console.log("readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
     xhttp.open("GET", "readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread,false);
     xhttp.send();
 
     var xmlDoc=xhttp.responseXML.getElementsByTagName("encap");
     for(var i = 0; i < xmlDoc.length; i++){
         var cSx = parseFloat(xmlDoc[i].getElementsByTagName("sx")[0].childNodes[0].nodeValue);
-        cSx*= imgWidth;
+        cSx = Math.floor(cSx*imgWidth);
         var cSy = parseFloat(xmlDoc[i].getElementsByTagName("sy")[0].childNodes[0].nodeValue);
-        cSy*= imgHeight;
+        cSy = Math.floor(cSy*imgHeight);
         var cEx = parseFloat(xmlDoc[i].getElementsByTagName("ex")[0].childNodes[0].nodeValue);
-        cEx*= imgWidth;
+        cEx = Math.floor(cEx*imgWidth);
         var cEy = parseFloat(xmlDoc[i].getElementsByTagName("ey")[0].childNodes[0].nodeValue);
-        cEy*= imgHeight;
+        cEy = Math.floor(cEy*imgHeight);
         rectAr.push(new commentRect(
             xmlDoc[i].getElementsByTagName("postId")[0].childNodes[0].nodeValue,
             xmlDoc[i].getElementsByTagName("userID")[0].childNodes[0].nodeValue,
@@ -176,7 +195,7 @@ function genComments(ctx,rectAr,cBoard,cThread){
     }
 
     for(var cObj of rectAr){
-        drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey,0);
+        drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey);
     }
 }
 
@@ -203,20 +222,20 @@ function highlightRect(ctx,pos_x,pos_y,rectAr){
     clearCanvas(ctx);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey,0);
+            drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey);
         }
     }
 }
 
 function postComment(sx,sy,ex,ey,cBoard,cThread){
-    console.log("POST "+cBoard + " " + cThread);
+    //console.log("POST "+cBoard + " " + cThread);
     var commentSec = document.getElementById("usrCommentText");
     var comment= commentSec.value;
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function() {
         //can do update or do a reload page here
         //document.getElementById("usrCommentText").value= this.responseText;
-        console.log("COMMENT: "+this.responseText);
+        //console.log("COMMENT: "+this.responseText);
         commentSec.value = "";
     }
     sx = sx/imgWidth; sy = sy/imgHeight;

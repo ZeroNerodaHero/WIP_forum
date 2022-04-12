@@ -484,6 +484,9 @@ img:hover {
 }
 .imgLayer{
     width: 100%;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 #imgCommentCont{
     grid-area: comment;

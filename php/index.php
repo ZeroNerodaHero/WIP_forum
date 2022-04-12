@@ -128,7 +128,6 @@
         if($typeOfPage == 1){
             echo "<script>
                 var totalContent=".$threadContentSize.";
-                console.log('SIZE' + totalContent);
                 updateLastThread('$boardPageName',$threadID,totalContent);
                 </script>";
         } else {

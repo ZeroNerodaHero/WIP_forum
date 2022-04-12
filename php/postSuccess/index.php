@@ -335,12 +335,25 @@
 
         function manageNewAnoteThread($board,$TID,$commentStr){
             global $connBoards;
-            echo $commentStr . "<br>";
+
+            $imgFormat = array(".apng",".gif",".jpg", ".jpeg",".png",".svg");
+
             $imgAr = array();
             $CLEN = strlen($commentStr); 
             for($i = 0; $i < $CLEN;$i++){
                 $j = $i;
-                while($j < $CLEN && $commentStr[$j] != ',') $j++;
+                $periodStart=0;
+                while($j < $CLEN && $commentStr[$j] != ','){
+                    $j++;
+                    if($commentStr[$j] == '.'){
+                        //you might wonder why that it starts at .
+                        //instead of +1, bc i corner case where the 
+                        //user doens't finish the link. not going to occur
+                        $periodStart = $j;
+                    }
+                }
+                //format to be working on later
+                $cFormat = substr($commentStr,$periodStart,($j-$periodStart));
                 array_push($imgAr,substr($commentStr,$i,($j-$i)));
                 $i = $j;
             }
