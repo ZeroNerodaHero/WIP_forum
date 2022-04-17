@@ -70,7 +70,7 @@ footer{
     border-bottom: 2px solid black;
 }
 
-#ruleAgree{
+#topLnkCont{
     display: inline-flex;
     float: right;
 }
@@ -84,7 +84,7 @@ footer{
     color: #197500;
 }
 
-#rules{
+#mainContent{
     background-color: #606060;
     padding:1%;
     color: white;

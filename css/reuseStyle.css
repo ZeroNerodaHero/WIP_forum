@@ -1,0 +1,14 @@
+#miscLnk{
+    margin-top: 5px;
+    text-align: center;
+    font-size: 0.8rem;
+}
+.contactGen{
+    padding: 3px;
+    color: white;
+    background-color: grey;
+    border: 1px solid black;
+}
+.contactGen:hover{
+    color: #272727;
+}

@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="../css/mainstyle.css">
+        <link rel="stylesheet" href="../css/reuseStyle.css">
         <link rel="icon" href="../res/icon/icon_0.png">
         <script type="text/javascript" src="../css/jscrap.js"></script>
         <script type="text/javascript" src="../css/cookieSetting.js"></script>
@@ -119,6 +120,11 @@
 
             <div class = "advert">
 	        <?php include_once('genPhp/generateAdvert.php'); ?>
+            </div>
+            <div id="miscLnk">
+                <a class=contactGen href="miscPg/advertisment.html">
+                    Advertisment
+                </a>
             </div>
         </div>
     </div>
