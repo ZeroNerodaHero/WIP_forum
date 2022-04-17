@@ -107,7 +107,7 @@ function integrate_TXT($tmpTXT,$option=""){
         }
     }
 
-    $newStr = $tagLeft."<span style=\'".$style."\'>".$tmpTXT .
+    $newStr = $tagLeft."<span style='".$style."'>".$tmpTXT .
             "</span>".$tagRight;
     return $newStr;
 }

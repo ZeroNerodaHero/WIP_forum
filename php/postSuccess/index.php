@@ -124,7 +124,7 @@
                 while($row = $res->fetch_assoc()){
 		    if($diff <= 0) continue;
                     if($row['tags'] == 'pin') continue;
-		    echo "current row ".$row["threadId"];
+		    //echo "current row ".$row["threadId"];
 
                     $que = "DROP TABLE ".$board."_".$row["threadId"];
                     myQuery($connBoards,$que);
@@ -179,7 +179,7 @@
         //it is slow of course
         //optimize
         function postParser($content){
-            $ws = 0; $we = 0;
+            $ws = 0; 
             $clen = strlen($content);
             $retStr = $content;
 
@@ -187,7 +187,9 @@
             $cntNL = 0;
 
             while($ws < $clen){
+
                 //this is used for pink text
+                $we = 0;
                 if($content[$ws] == "~"){
                     while($we < $clen && $content[$we] != "\n" &&
                       $content[$we] != "\r" && $content[$we] != "\r\n" &&
@@ -195,6 +197,7 @@
                         $we++;      
                     }
                     //>hello -> <div style="color:pink">hello</div>
+                    //-1 because this includes "/n"
                     $tobeReplace = substr($content,$ws,$we-$ws);
                     $retStr = str_replace($tobeReplace,
                         //"<div style='color:pink'>".$tobeReplace."</div>",$retStr);
@@ -204,62 +207,84 @@
                     $ws = ++$we;
                     continue;
                 }
-
-                //i canot understadn what character html uses for newlines wtf
-                //i do have a problem where the skips for characters are wrong
-                while($we < $clen && $content[$we] != ' ' && $content[$we] != "\n" &&
+                //dont forget escape character after anything wtf
+                if($ws+2 < $clen && $content[$ws] == "#" && $content[$ws+1] == "#"){
+                    //plus 2 to skip over "##" -> we can assume does not hit max size
+                    $we = $ws+2;
+                    while($we < $clen && $content[$we] != "\n" &&
                       $content[$we] != "\r" && $content[$we] != "\r\n" &&
                       $content[$we] != "\n\r"){
                         $we++;
-                }
-                //check if string is special case
-                $word = substr($content,$ws,$we-$ws);
-
-                $wlen = strlen($word);
-                //dont forget escape character after anything wtf
-                if($wlen > 2 && $word[0] == "#" && $word[1] == "#"){
-                    $goTo= substr($word,2);
+                    }
+                    //
+                    //the 2 here is the offset from ## and \n
+                    $goTo= substr($content,$ws+2,($we-$ws-2));
+                    $oldTXT = substr($content,$ws,($we-$ws));
                     $replace = "<a href='javascript:jumpPost(\"pd$goTo\")'>" .
-                        $word . "</a>";
+                        "##".$goTo. "</a>";
 
-                    $retStr = str_replace($word,$replace,$retStr);
+                    $retStr = str_replace($oldTXT,$replace,$retStr);
                     
                     $ws = ++$we;
                     continue;
                 }
-
-                //[tag](URI){option}
-
-                $option = 0; $cpo = 0;
-                $leftChar = array('[','(','{');
-                $rightChar = array(']',')','}');
+                //i canot understadn what character html uses for newlines wtf
+                //i do have a problem where the skips for characters are wrong
+                $isComplete=0; $lastSet = -1;
                 $pos = array(-1,-1,-1,-1,-1,-1);
-                //search and find next `
-                for($i = $ws; $i < $we; $i++,$option++){
-                    while($i < $we && $content[$i] != $leftChar[$option]){
-                        $i++;
+                $sepType = array( "[", "]", "(", ")", "{", "}");
+
+                $we = $ws;
+                while($we < $clen && $content[$we] != "\n" &&
+                  $content[$we] != "\r" && $content[$we] != "\r\n" &&
+                  $content[$we] != "\n\r"){
+                    $doubleBreak=0;
+                    $isInArray = 0;
+
+                    for($sepIt = 0; $sepIt < 6; $sepIt++){
+                        //essentailly if char == one of the [](){} -> check if set
+                        //if not set then set and break
+                        if($content[$we] == $sepType[$sepIt] && $pos[$sepIt] == -1){
+                            $isInArray = 1;
+                            $pos[$sepIt]=$we;
+                            $lastSet++;
+
+                            //complete break bc meets }
+                            if($sepId == 5){
+                                $doubleBreak = 1;
+                            }
+                            break;
+                        }
                     }
-                    if($content[$i] == $leftChar[$option])
-                        $pos[$cpo++] = ++$i;
-                    while($i < $we && $content[$i] != $rightChar[$option]){
-                        $i++;
-                    } 
-                    if($content[$i] == $rightChar[$option])
-                        $pos[$cpo++] = $i;
+                    $we++;
+                    if($doubleBreak) break;
+                    if($isInArray) continue;
+                    else if($lastSet & 1){
+                        //essentailly if it is anything else(ie character or space)
+                        //-> we need to make sure that it is between a [,(,{
+                        //if it is even -> we can place a character of any type
+                        break;
+                    }
                 }
-                if($pos[0] != -1 && $pos[1] != -1 && 
-                        $pos[2] != -1 && $pos[3] != -1){
-                    $tmpTYPE = substr($content,$pos[0], $pos[1]-$pos[0]);
-                    $tmpLNK = substr($content,$pos[2], $pos[3]-$pos[2]);
+                //[tag](URI){option}
+                //lastSet max is 5 bc starts from -1
+                //or if lastSet is odd
+                $isComplete = ($lastSet == 5) || ($lastSet == 3);
+
+                if($isComplete){
+                    $tmpTYPE = substr($content,$pos[0]+1, $pos[1]-$pos[0]-1);
+                    $tmpLNK = substr($content,$pos[2]+1, $pos[3]-$pos[2]-1);
 
                     $tmpOPT = ""; 
                     if($pos[5] != -1){
-                        $tmpOPT= substr($content,$pos[4],$pos[5]-$pos[4]);
+                        $tmpOPT= substr($content,$pos[4]+1,$pos[5]-$pos[4]-1);
                     } else{
                         //have to set pos[5] as pos[3] bc the str replace
                         //changes
+                        //this is just optimzation so no extra if is needed
                         $pos[5] = $pos[3];
                     }
+                    //echo "TYPE " .$tmpTYPE. "<br>LNK " .$tmpLNK. "<br>OPT " .$tmpOPT."<br>";
 
                     $newStr = substr($content,$ws,$we-$ws);
 
@@ -279,7 +304,7 @@
                     //i made this is that the endpoints are not
                     //counted...have to add 2
                     //old ver that replaces the whole word
-                    $findStr = substr($content,$pos[0]-1,$pos[5]-$pos[0]+2); 
+                    $findStr = substr($content,$pos[0],$pos[5]-$pos[0]+1); 
 
                     $retStr = str_replace($findStr,$newStr,$retStr);
                 }
@@ -366,7 +391,7 @@
             myQuery($connBoards,$que);
 
             foreach($imgAr as $imgLnk){
-                echo $imgLnk . "<br>";
+                //echo $imgLnk . "<br>";
                 $que = "INSERT INTO ".$board."_".$TID."_imgs(imgLnk)
                         VALUES('$imgLnk')";
                 myQuery($connBoards,$que);
