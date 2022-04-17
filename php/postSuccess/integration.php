@@ -2,12 +2,15 @@
 function integrate_IMG($tmpLNK,$option=""){
     $retML = "";
     $curLNK = "";
+    $multipleIMG = 0;
 
     $tmpLNK .= ",";
     for($i = 0; $i < strlen($tmpLNK); $i++){
         if($tmpLNK[$i] == ','){
+            if($multipleIMG) $retML .="<span class='flexBoxGap'>.</span>";
             $retML .= "<img src='" . $curLNK . "'>";
             $curLNK = "";
+            $multipleIMG = 1;
         }  else{
             $curLNK .= $tmpLNK[$i];
         }

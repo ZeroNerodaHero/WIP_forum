@@ -543,3 +543,8 @@ img:hover {
     margin-right: 3%;
     text-align: right;
 }
+/*for the span on the flexbox
+*/
+.flexBoxGap{
+    color: #12345600;
+}
