@@ -49,7 +49,7 @@
                     $deletePg=$deleteRed."&PID=".$rpid;
                     $banPg =$banGen . "&PID=".$rpid;
 
-                    echo "<th>".$rcontent."</th>
+                    echo "<th><div class=usrComment>".$rcontent."</div></th>
                         <th>".$rpid."</th>
                         <th>".$rtime."</th> ";
                     echo '<th> <form action='.$deletePg.' method="post">
@@ -87,7 +87,8 @@
                     $tmp = $redirect . "&TID=".$rtid;
                     $deletePg = $deleteRed . "&TID=".$rtid;
 
-                    echo "<th>".$rtitle."</th><th>".$rtid."</th><th>".$rtime."</th>
+                    echo "<th><div class=usrComment>".$rtitle."</div></th>
+                          <th>".$rtid."</th><th>".$rtime."</th>
                           <th>".$rtags."</th><th><a href='$tmp'> > </a></th>";
                     echo '<th> <form action='.$deletePg.' method="post">
                             <input type="text" name="pword" size="5"> 
@@ -106,7 +107,8 @@
 
             if($res->num_rows > 0){
                 echo "<table>";
-                echo "<th>Board Name</th><th>TYPE</th><th>GOTO</th><th>EDIT DESC</th>";
+                echo "<th>Board Name</th><th>TYPE</th><th>GOTO</th>
+                      <th>EDIT DESC(NEW DESC/pword)</th>";
                 while($row = $res->fetch_assoc()){
                     echo "<tr>";
                     $bname = $row["boardName"];
@@ -135,5 +137,8 @@
             }
         }
     ?>
+    <p>
+        penispenis
+    </p>
     </body>
 </html> 

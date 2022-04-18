@@ -21,7 +21,7 @@ ul {
 
 .topTools{
     color: pink;
-	margin-bottom: 2%;
+    margin-bottom: 2%;
 }
 
 
@@ -30,8 +30,22 @@ ul {
 }
 
 img{
-	width: 100px;
+    width: 100px;
 }
 img:hover{
-	width: 100%;
+    width: 100%;
+}
+.usrComment{
+    text-align: left;
+    margin: 1%;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
+}
+.usrComment:hover{
+    overflow: visible;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
