@@ -11,6 +11,9 @@
             echo "<div>/".$pageTitle."/</div>";
         } else{
             echo "<div class=headTitle>/".$pageTitle."/</div>";
+            if(!empty($_GET["pgN"]) &&  $_GET["pgN"] > 0){
+                echo "<script type='text/javascript'>headerRedirect('$pageTitle')</script>";
+            }
         }
     }
     /*

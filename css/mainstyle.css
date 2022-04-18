@@ -249,6 +249,9 @@ footer{
     margin-right: 2%;
     word-wrap: break-word;
 }
+.pageHeaderHover:hover{
+    background-color:red;
+}
 .headText{
     font-size: 20px; 
 }

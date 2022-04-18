@@ -46,9 +46,13 @@ function threadUnHover(TID){
 }
 
 function headerRedirect(page){
-    document.getElementById("PageHeader").addEventListener("click",
-        function() { window.location = "?page="+page; }
-    );
+    var header_ele = document.getElementById("PageHeader");
+    header_ele.addEventListener("click", function() 
+        { window.location = "?page="+page; });
+    header_ele.addEventListener("mouseenter", function() 
+        { header_ele.style.backgroundColor="#ea82df"; });
+    header_ele.addEventListener("mouseleave", function() 
+        { header_ele.style.backgroundColor="";});
 }
 
 function buttonUp(){
