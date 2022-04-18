@@ -1,16 +1,17 @@
 function quotePost(val){
     document.getElementById("textArea").value += "##"+ val+"\n";
+    buttonDown();
 }
 
 function jumpPost(val){
     var ele = document.getElementById(val);
     var top = ele.offsetTop;
-    window.scrollTo(0,top-10);
+    window.scrollTo(0,top-35);
     
     var oldColor= ele.style.backgroundColor;
-    ele.style.backgroundColor = "rgba(238,130,238,0.2)";
-    ele.style.boxShadow = "0px -3px 1px 5px rgba(238,130,238,0.2)";
-    ele.style.webkitBoxShadow = "0px -3px 1px 5px rgba(238,130,238,0.2)";
+    ele.style.backgroundColor = "rgba(238,130,238,0.5)";
+    ele.style.boxShadow = "0px -3px 1px 5px rgba(238,130,238,0.5)";
+    ele.style.webkitBoxShadow = "0px -3px 1px 5px rgba(238,130,238,0.5)";
 
     setTimeout(function() {
         ele.style.backgroundColor = oldColor;
