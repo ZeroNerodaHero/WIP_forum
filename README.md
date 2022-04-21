@@ -1,6 +1,3 @@
-# Legal stuff
-This uses google's captcha system
-
 # WIP_forum
 Test
 
