@@ -15,6 +15,11 @@
 	?>
     </head>
 
+    <?php
+        if($newUsr){
+            include_once('genPhp/generateNewUserPrompt.php');
+        }
+    ?>
     <span id=topRowCont>
         <details class=topRowButton title="Settings">
             <summary>&#9881</summary>

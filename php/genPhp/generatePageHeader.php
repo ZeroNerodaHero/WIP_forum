@@ -1,4 +1,12 @@
 <?php
+    //if User is a new one
+    $newUsr = 0;
+    if(!isset($_COOKIE["NewUser"])){
+        $newUsr = 1;
+        setcookie("NewUser",1,time()+3600*24*365*5);
+    }
+
+
     include_once("/var/www/html/adminPower/login.php");
     $descript = "FUNCEL.XYZ is an anonymous text-board. ";
     $tabTitle = "[news]";
@@ -98,5 +106,6 @@
     }
     echo "<title>$tabTitle : FUNCEL.XYZ</title>";
     echo "<meta name='description' content='$descript'>";
+
 ?>
 
