@@ -9,7 +9,9 @@
         position: fixed;
         z-index: 5;
 
-        width: 40%;
+        width: 70%;
+        height: 60%;
+
         
         margin: 5px;
         padding: 5px;
@@ -24,8 +26,9 @@
         padding: 2px 5px 0px 5px;
         margin: -5px -5px 0px -5px ;
     }
-    #nup_topBarTitle{
-        
+    #nup_content{
+        overflow: auto;
+        height: 92%;
     }
     #nup_topBarClose{
         float: right; 
