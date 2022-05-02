@@ -4,7 +4,7 @@
  */
 function getWatchThreads(){
     var tmp = window.localStorage.getItem("watchThreads");
-    if(tmp == null) return "[]";
+    if(tmp == null) return "{}";
     return tmp;
 }
 
@@ -12,67 +12,60 @@ function setWatchJson(nstr){
     window.localStorage.setItem("watchThreads",nstr);
 }
 
-function setWatchThreads(board,TID,pCnt){
-    var strData = getWatchThreads();
-    var cmpTmp = strData;
-    var selector = board+'_'+TID;
-
-    var nstr= '{"board":"'+board+'","tid":'+TID+',"lastTotalPost":'+
-                pCnt+',"currentTotalPost":'+pCnt+"}";
-
-    if(strData == "[]"){
-        strData="["+nstr +']';
-    } else{
-        if(strData.includes(nstr)) return;
-
-        var rep = '{"board":"'+board+'","tid":"'+TID+
-                '","lastTotalPost":[0-9]{0,9},"currentTotalPost":[0-9]{0,9}}';
-        strData = strData.replace(new RegExp(rep),nstr);
-        if(strData == cmpTmp){
-            strData = strData.replace("]",","+nstr+"]");
-        }
-    }
-    setWatchJson(strData);
-}
-
-function unWatchThread(board,TID){
-    var strData = getWatchThreads();
-    var cmpTmp = strData;
-    var selector = board+'_'+TID;
-
-    //{0,1} is this right?
-    var rep = '{"board":"'+board+'","tid":"'+TID+
-            '","lastTotalPost":[0-9]{0,9},"currentTotalPost":[0-9]{0,9}}';
-    strData = strData.replace(new RegExp(rep),"");
-    setWatchJson(strData);
-}
-
-function watchMaster(board,TID,pCnt){
+function setWatchThread(board,TID,pCnt){
     var watchCol = JSON.parse(getWatchThreads());
-    var xhttp = new XMLHttpRequest();
+    
+    if(!watchCol.hasOwnProperty(board)){
+        watchCol[board] = {}; 
+    }
+    watchCol[board][TID.toString()] = [pCnt,pCnt];
+    setWatchJson(JSON.stringify(watchCol));
 
+    var ele = document.getElementById("threadStarButton")
+    ele.text= "\u2605";
+    ele.href="javascript:unWatchThread('"+board+"',"+TID+","+pCnt+")";
+}
+
+function unWatchThread(board,TID,pCnt){
+    var watchCol = JSON.parse(getWatchThreads());
+
+    if(watchCol.hasOwnProperty(board) && watchCol[board].hasOwnProperty(TID)){
+        delete watchCol[board][TID];
+    }
+    setWatchJson(JSON.stringify(watchCol));
+
+    var ele = document.getElementById("threadStarButton")
+    ele.text= "\u2606";
+    ele.href="javascript:setWatchThread('"+board+"',"+TID+","+pCnt+")";
+}
+
+function watchGetter(board,TID,pCnt){
+    var watchStr = getWatchThreads();
+    var xhttp = new XMLHttpRequest();
 
     //really bad way to tell if board exists, but we can use it to update
     //no cost i guess
-    console.time('global');
-    for(var i = 0; i < watchCol.length; i++){
-        var it = watchCol[i];
+//console.time('global');
+    xhttp.open("POST", "../php/watchedThreadResponse/watchedThreadResponse.php",false);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("json="+watchStr);
+    setWatchJson(xhttp.responseText);
+//console.timeEnd('global');
+}
 
-        var board=it.board;
-        var tid=it.tid;
-        var lastTP=it.lastTotalPost;
-        var currentTP=it.currentTotalPost;
+function watchingCurrent(board,TID){
+    var watchCol = JSON.parse(getWatchThreads());
+    return watchCol.hasOwnProperty(board) && watchCol[board].hasOwnProperty(TID);
+}
 
-        if(TID == tid){
-            console.log("isWatched");
-            document.getElementById("threadStarButton").text= "\u2605";
-        }
-        console.time('Function #1');
-        xhttp.open("GET", "../php/watchedThreadResponse/watchedThreadResponse.php?"
-                    +"board="+board+"&TID="+tid, false);
-        xhttp.send();
-        console.log(xhttp.responseText);
-        console.timeEnd('Function #1');
+function watchMaster(board,TID,pCnt){
+    watchGetter();
+
+    var ele = document.getElementById("threadStarButton")
+    if(watchingCurrent(board,TID)){
+        ele.href="javascript:unWatchThread('"+board+"',"+TID+","+pCnt+")";
+    } else{
+        ele.href="javascript:setWatchThread('"+board+"',"+TID+","+pCnt+")";
     }
-        console.timeEnd('global');
+    //generate the bar stuff
 }

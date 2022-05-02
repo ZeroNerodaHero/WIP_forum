@@ -550,3 +550,7 @@ img:hover {
 .flexBoxGap{
     color: #12345600;
 }
+/*for the starring of theads*/
+#threadStarButton{
+    float: right;
+}
