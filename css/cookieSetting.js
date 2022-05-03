@@ -21,6 +21,9 @@ xxxx xxxx xx...
 3: bkg is img or color
 4: mainboards collapsed?
 5: shitboards collapsed?
+6: starred or recent (see starThread.js)
+    0: is star
+    1: is recent
 */
 
 function toggleNavList(type,toggleOrNot){
@@ -53,8 +56,8 @@ function toggleNav(toggleOrNot=1){
     togglePage(0,"navContainer","navCollapseText",toggleOrNot);
 }
 function toggleRecent(toggleOrNot=1){
-    togglePage(1,"recentThreadContainer",
-        "recentThreadCollapseText",toggleOrNot);
+    togglePage(1,"watchThreadContainer",
+        "watchThreadCollapseText",toggleOrNot);
 }
 function getSettings(){
     var settingCookieStr = getCookie("settings");

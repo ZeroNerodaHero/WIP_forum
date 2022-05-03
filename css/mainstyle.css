@@ -316,7 +316,7 @@ img:hover {
 /*
  * RECENT LNK
  */
-.recentLnk{
+.watchingLnk{
     white-space: nowrap;
     text-overflow: clip;
     margin: 0px;

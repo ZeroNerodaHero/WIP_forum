@@ -8,6 +8,7 @@
         <script type="text/javascript" src="../css/cookieSetting.js"></script>
         <script type="text/javascript" src="../css/lastView.js"></script>
         <script type="text/javascript" src="../css/readerScript.js"></script>
+        <script type="text/javascript" src="../css/starThread.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
         <?php
@@ -100,25 +101,33 @@
 		</div>
             </div>  
 
-            <div class=sideBarElement id=recentThread>
-	        <div class=sideBarHeader id=recentThreadHeader>
-                    <span class=sideBarTitle id=recentThreadTitle>
-                        Recent Thread
+            <div class=sideBarElement id=watchThread>
+	        <div class=sideBarHeader id=watchThreadHeader>
+                    <span class=sideBarTitle id=watchThreadTitle>
+                        Thread Watcher:
                     </span> 
-		    <span class=sideBarCol id=recentThreadCol>
+		    <span class=sideBarCol id=watchThreadCol>
                         <a href="javascript:toggleRecent()" 
-                        id=recentThreadCollapseText class="chevron"> </a>
+                        id=watchThreadCollapseText class="chevron"> </a>
 		    </span> 
 	        </div>
-	        <div class=sideBarContainer id=recentThreadContainer>
+	        <div class=sideBarContainer id=watchThreadContainer>
+                    <div id=watchingTypeSelector>
+                        <?php
+                        echo "<a href='javascript:starReload(1)'".
+                            " class=watchSwitcher>Starred</a>";
+                        if($typeOfPage== 1){
+                        echo " | <a href='javascript:recentReload(\"$boardPageName\")'".
+                            " class=watchSwitcher>Recent</a>";
+                        }
+                        ?>
+                    </div>
+                    <div id=recLinkCont>
                     <?php
                         include_once('genPhp/generateRecent.php'); 
                         //this is not a great way but yea
-                        if(!empty($_GET["page"]) && !empty($_GET["TID"]))
-                            echo "<script> recentAnimateAll(); </script>";
-                        else
-                            echo "<script> closeRecent(); </script>";
                     ?>
+                    </div>
 
 		</div>
             </div>  
@@ -136,14 +145,19 @@
 
     <!--for variables and stuff -->
     <?php
+        $pStr = "<script> 
+                  var totalContent=".$threadContentSize.";";
         if($typeOfPage == 1){
-            echo "<script>
-                var totalContent=".$threadContentSize.";
-                updateLastThread('$boardPageName',$threadID,totalContent);
-                </script>";
+            //thread view
+            $pStr .= "watchMaster('$boardPageName',$threadID,totalContent,1);
+                      updateLastThread('$boardPageName',$threadID,totalContent);";
         } else {
-            echo "<script>iterateCnter('$boardPageName')</script>";
+            //board
+            $pStr .= "watchMaster('$boardPageName',$threadID,totalContent,0);
+                      iterateCnter('$boardPageName');";
         }
+        $pStr .= "recentAnimateAll();</script>";
+        echo $pStr
     ?>
     <script>
         generatePageStyle();

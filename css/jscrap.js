@@ -86,7 +86,7 @@ function checkOverflow(ele){
     return ele.scrollWidth - ele.clientWidth;
 }
 
-function animateRecent(ele,diff){
+function animateWatcherLnk(ele,diff){
     //constant help better look
     diff += diff/5;
     //assume overflow
@@ -116,13 +116,13 @@ function recentAnimateAll(){
     for(var i = 0; i < cc.length; i++){
         var overflowPx = checkOverflow(cc[i]);
         if(overflowPx > 0){
-            animateRecent(cc[i],overflowPx);
+            animateWatcherLnk(cc[i],overflowPx);
         }
     }  
 }
 
 function closeRecent(){
-    var ele = document.getElementById("recentThread");
+    var ele = document.getElementById("watchThread");
     ele.style.display = "none";
 }
 

@@ -38,6 +38,11 @@
 
 	    $navStr .= " > <a href='$reLnk' class=bheaderLnk>".
 	            " ThreadNo".$threadN." : ".$threadTitle."</a>";
+
+            //here begins the code for starring a thread or not
+            $navStr .= "<a id=threadStarButton 
+                        href=\"javascript:setWatchThread('$boardPageName',".
+                            "$threadID,$threadContentSize)\">&#9734</a>";
         }
     } 
     echo $navStr." &#x21bb";
