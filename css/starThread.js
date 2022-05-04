@@ -24,6 +24,7 @@ function setStarThread(board,TID,pCnt){
     var ele = document.getElementById("threadStarButton")
     ele.text= "\u2605";
     ele.href="javascript:unStarThread('"+board+"',"+TID+","+pCnt+")";
+    starReload(0);
 }
 
 function unStarThread(board,TID,pCnt){
@@ -31,12 +32,14 @@ function unStarThread(board,TID,pCnt){
 
     if(starCol.hasOwnProperty(board) && starCol[board].hasOwnProperty(TID)){
         delete starCol[board][TID];
+        if(Object.keys(starCol[board]).length==0) delete starCol[board];
     }
     setStarJson(JSON.stringify(starCol));
 
     var ele = document.getElementById("threadStarButton")
     ele.text= "\u2606";
     ele.href="javascript:setStarThread('"+board+"',"+TID+","+pCnt+")";
+    starReload(0);
 }
 
 //here is the problem, i need to do a json update and a json render
@@ -74,6 +77,7 @@ function starReload(settingChange){
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("json="+starStr);
     document.getElementById("recLinkCont").innerHTML= xhttp.responseText;
+    recentAnimateAll();
 
     if(settingChange){
         var fullSetting = getSettings("settings");
@@ -119,19 +123,24 @@ function recentReload(board){
     var fullSetting = getSettings("settings");
     fullSetting.setting = (fullSetting.setting|(1<<6));
     var ot = fullSetting.setting&(1<<6);
-console.log("ot "+ot+" "+!ot);
     setCookie("settings", JSON.stringify(fullSetting));
 }
 
-function watchMaster(board,TID,pCnt,pageType){
+function watchMaster(board,TID,pCnt){
+    console.log("TID "+TID);
     var fullSetting = getSettings("settings");
     var ot = fullSetting.setting&(1<<6);
-console.log("ot is"+ot);
-    if(pageType == 0 || !ot){
-console.log(pageType+" "+!ot+" starred");
-        starMaster(board,TID,pCnt);
+    if(TID == -1){
+        if(getStarThreads() == "{}"){
+            document.getElementById("watchThread").style.display = "none";
+        } else{
+            starMaster(board,TID,pCnt);
+        }
     } else{
-console.log(pageType+" recent");
-        recentReload(board);
+        if(!ot){
+            starMaster(board,TID,pCnt);
+        } else{
+            recentReload(board);
+        }
     }
 }
