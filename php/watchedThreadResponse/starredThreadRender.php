@@ -14,7 +14,9 @@
         }
 
         $res = $connBoards->query($que);
-
+        $exitStr .= "<div class=starTitle>[$board]</div>".
+                    "<span class=clearStar>".
+                    "<a href='javascript:clearStar(\"$board\")'>Clear</a></span>";
         if($res->num_rows > 0){
             while($row = $res->fetch_assoc()){
                 $tid = $row["threadId"];
@@ -22,14 +24,17 @@
                 $lastView = $decoded_json[$board][$tid][0];
                 $newView = $decoded_json[$board][$tid][1];
                 $diff = $newView - $lastView;
-                $newColor = ($diff > 0) ? "#30ff30":"red";
-
-                $exitStr .= "<div class=watchingLnk>($lastView)".
-                            "<span style='color:$newColor'>[$diff]</span>".
-                            "<a href='?page=$board&TID=$tid' >".
-                            "$title</a></div>";
+                $newColor = ($diff > 0) ? "#30ff30":"#7f0000";
+                $exitStr .= "<div class=watchingLnk>".
+                            "<a href='?page=$board&TID=$tid'
+                              style='color:$newColor' title='+$diff comments'>".
+                            "($lastView)[$diff]$title</a></div>";
             }
         } 
+    }
+    if($exitStr == ""){
+        $exitStr = "<div class=noStarThreads>Starring a thread is a feature 
+                    that allows you to keep track of the threads</div>";
     }
     echo $exitStr;
 ?>

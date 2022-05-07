@@ -6,14 +6,12 @@
     $decoded_json = json_decode($json, true);
 
     foreach($decoded_json as $board => $watchedThreads) {
-//echo $board . "\n";
         $isFirst = true;
         $que = "SELECT threadId, postCnt FROM ".$board."Threads WHERE threadId=";
         foreach($watchedThreads as $threadId => $datas){
             $que .= ($isFirst ? "":" or threadId="). $threadId;
             $isFirst = false;
         }
-//echo "\t" . $que . "\n";
         $res = $connBoards->query($que);
 
         if($res->num_rows > 0){

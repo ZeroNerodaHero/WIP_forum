@@ -80,6 +80,7 @@ function showFuncButtons(val){
 
 
 function checkOverflow(ele){
+    console.log(ele.scrollWidth + "----"+ele.clientWidth);
     if(ele.scrollWidth < ele.clientWidth){
         return 0;
     }
@@ -110,11 +111,11 @@ function animateWatcherLnk(ele,diff){
 }
 
 function recentAnimateAll(){
-    var ele = document.getElementById("recLinkCont");
-    var cc = ele.children;
+    var cc = document.getElementsByClassName("watchingLnk");
 
     for(var i = 0; i < cc.length; i++){
         var overflowPx = checkOverflow(cc[i]);
+        console.log(i+" "+overflowPx);
         if(overflowPx > 0){
             animateWatcherLnk(cc[i],overflowPx);
         }

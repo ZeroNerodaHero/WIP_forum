@@ -190,6 +190,36 @@ footer{
     text-align: center;
 }
 
+/* recent and watching link */
+#watchThreadContainer{
+    font-size: 0.95rem;
+}
+#watchingTypeSelector{
+    text-align: center;
+    margin: 6px 0px;
+    font-size: 1rem;
+}
+.watchSwitcher{
+    border: 0px solid red;
+    border-radius: 5px;
+    padding: 0px 7px;
+}
+.watchSwitcher:hover{
+    background-color: #ea82df;
+}
+
+.noStarThreads{
+    text-align: center;
+}
+.starTitle{
+    display:inline-block;
+}
+.clearStar{
+    float: right;
+    display:inline;
+    margin-right: 3px;
+}
+
 #recLinkCont{
     margin: 0 1%;
     margin-bottom: 1%;

@@ -41,7 +41,7 @@
 
             //here begins the code for starring a thread or not
             $navStr .= "<a id=threadStarButton 
-                        href=\"javascript:setWatchThread('$boardPageName',".
+                        href=\"javascript:setStarThread('$boardPageName',".
                             "$threadID,$threadContentSize)\">&#9734</a>";
         }
     } 

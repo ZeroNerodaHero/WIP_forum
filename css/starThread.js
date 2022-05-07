@@ -91,7 +91,7 @@ function starMaster(board,TID,pCnt){
     var starStr = getStarThreads();
     var starCol = JSON.parse(starStr);
 
-    var ele = document.getElementById("threadStarButton")
+    var ele = document.getElementById("threadStarButton");
     //extra json parse? remove or no
     if(ele){
         if(staringCurrent(board,TID)){
@@ -124,10 +124,10 @@ function recentReload(board){
     fullSetting.setting = (fullSetting.setting|(1<<6));
     var ot = fullSetting.setting&(1<<6);
     setCookie("settings", JSON.stringify(fullSetting));
+    recentAnimateAll();
 }
 
 function watchMaster(board,TID,pCnt){
-    console.log("TID "+TID);
     var fullSetting = getSettings("settings");
     var ot = fullSetting.setting&(1<<6);
     if(TID == -1){
@@ -143,4 +143,13 @@ function watchMaster(board,TID,pCnt){
             recentReload(board);
         }
     }
+}
+
+function clearStar(board){
+    var starCol = JSON.parse(getStarThreads());
+    if(starCol.hasOwnProperty(board)){
+        delete starCol[board];
+        setStarJson(JSON.stringify(starCol));
+    }
+    starReload(0);
 }

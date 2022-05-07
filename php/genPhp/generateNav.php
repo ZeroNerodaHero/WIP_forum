@@ -10,12 +10,12 @@
             <a href='?page=news' class=navLink>[News]</a></div>";
     }
     echo "<div class=navCategory id=mainNavList> Main Boards: 
-        [ <a href=javascript:navListClick('main') id=mainNavToggle></a> ]</div>";
+        [<a href=javascript:navListClick('main') id=mainNavToggle></a>]</div>";
     getBoard("main",$cPage);
     /* -----------------------------------------------------------*/
 
     echo "<div class=navCategory id=shitNavList> Shit Boards: 
-        [ <a href=javascript:navListClick('shit') id=shitNavToggle></a> ]</div>";
+        [<a href=javascript:navListClick('shit') id=shitNavToggle></a>]</div>";
     getBoard("shit",$cPage);
     /* -----------------------------------------------------------*/
 
