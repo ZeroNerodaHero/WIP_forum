@@ -1,5 +1,4 @@
 # WIP_forum
-Test
 
 structures of MYSQL database:
 # DATA1(peepo):
