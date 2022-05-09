@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="css/titstyle.css">
+        <link rel="stylesheet" href="css/reuseStyle.css">
         <link rel="icon" href="res/icon/icon_0.png">
         <script type="text/javascript" src="css/jscrap.js"></script>
 
@@ -30,7 +31,10 @@
 	</div>
 
 	<div id=disclaimer>
-            *By entering the site you accept the responsibility of your actions on this site and agree that the owner of this site is not to be held accountable for your autistic decisions if you do choose to do something extremely stupid. Also you will 100% agree to the rules below. If you violate them u will...
+            *By entering the site you accept the responsibility of your actions on this site 
+            and agree that the owner of this site is not to be held accountable for your autistic 
+            decisions if you do choose to do something extremely retarded. Also you will 100% 
+            agree to the rules below. If you violate them u will...
         </div>
 
 	<div id=content>
@@ -86,14 +90,55 @@
 		            #--[ Syntax for stuff other than text > 
 		        </div>
 		        <div class=pcontent>
-		            So you want to post the imgs? <br> The current way to post imgs,links, and videos(on youtube only) is: [tag](link){option} <br> <i>Example: [link](https://google.com){...}<br></i> Always have https or http bc if you don't things get wacky.
+		            So you want to post the imgs? <br> The current way to post 
+                            imgs,links, and videos(on youtube only) is: [tag](link){option} 
+                            <br> 
+                            <i>Example: [link](https://google.com){...}<br>
+                            </i> Always have https or http bc if you don't things get wacky.
 				
 
 		            <ol>
 		            <li>tag represents the type. The current three are IMG,LNK,YTB.</li>
-			    <li>link is the link. It should always have http something bc if u don't ur gonna go into my server's error.</li>
-                            <li>option has not been implemented yet. I don't really know what will happen if you do. Maybe nothing will appear to maybe a nuke will go off. I dunno just don't try. (EDIT: It just shows up as link{} no blowing up world. Sad :( )</li>
+			    <li>link is the link. It should always have http something bc 
+                                if u don't ur gonna go into my server's error.</li>
+                            <li>option has been implemented(as of 4/18). 
+                                Options is only available for the tag [TXT]. 
+                                What can be done is listed below</li>
 			    </ol>
+		        <div class=phead>
+                            #--[ Options for text >
+                        </div><br>
+
+                            Here are the avalible options for text<br>
+                            <span style="color:#ff9e9e;">
+                                [TXT](word){option}</span><br>
+                            Options are broken down into either a property or a tag. 
+                            If you used html and css before, the tag is from html and the 
+                            property is from css. The difference between the two is that 
+                            properties are two valued and separated by a ":" and tags are 
+                            simply just one valued.<br>
+                        <br>
+
+                        <b style="color:#ff9e9e">properties : values</b><br>
+                        <b>color</b> : [any color values one word or a hex value]<br>
+                        <i>[TXT](word){color:#ff9e9e}</i><br>
+                        <b>size</b> : [xsmall,small,large]<br>
+                        <i>[TXT](word){size:large}</i><br>
+                        <br>
+                        <b>tags</b><br>
+                        b [bolds text]<br>
+                        <i>[TXT](word){b}</i><br>
+                        i [italcizes the text] <br>
+                        <i>[TXT](word){i}</i><br>
+                        <br>
+                        <br>
+                        <b style="color:red">ABOUT COLOR</b><br>
+                        color -&gt; any color available in HTML is available here. 
+                        This means u can do:<br>
+                        [TXT](word){color:red}<br>
+                        or<br>
+                        [TXT](word){color:#ff0000}<br>
+                        <br>
 			</div>
 
 		        <div class=phead>
@@ -120,6 +165,12 @@
 	            Lmao. Imagine wanting to do it for free. 
 	        </div>
             </div>
+        </div>
+            
+        <div id="miscLnk">
+            <a class=contactGen href="php/miscPg/advertisment.html">
+                Advertisment
+            </a>
         </div>
     </body>
 </html>
