@@ -5,6 +5,12 @@
         $newUsr = 1;
         setcookie("NewUser",1,time()+3600*24*365*5);
     }
+    $hasOldLast = 1;
+    if(empty($_COOKIE["oldView"])){
+        $hasOldLast = 0;
+        setcookie("oldView", "1", time()+3600*24*60);
+    }
+
 
 
     include_once("../adminPower/login.php");

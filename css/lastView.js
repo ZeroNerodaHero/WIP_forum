@@ -1,21 +1,26 @@
-function getBoardJson(board){
-    var tmp = window.localStorage.getItem(board+"_lastThread");
-    if(tmp == null) return "[]";
+/*
+ * returns a string
+ */
+function getAllLVJson(){
+    var tmp = window.localStorage.getItem("LastViewRecorder");
+    if(tmp == null) return "{}";
     return tmp;
 }
+/*
+ * returns a json object
+ */
+function getBoardJson(){
+    var tmp = getAllLVJson();
+    var jObj = JSON.parse(tmp);
+    return jObj;
+}
 
-function setBoardJson(board,nstr){
-    window.localStorage.setItem(board+"_lastThread",nstr);
+function setBoardJson(obj){
+    window.localStorage.setItem("LastViewRecorder",JSON.stringify(obj));
 }
 
 function iterateCnter(board){
-    var jsonData = JSON.parse(getBoardJson(board));
-    var newjsonData = "[";
-
-    var mData = new Map();
-    for(let it of jsonData){
-        mData.set(it.TID,Array(it.postCnt,it.isWatched));
-    }
+    var recorder = getBoardJson();
 
     var eles = document.getElementsByClassName("postCnter");
 
@@ -30,8 +35,9 @@ function iterateCnter(board){
 
         var diff = nPostCnt;
         //calculate the difference or show original amount
-        if(mData.has(TID)){
-            oPostCnt = mData.get(TID)[0]; 
+        console.log(typeof(TID)+" "+typeof(TID.toString()));
+        if(recorder[board] && recorder[board][TID.toString()]){
+            oPostCnt = recorder[board][TID.toString()][0]; 
             diff = nPostCnt-oPostCnt; 
         } 
 
@@ -43,31 +49,22 @@ function iterateCnter(board){
             pDiff.textContent = '['+diff+']';
             pDiff.classList.add("pDiff_na");
         }
-        
-        newjsonData+='{"TID":'+TID+',"postCnt":'+oPostCnt+',"isWatched":false}'
-            + ((i == eles.length-1) ? "" : ",");
     }
-    newjsonData+=']';
-    //console.log(newjsonData);
-    setBoardJson(board,newjsonData);
-    //window.localStorage.setItem(board+"_lastThread",null);
-    //overWrite jsonData
 }
 
 function updateLastThread(board,TID,pCnt){
-    var strData = getBoardJson(board);
-    var cmpTmp = strData;
-    if(strData == '[]') return;
+    var boardData = getBoardJson();
+    console.log(boardData);
+    console.log(typeof(boardData));
 
-    var rep = '"TID":'+TID+',"postCnt":[0-9]{0,9}';
-    var nstr= '"TID":'+TID+',"postCnt":'+pCnt;
-    strData = strData.replace(new RegExp(rep),nstr);
-
-    if(strData == cmpTmp){
-        strData = strData.replace("]",",{"+nstr+"}]");
+    if(!boardData.hasOwnProperty(board)){
+        boardData[board] = {};
     }
-
-    setBoardJson(board,strData);
+    console.log(boardData);
+    console.log(board+" "+TID+" "+pCnt);
+    boardData[board][TID.toString()] = [pCnt];
+    console.log("LST "+boardData);
+    setBoardJson(boardData);
 }
 
 //exampleJSON
@@ -75,4 +72,7 @@ function updateLastThread(board,TID,pCnt){
  *      {'TID': 14,'postCnt': 10 , 'isWatched': false}
  *      {'TID': 12,'postCnt': 10 , 'isWatched': false}
  *  ]
+ *  { "example":[[10,4],[9,6]]}
+ *  translate: boardName example has thread 10 with a last view of 4
+ *  and has a thread 9 with a last view of 4
  */

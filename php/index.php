@@ -157,7 +157,17 @@
                       iterateCnter('$boardPageName');";
         }
         $pStr .= "recentAnimateAll();</script>";
-        echo $pStr
+        echo $pStr;
+
+        if($hasOldLast){
+            echo "<script>"; 
+            foreach($allBoards as $it){
+                $bName = $it["boardName"];
+                echo "deleteOldLocalStorage('$bName');";
+            }
+                echo "deleteOldLocalStorage('news');";
+            echo "</script>"; 
+        } 
     ?>
     <script>
         generatePageStyle();

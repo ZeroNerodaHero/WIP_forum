@@ -80,7 +80,6 @@ function showFuncButtons(val){
 
 
 function checkOverflow(ele){
-    console.log(ele.scrollWidth + "----"+ele.clientWidth);
     if(ele.scrollWidth < ele.clientWidth){
         return 0;
     }
@@ -115,7 +114,6 @@ function recentAnimateAll(){
 
     for(var i = 0; i < cc.length; i++){
         var overflowPx = checkOverflow(cc[i]);
-        console.log(i+" "+overflowPx);
         if(overflowPx > 0){
             animateWatcherLnk(cc[i],overflowPx);
         }
@@ -230,4 +228,8 @@ function addEmote(ele,board,TID,opt){
     };
     xhttp.open("GET","acclaimGenerator/updateUsrScore.php",true);
     xhttp.send();
+}
+
+function deleteOldLocalStorage(board){ 
+    window.localStorage.removeItem(board+"_lastThread");
 }
