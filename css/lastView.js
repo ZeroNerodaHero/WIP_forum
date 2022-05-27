@@ -35,7 +35,7 @@ function iterateCnter(board){
 
         var diff = nPostCnt;
         //calculate the difference or show original amount
-        console.log(typeof(TID)+" "+typeof(TID.toString()));
+        //console.log(typeof(TID)+" "+typeof(TID.toString()));
         if(recorder[board] && recorder[board][TID.toString()]){
             oPostCnt = recorder[board][TID.toString()][0]; 
             diff = nPostCnt-oPostCnt; 

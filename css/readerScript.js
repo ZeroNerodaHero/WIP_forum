@@ -3,6 +3,7 @@ var imgWidth = 0, imgHeight = 0, imgLeft = 0, imgTop= 0;
 var minSize = 4;
 var maxX=-1,maxY=-1,minX=-1,minY=-1;
 var itCount = 0;
+var colorSelect="red",colorRead="#f18973a2";
 
 //system matically generate all img.
 //post in succession
@@ -195,7 +196,7 @@ function genComments(ctx,rectAr,cBoard,cThread){
     }
 
     for(var cObj of rectAr){
-        drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey);
+        drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey,colorRead);
     }
 }
 
@@ -204,12 +205,16 @@ function showComments(pos_x,pos_y,rectAr){
     deleteAllChildren(eleComments);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            var tmp = document.createElement("div");
-            tmp.className = "imgComment";
-            tmp.innerHTML = cObj.strComment;
-            eleComments.appendChild(tmp);
+            showCommentText(eleComments,cObj.strComment);
         }
     }
+}
+function showCommentText(eleComments,str,color=""){
+    var tmp = document.createElement("div");
+    tmp.className = "imgComment";
+    tmp.innerHTML = str;
+    if(color!="")tmp.style.backgroundColor=color;
+    eleComments.appendChild(tmp);
 }
 
 function deleteAllChildren(ele){
@@ -222,7 +227,7 @@ function highlightRect(ctx,pos_x,pos_y,rectAr){
     clearCanvas(ctx);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey);
+            drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey,colorRead);
         }
     }
 }
@@ -237,6 +242,9 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
         //document.getElementById("usrCommentText").value= this.responseText;
         //console.log("COMMENT: "+this.responseText);
         commentSec.value = "";
+
+        var eleComments = document.getElementById("otherCommentCont");
+        showCommentText(eleComments,"POST SUCCESS","red");
     }
     sx = sx/imgWidth; sy = sy/imgHeight;
     ex = ex/imgWidth; ey = ey/imgHeight;
@@ -244,4 +252,5 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("board="+cBoard+"&TID="+cThread+
                 "&sx="+sx+"&sy="+sy+"&ex="+ex+"&ey="+ey+"&comment="+comment);
+
 }

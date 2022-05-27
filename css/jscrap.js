@@ -191,7 +191,7 @@ function addEmote(ele,board,TID,opt){
             //usr doesn't have enough points
             if(this.responseText == "0"){
                 var errorBox= document.createElement("div");
-                errorBox.className= "acclaimErrorMsg";
+                errorBox.className= "noncontentMsg";
                 errorBox.innerHTML = "ERROR: YOU DO NOT HAVE ENOUGH POINTS. "+
                                     "NEED AT LEAST 100 FOR A EMOTE. START SLAVING BOI";
                 document.getElementById("boardHeader").appendChild(errorBox);
