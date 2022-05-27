@@ -30,8 +30,7 @@
                          rows='5'></textarea><br>
                     </div>
                     <div id=usrCommentSubmitCont>
-                        <button type='submit' id=usrCommentSubmit>
-                        Post</button>
+                        <button type='submit' id=usrCommentSubmit>Post</button>
                     </div>
                 </div>
                 <div id=otherCommentCont>
@@ -43,7 +42,7 @@
                <canvas id=highlightCanvas class=imgRenderCanvas></canvas>
                <canvas id=upperCanvas class=imgRenderCanvas></canvas>";
         echo "<script> 
-                imgRenderInit('$board',$TID); 
+                //imgRenderInit('$board',$TID); 
 
                 //for bad img size 
                 //behavior happens bc of some reason.
