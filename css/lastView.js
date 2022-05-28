@@ -54,16 +54,11 @@ function iterateCnter(board){
 
 function updateLastThread(board,TID,pCnt){
     var boardData = getBoardJson();
-    console.log(boardData);
-    console.log(typeof(boardData));
 
     if(!boardData.hasOwnProperty(board)){
         boardData[board] = {};
     }
-    console.log(boardData);
-    console.log(board+" "+TID+" "+pCnt);
     boardData[board][TID.toString()] = [pCnt];
-    console.log("LST "+boardData);
     setBoardJson(boardData);
 }
 

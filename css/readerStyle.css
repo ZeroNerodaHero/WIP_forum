@@ -1,0 +1,77 @@
+.idCommentBox{
+    float:left;
+    font-size: 0.75rem;
+}
+.timeCommentBox{
+    float:right;
+    font-size: 0.75rem;
+}
+
+/*
+ * img render
+ */
+.imgContLayer{
+    grid-area: reader;
+}
+.imgLayer{
+    width: 100%;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+#imgCommentCont{
+    grid-area: comment;
+    justify-self: center;
+
+    top: 30px;
+    position: -webkit-sticky;
+    position: sticky;
+
+    height: fit-content;
+}
+.imgComment{
+    width: 100%;
+    background-color: #345678b5;
+    border: 2px solid black;
+    border-radius: 3px;
+
+    text-align: center;
+    margin: 3px;
+    padding: 10px 3px 10px 3px;
+}
+.imgRenderCanvas{
+    border: 2px solid black;
+    position: absolute;
+    user-select: none;
+}
+#imgRenderCont{
+    display: grid;
+    grid-template-columns: 74% 1% 24% 1%;
+    grid-template-areas: "reader . comment .";
+}
+#usrCommentCont{
+    width: 100%;
+    background-color: #345678b5;
+    border: 2px solid black;
+    border-radius: 3px;
+
+    margin: 3px;
+    padding: 6px 2px 6px 2px;
+
+    display: none;
+}
+#usrTextConstraint{
+    padding: 0px 6px 0px 0px;
+    text-align: center;
+}
+#usrCommentTitle{
+    margin-left: 3%;
+}
+#usrCommentText{
+    width: 100%;
+}
+#usrCommentSubmitCont{
+    margin-right: 3%;
+    text-align: right;
+}
+

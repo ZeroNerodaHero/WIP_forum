@@ -233,3 +233,15 @@ function addEmote(ele,board,TID,opt){
 function deleteOldLocalStorage(board){ 
     window.localStorage.removeItem(board+"_lastThread");
 }
+
+//initially used to generate a random number trhoug a seed
+//bc js doesn't have it. not used
+function genMod(num){
+    var ret = 0;
+    var shift = (num)%7+1;
+    for(var i = 0; i < num; i++){
+        ret = (ret<<num)|num;
+    }
+    return ret;
+}
+

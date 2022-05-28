@@ -4,6 +4,9 @@ var minSize = 4;
 var maxX=-1,maxY=-1,minX=-1,minY=-1;
 var itCount = 0;
 var colorSelect="red",colorRead="#f18973a2";
+//used for quick access. no checks given whether or not
+//this is valid
+var threadID=-1;
 
 //system matically generate all img.
 //post in succession
@@ -39,6 +42,7 @@ class commentRect{
     }
 }
 function imgRenderInit(board,threadId){
+    threadID = threadId;
     //for resizes
     window.addEventListener('resize', function(){
         if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
@@ -133,6 +137,7 @@ function imgRenderInit(board,threadId){
         clearCanvas(botCtx);
         genComments(botCtx,allComments,board,threadId);
         usrCommentEle.style.display="none";
+        console.log("double:");
     });
 }
 
@@ -205,14 +210,22 @@ function showComments(pos_x,pos_y,rectAr){
     deleteAllChildren(eleComments);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            showCommentText(eleComments,cObj.strComment);
+            showCommentText(eleComments,cObj.strComment,cObj.uid,cObj.time);
         }
     }
 }
-function showCommentText(eleComments,str,color=""){
+function showCommentText(eleComments,strComment,cId="",cTime="",color=""){
     var tmp = document.createElement("div");
     tmp.className = "imgComment";
-    tmp.innerHTML = str;
+    var innerTXT= "<p>"+strComment+"</p>";
+    if(cId != ""){
+        innerTXT = "<span class=idCommentBox>"+cId+"</span>"+innerTXT;
+    }
+    if(cTime != ""){
+        innerTXT = "<span class=timeCommentBox>"+cTime+"</span>"+innerTXT;
+    }
+    tmp.innerHTML = innerTXT;
+
     if(color!="")tmp.style.backgroundColor=color;
     eleComments.appendChild(tmp);
 }
@@ -237,14 +250,16 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
     var commentSec = document.getElementById("usrCommentText");
     var comment= commentSec.value;
     const xhttp = new XMLHttpRequest();
-    xhttp.onload = function() {
-        //can do update or do a reload page here
-        //document.getElementById("usrCommentText").value= this.responseText;
-        //console.log("COMMENT: "+this.responseText);
-        commentSec.value = "";
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200 && this.responseText != "EMPTY"){
+            //can do update or do a reload page here
+            //document.getElementById("usrCommentText").value= this.responseText;
+            //console.log("COMMENT: "+this.responseText);
+            commentSec.value = "";
 
-        var eleComments = document.getElementById("otherCommentCont");
-        showCommentText(eleComments,"POST SUCCESS","red");
+            var eleComments = document.getElementById("otherCommentCont");
+            showCommentText(eleComments,"POST SUCCESS","red");
+        }
     }
     sx = sx/imgWidth; sy = sy/imgHeight;
     ex = ex/imgWidth; ey = ey/imgHeight;
