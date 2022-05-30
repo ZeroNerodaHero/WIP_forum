@@ -79,6 +79,7 @@
     }
         
     function postThreads($board,$title,$time,$TID,$postCnt,$acclaim,$classTag=""){
+        $time = timeRegFormat($time);
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
         echo "<div id=p_$TID class=threadEncap onclick='threadRedirect(\"$newLink\",$TID)' 
                 onmouseover=threadHover($TID) onmouseout=threadUnHover($TID) >";
@@ -111,9 +112,11 @@
     }
         
     function postComment($content,$UID,$time,$PID,$board,$TID){
+        $time = timeRegFormat($time);
         if(empty($UID)) $UID = 0;
         $boardHash = ord($board[0]);
-        $UID = (($UID%1000000)^($TID^($TID<<16))^$boardHash);
+        //$UID = (($UID%1000000)^($TID^($TID<<16))^$boardHash);
+        $UID = getUsrSafeHash($UID,$TID,$boardHash); 
         $id_sel = "p".$UID."_".$PID;
         echo "<div class=postEncap id=pd".$PID.">";
         echo "<style> #".$id_sel." { background-color:#".$UID."; } </style>";

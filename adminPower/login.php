@@ -1,6 +1,6 @@
 <?php
 
-if(0){
+if(1){
 error_reporting(-1);
 ini_set('display_errors',1);
 }
@@ -127,7 +127,8 @@ ini_set('display_errors',1);
             }
         }
         if($lastPostTime == NULL) return NULL;
-        $newTime = max((750-$totalPoints)/10,0);
+        //$newTime = max((750-$totalPoints)/10,0);
+        $newTime = 0;
         $lastTimeObj = date_create($lastPostTime);
         $lastTimeObj->add(new DateInterval("PT".$newTime."S"));
         $curDate = date_create();
@@ -154,5 +155,14 @@ ini_set('display_errors',1);
                 SET postCnt = $newPostCnt, time=CURRENT_TIMESTAMP
                 WHERE threadId = $TID";
         myQuery($connBoards,$que);
+    }
+
+    function getUsrSafeHash($UID,$TID,$boardHash){
+        return (($UID%1000000)^($TID^($TID<<16))^$boardHash);
+    }
+    function timeRegFormat($time){
+        $phpdate = strtotime( $time);
+        $mysqldate = date( 'n/d/y-H:i', $phpdate );
+        return $mysqldate;
     }
 ?>

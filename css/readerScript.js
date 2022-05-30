@@ -210,19 +210,23 @@ function showComments(pos_x,pos_y,rectAr){
     deleteAllChildren(eleComments);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            showCommentText(eleComments,cObj.strComment,cObj.uid,cObj.time);
+            showCommentText(eleComments,cObj.strComment,1,cObj.uid,cObj.time);
         }
     }
 }
-function showCommentText(eleComments,strComment,cId="",cTime="",color=""){
+function showCommentText(eleComments,strComment,type=0,cId="",cTime="",color=""){
     var tmp = document.createElement("div");
     tmp.className = "imgComment";
-    var innerTXT= "<p>"+strComment+"</p>";
-    if(cId != ""){
-        innerTXT = "<span class=idCommentBox>"+cId+"</span>"+innerTXT;
-    }
-    if(cTime != ""){
-        innerTXT = "<span class=timeCommentBox>"+cTime+"</span>"+innerTXT;
+    var innerTXT= "<p class=contentCommentBox>"+strComment+"</p>";
+    if(type==1){
+        innerTXT = "<div class=commentInfoCont>"+
+                "<span class=idCommentBox>"+cId+"</span>"+
+                "<span class=timeCommentBox>"+cTime+"</span>"+
+                "</div>"+innerTXT;
+
+    } else{
+        console.log("hahahaha");
+        tmp.style.backgroundColor="red";
     }
     tmp.innerHTML = innerTXT;
 
@@ -258,7 +262,7 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
             commentSec.value = "";
 
             var eleComments = document.getElementById("otherCommentCont");
-            showCommentText(eleComments,"POST SUCCESS","red");
+            showCommentText(eleComments,"POST SUCCESS");
         }
     }
     sx = sx/imgWidth; sy = sy/imgHeight;

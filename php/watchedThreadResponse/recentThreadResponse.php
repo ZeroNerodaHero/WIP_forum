@@ -11,7 +11,7 @@
         if($res->num_rows > 0){
             while($row = $res->fetch_assoc()){
                 $recentRed = "?page=$board&TID=".$row["threadId"];
-                $displayTime = "[".date("m/d-H:i",strtotime($row["time"])) . "] ";
+                $displayTime = "[".timeRegFormat($row["time"]) . "] ";
                 $displayTxt = $displayTime.$row["title"];
                 echo "<div class=watchingLnk><a href='$recentRed'>"
                     .$displayTxt . "</a></div>";
