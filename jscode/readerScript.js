@@ -146,18 +146,23 @@ function imgRenderInit(board,threadId){
     setTimeout(function(){
         //compare if old height is new height
         //console.log(imgLayer.offsetHeight+" ? "+imgHeight);
+        var outputMsg = "Reader was loaded. The current dimensionality is fine."+
+                        "<br>[why am I seeing this?]";
         if(imgLayer.offsetHeight != imgHeight){
             window.location.reload();
-        } else{
-            var errorBox= document.createElement("div");
-            errorBox.className= "noncontentMsg";
-            errorBox.innerHTML = "ERROR: YOU DO NOT HAVE ENOUGH POINTS. "+
-                                "NEED AT LEAST 100 FOR A EMOTE. START SLAVING BOI";
-            document.getElementById("boardHeader").appendChild(errorBox);
-            setTimeout(function(){
-                    errorBox.remove();
-            }, 2000);
-        }
+        } 
+        var msgBox= document.createElement("div");
+        msgBox.className= "noncontentMsg";
+        msgBox.innerHTML = outputMsg;
+        document.getElementById("boardHeader").appendChild(msgBox);
+        setTimeout(function(){
+            msgBox.remove();
+        }, 3000);
+
+        //style
+        msgBox.style.boxShadow = msgBox.style.webkitBoxShadow =
+        "0px 0px 17px 4px #9fffb5";
+
     },5000);
 }
 
