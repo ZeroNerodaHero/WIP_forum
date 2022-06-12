@@ -3,7 +3,7 @@ var imgWidth = 0, imgHeight = 0, imgLeft = 0, imgTop= 0;
 var minSize = 4;
 var maxX=-1,maxY=-1,minX=-1,minY=-1;
 var itCount = 0;
-var colorSelect="red",colorRead="#f18973a2";
+var colorSelect="red",colorRead="#f1897349";
 //used for quick access. no checks given whether or not
 //this is valid
 var threadID=-1;
@@ -44,12 +44,17 @@ class commentRect{
 function imgRenderInit(board,threadId){
     threadID = threadId;
     //for resizes
+    var otherCommentEle = document.getElementById("otherCommentCont");
+    var allCommentEle = document.getElementById("imgCommentCont");
+    var nheight = window.innerHeight * 0.75;
+    allCommentEle.style.height=nheight+"px";
+    otherCommentEle.style.height=(nheight-100)+"px";
+
     window.addEventListener('resize', function(){
         if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
             //console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
             //console.log("resize "+(++itCount));
             imgRenderInit(board,threadId);
-
         }
     });
 
@@ -137,8 +142,23 @@ function imgRenderInit(board,threadId){
         clearCanvas(botCtx);
         genComments(botCtx,allComments,board,threadId);
         usrCommentEle.style.display="none";
-        console.log("double:");
     });
+    setTimeout(function(){
+        //compare if old height is new height
+        //console.log(imgLayer.offsetHeight+" ? "+imgHeight);
+        if(imgLayer.offsetHeight != imgHeight){
+            window.location.reload();
+        } else{
+            var errorBox= document.createElement("div");
+            errorBox.className= "noncontentMsg";
+            errorBox.innerHTML = "ERROR: YOU DO NOT HAVE ENOUGH POINTS. "+
+                                "NEED AT LEAST 100 FOR A EMOTE. START SLAVING BOI";
+            document.getElementById("boardHeader").appendChild(errorBox);
+            setTimeout(function(){
+                    errorBox.remove();
+            }, 2000);
+        }
+    },5000);
 }
 
 /*
@@ -225,10 +245,9 @@ function showCommentText(eleComments,strComment,type=0,cId="",cTime="",color="")
                 "</div>"+innerTXT;
 
     } else{
-        console.log("hahahaha");
         tmp.style.backgroundColor="red";
     }
-    tmp.innerHTML = innerTXT;
+    tmp.innerHTML = "<div class=commentCont>"+innerTXT+"</div>";
 
     if(color!="")tmp.style.backgroundColor=color;
     eleComments.appendChild(tmp);
@@ -262,7 +281,7 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
             commentSec.value = "";
 
             var eleComments = document.getElementById("otherCommentCont");
-            showCommentText(eleComments,"POST SUCCESS");
+            showCommentText(eleComments,this.responseText);
         }
     }
     sx = sx/imgWidth; sy = sy/imgHeight;
@@ -272,4 +291,16 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
     xhttp.send("board="+cBoard+"&TID="+cThread+
                 "&sx="+sx+"&sy="+sy+"&ex="+ex+"&ey="+ey+"&comment="+comment);
 
+}
+function toggleAnote(){
+    var lowerEle = document.getElementById("lowerCanvas");
+    var highlightEle = document.getElementById("highlightCanvas");
+
+    if(lowerEle.style.display=="none"){
+        lowerEle.style.display = "block";
+        highlightEle.style.display = "block";
+    } else{
+        lowerEle.style.display = "none";
+        highlightEle.style.display = "none";
+    }
 }

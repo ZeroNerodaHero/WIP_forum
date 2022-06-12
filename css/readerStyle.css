@@ -10,6 +10,10 @@
     padding-left: 2px;
     margin-bottom: 0px;
 }
+.commentCont{
+    padding: 5px 3px 8px 4px;
+    word-break: break-all;
+}
 
 /*
  * img render
@@ -31,18 +35,25 @@
     position: -webkit-sticky;
     position: sticky;
 
-    height: fit-content;
+    height: 500px;
+}
+#otherCommentCont{
+    height: 400px;
+    overflow: auto;
+    position: -webkit-sticky;
+    position: sticky;
 }
 .imgComment{
     width: 100%;
     background-color: #345678b5;
+    /*
     border: 2px solid black;
     border-radius: 3px;
 
     margin: 3px;
-    padding: 5px 3px 8px 4px;
+    */
+    margin-top: 3px;
     
-    word-break: break-all;
 }
 .imgRenderCanvas{
     border: 2px solid black;
@@ -50,33 +61,65 @@
     user-select: none;
 }
 #imgRenderCont{
+    margin-right:5px;
     display: grid;
-    grid-template-columns: 74% 1% 24% 1%;
-    grid-template-areas: "reader . comment .";
+    grid-template-columns: 74% 1% 25%;
+    grid-template-areas: "reader . comment";
 }
 #usrCommentCont{
     width: 100%;
     background-color: #345678b5;
+    /*
     border: 2px solid black;
     border-radius: 3px;
 
     margin: 3px;
-    padding: 6px 2px 6px 2px;
+    */
+    padding: 6px 0px 6px 0px;
 
     display: none;
+    margin-bottom: 8px;
 }
 #usrTextConstraint{
-    padding: 0px 6px 0px 0px;
+    padding: 0px 3px 0px 3px;
     text-align: center;
 }
 #usrCommentTitle{
     margin-left: 3%;
 }
 #usrCommentText{
-    width: 100%;
+    width: 95%;
+    padding: 2px;
+    resize:none;
 }
 #usrCommentSubmitCont{
     margin-right: 3%;
     text-align: right;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow:-top inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: red;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+
+#commentToggleCont{
+    text-align: center;
+    margin-bottom:3px;
+}
