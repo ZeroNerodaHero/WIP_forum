@@ -41,6 +41,18 @@ class commentRect{
         console.log(this.sx + ","+this.sy+" -> "+this.ex +","+this.ey);
     }
 }
+function imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas){
+    console.log("is wtf null "+ imgLayer);
+    imgWidth = imgLayer.offsetWidth, 
+    imgHeight = imgLayer.offsetHeight,
+    imgLeft = (imgLayer.offsetLeft-imgLayer.style.marginLeft),
+    imgTop= (imgLayer.offsetTop-imgLayer.style.marginTop);
+
+    usrCanvas.style.left = botCanvas.style.left = highlightCanvas.style.left = imgLeft+"px";
+    usrCanvas.style.top= botCanvas.style.top= highlightCanvas.style.top = imgTop+"px";
+    usrCanvas.width = botCanvas.width = highlightCanvas.width = imgWidth;
+    usrCanvas.height = botCanvas.height = highlightCanvas.height = imgHeight;
+}
 function imgRenderInit(board,threadId){
     threadID = threadId;
     //for resizes
@@ -50,35 +62,27 @@ function imgRenderInit(board,threadId){
     allCommentEle.style.height=nheight+"px";
     otherCommentEle.style.height=(nheight-100)+"px";
 
-    window.addEventListener('resize', function(){
-        if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
-            //console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
-            //console.log("resize "+(++itCount));
-            imgRenderInit(board,threadId);
-        }
-    });
-
+    const allComments = [];
+    var usrCommentEle= document.getElementById("usrCommentCont");
 
     var imgLayer = document.getElementById("imgContLayer");
-    imgWidth = imgLayer.offsetWidth, 
-    imgHeight = imgLayer.offsetHeight,
-    imgLeft = (imgLayer.offsetLeft-imgLayer.style.marginLeft),
-    imgTop= (imgLayer.offsetTop-imgLayer.style.marginTop);
-
-    const allComments = [];
-
     var usrCanvas= document.getElementById("upperCanvas");
     var usrCtx = usrCanvas.getContext("2d");
     var botCanvas = document.getElementById("lowerCanvas");
     var botCtx= botCanvas.getContext("2d");
     var highlightCanvas = document.getElementById("highlightCanvas");
     var highlightCtx= highlightCanvas.getContext("2d");
-    usrCanvas.style.left = botCanvas.style.left = highlightCanvas.style.left = imgLeft+"px";
-    usrCanvas.style.top= botCanvas.style.top= highlightCanvas.style.top = imgTop+"px";
-    usrCanvas.width = botCanvas.width = highlightCanvas.width = imgWidth;
-    usrCanvas.height = botCanvas.height = highlightCanvas.height = imgHeight;
 
-    var usrCommentEle= document.getElementById("usrCommentCont");
+    window.addEventListener('resize', function(){
+        if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
+            //console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
+            console.log("resize ");
+            console.log("is null "+ imgLayer.offsetWidth);
+            imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas);
+            genComments(botCtx,allComments,board,threadId);
+        }
+    });
+    imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas);
     genComments(botCtx,allComments,board,threadId);
 
     var isDown = false;
@@ -143,6 +147,7 @@ function imgRenderInit(board,threadId){
         genComments(botCtx,allComments,board,threadId);
         usrCommentEle.style.display="none";
     });
+    /*
     setTimeout(function(){
         //compare if old height is new height
         //console.log(imgLayer.offsetHeight+" ? "+imgHeight);
@@ -164,6 +169,7 @@ function imgRenderInit(board,threadId){
         "0px 0px 17px 4px #9fffb5";
 
     },5000);
+    */
 }
 
 /*

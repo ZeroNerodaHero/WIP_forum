@@ -30,3 +30,7 @@ export function createNonContentMsg(text,duration=2000,boxShadowColor="rgba(0,0,
     return errorBox;
 }
 
+/*
+ *
+ * maybe use resize observer?
+ */
