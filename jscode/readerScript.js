@@ -42,7 +42,6 @@ class commentRect{
     }
 }
 function imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas){
-    console.log("is wtf null "+ imgLayer);
     imgWidth = imgLayer.offsetWidth, 
     imgHeight = imgLayer.offsetHeight,
     imgLeft = (imgLayer.offsetLeft-imgLayer.style.marginLeft),
@@ -76,8 +75,6 @@ function imgRenderInit(board,threadId){
     window.addEventListener('resize', function(){
         if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
             //console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
-            console.log("resize ");
-            console.log("is null "+ imgLayer.offsetWidth);
             imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas);
             genComments(botCtx,allComments,board,threadId);
         }
@@ -88,37 +85,63 @@ function imgRenderInit(board,threadId){
     var isDown = false;
     var sx=0,sy=0,ex=0,ey=0;
 
+    //choose whether it is mouse(0) or touch(1)
+    var deviceType = 0; 
+    const eventType = ["mousedown","mousemove","mouseup"];
+    if("ontouchstart" in document.documentElement &&
+      navigator.userAgent.match(/Mobi/)){
+        deviceType = 1; 
+        eventType[0] = "touchstart";
+        eventType[1] = "touchmove";
+        eventType[2] = "touchend";
+        
+    }
+
+
     //add command to tell initial mousedown position
     //on mouse up see difference
     //create rectangle
-    usrCanvas.addEventListener("mousedown",function(){
+    //how this code is written: if(mouse or touch) do mouse or touch action
+    //it might seem like replicated code, however i have to add a few extra
+    //parameters for mobile
+    ////down/start
+    usrCanvas.addEventListener(eventType[0],function(){
+        var bound = event.target.getBoundingClientRect();
         isDown = true;
-        sx = event.offsetX;
-        sy = event.offsetY;
+        sx = (!deviceType) ? event.offsetX : (event.touches[0].pageX-bound.left);
+        sy = (!deviceType) ? event.offsetY : (event.touches[0].pageY-bound.top);
+        if(deviceType) event.preventDefault();
+//console.log(bound.left+' '+bound.top);
+//console.log(sx+' '+sy);
+//console.log(event);
         maxX=sx,maxY=sy,minX=sx,minY=sy;
 
         //clear whole canvas
         clearCanvas(usrCtx);
-        showComments(event.offsetX,event.offsetY,allComments);
+        showComments(sx,sy,allComments);
     });
-    usrCanvas.addEventListener("mousemove",function(){
+    usrCanvas.addEventListener(eventType[1],function(){
+        var bound = event.target.getBoundingClientRect();
+        ex = (!deviceType) ? event.offsetX : (event.changedTouches[0].pageX-bound.left);
+        ey = (!deviceType) ? event.offsetY : (event.changedTouches[0].pageY-bound.top);
         if(isDown){
-            ex = event.offsetX;
-            ey = event.offsetY;
+//console.log(bound.left+' '+bound.top);
+//console.log("rect->"+sx+','+sy+" to "+ex+","+ey);
             maxX=Math.max(maxX,ex),maxY=Math.max(maxY,ey);
             minX=Math.min(minX,ex),minY=Math.min(minY,ey);
             //console.log(minX+","+minY+":::"+maxX+","+maxY);
 
             //clear from min to max
             clearCanvas(usrCtx,minX,minY,maxX,maxY,0);
-            drawRect(usrCtx,sx,sy,event.offsetX,event.offsetY);
+            drawRect(usrCtx,sx,sy,ex,ey);
         } else{
-            highlightRect(highlightCtx,event.offsetX,event.offsetY,allComments);
+            highlightRect(highlightCtx,ex,ey,allComments);
         }
     });
-    usrCanvas.addEventListener("mouseup",function(){
-        ex = event.offsetX;
-        ey = event.offsetY;
+    usrCanvas.addEventListener(eventType[2],function(){
+        var bound = event.target.getBoundingClientRect();
+        ex = (!deviceType) ? event.offsetX : (event.changedTouches[0].pageX-bound.left);
+        ey = (!deviceType) ? event.offsetY : (event.changedTouches[0].pageY-bound.top);
         
         if(isDown){
             maxX=Math.max(maxX,ex),maxY=Math.max(maxY,ey);
@@ -147,29 +170,24 @@ function imgRenderInit(board,threadId){
         genComments(botCtx,allComments,board,threadId);
         usrCommentEle.style.display="none";
     });
-    /*
-    setTimeout(function(){
-        //compare if old height is new height
-        //console.log(imgLayer.offsetHeight+" ? "+imgHeight);
-        var outputMsg = "Reader was loaded. The current dimensionality is fine."+
-                        "<br>[why am I seeing this?]";
-        if(imgLayer.offsetHeight != imgHeight){
-            window.location.reload();
-        } 
-        var msgBox= document.createElement("div");
-        msgBox.className= "noncontentMsg";
-        msgBox.innerHTML = outputMsg;
-        document.getElementById("boardHeader").appendChild(msgBox);
-        setTimeout(function(){
-            msgBox.remove();
-        }, 3000);
-
-        //style
-        msgBox.style.boxShadow = msgBox.style.webkitBoxShadow =
-        "0px 0px 17px 4px #9fffb5";
-
-    },5000);
-    */
+    //every 100ms check is size has changed
+    //if after 3 secs-> delete inteval
+    var timeCheck = 0;
+    var checkResize = setInterval(function(){
+        if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
+            //console.log("reloaded well");
+            imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas);
+            genComments(botCtx,allComments,board,threadId);
+            timeCheck = 0;
+        } else{
+            if(timeCheck >= 3000) {
+                clearInterval(checkResize);
+                //console.log("no timer");
+            } else{
+                timeCheck+=100;
+            }
+        }
+    },100);
 }
 
 /*
