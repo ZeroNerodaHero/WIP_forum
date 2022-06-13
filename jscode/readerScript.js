@@ -113,7 +113,7 @@ function imgRenderInit(board,threadId){
         if(deviceType) event.preventDefault();
 //console.log(bound.left+' '+bound.top);
 //console.log(sx+' '+sy);
-console.log(event);
+//console.log(event);
         maxX=sx,maxY=sy,minX=sx,minY=sy;
 
         //clear whole canvas
@@ -122,11 +122,14 @@ console.log(event);
     });
     usrCanvas.addEventListener(eventType[1],function(){
         var bound = event.target.getBoundingClientRect();
-        ex = (!deviceType) ? event.offsetX : (event.changedTouches[0].clientX-bound.left);
-        ey = (!deviceType) ? event.offsetY : (event.changedTouches[0].clientY-bound.top);
+        moveX = (!deviceType) ? event.offsetX : (event.changedTouches[0].clientX-bound.left);
+        moveY = (!deviceType) ? event.offsetY : (event.changedTouches[0].clientY-bound.top);
+
         if(isDown){
 //console.log(bound.left+' '+bound.top);
 //console.log("rect->"+sx+','+sy+" to "+ex+","+ey);
+            ex = moveX;
+            ey = moveY;
             maxX=Math.max(maxX,ex),maxY=Math.max(maxY,ey);
             minX=Math.min(minX,ex),minY=Math.min(minY,ey);
             //console.log(minX+","+minY+":::"+maxX+","+maxY);
@@ -135,7 +138,7 @@ console.log(event);
             clearCanvas(usrCtx,minX,minY,maxX,maxY,0);
             drawRect(usrCtx,sx,sy,ex,ey);
         } else{
-            highlightRect(highlightCtx,ex,ey,allComments);
+            highlightRect(highlightCtx,moveY,moveY,allComments);
         }
     });
     usrCanvas.addEventListener(eventType[2],function(){
