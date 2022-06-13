@@ -108,12 +108,12 @@ function imgRenderInit(board,threadId){
     usrCanvas.addEventListener(eventType[0],function(){
         var bound = event.target.getBoundingClientRect();
         isDown = true;
-        sx = (!deviceType) ? event.offsetX : (event.touches[0].pageX-bound.left);
-        sy = (!deviceType) ? event.offsetY : (event.touches[0].pageY-bound.top);
+        sx = (!deviceType) ? event.offsetX : (event.touches[0].clientX-bound.left);
+        sy = (!deviceType) ? event.offsetY : (event.touches[0].clientY-bound.top);
         if(deviceType) event.preventDefault();
 //console.log(bound.left+' '+bound.top);
 //console.log(sx+' '+sy);
-//console.log(event);
+console.log(event);
         maxX=sx,maxY=sy,minX=sx,minY=sy;
 
         //clear whole canvas
@@ -122,8 +122,8 @@ function imgRenderInit(board,threadId){
     });
     usrCanvas.addEventListener(eventType[1],function(){
         var bound = event.target.getBoundingClientRect();
-        ex = (!deviceType) ? event.offsetX : (event.changedTouches[0].pageX-bound.left);
-        ey = (!deviceType) ? event.offsetY : (event.changedTouches[0].pageY-bound.top);
+        ex = (!deviceType) ? event.offsetX : (event.changedTouches[0].clientX-bound.left);
+        ey = (!deviceType) ? event.offsetY : (event.changedTouches[0].clientY-bound.top);
         if(isDown){
 //console.log(bound.left+' '+bound.top);
 //console.log("rect->"+sx+','+sy+" to "+ex+","+ey);
@@ -140,8 +140,8 @@ function imgRenderInit(board,threadId){
     });
     usrCanvas.addEventListener(eventType[2],function(){
         var bound = event.target.getBoundingClientRect();
-        ex = (!deviceType) ? event.offsetX : (event.changedTouches[0].pageX-bound.left);
-        ey = (!deviceType) ? event.offsetY : (event.changedTouches[0].pageY-bound.top);
+        ex = (!deviceType) ? event.offsetX : (event.changedTouches[0].clientX-bound.left);
+        ey = (!deviceType) ? event.offsetY : (event.changedTouches[0].clientY-bound.top);
         
         if(isDown){
             maxX=Math.max(maxX,ex),maxY=Math.max(maxY,ey);
