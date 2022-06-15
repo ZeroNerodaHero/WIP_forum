@@ -5,11 +5,11 @@
         <link rel="stylesheet" href="../css/reuseStyle.css">
         <link rel="stylesheet" href="../css/readerStyle.css">
         <link rel="icon" href="../res/icon/icon_0.png">
-        <script type="text/javascript" src="../css/jscrap.js"></script>
-        <script type="text/javascript" src="../css/cookieSetting.js"></script>
-        <script type="text/javascript" src="../css/lastView.js"></script>
-        <script type="text/javascript" src="../css/readerScript.js"></script>
-        <script type="text/javascript" src="../css/starThread.js"></script>
+        <script type="text/javascript" src="../jscode/jscrap.js"></script>
+        <script type="text/javascript" src="../jscode/cookieSetting.js"></script>
+        <script type="text/javascript" src="../jscode/lastView.js"></script>
+        <script type="text/javascript" src="../jscode/readerScript.js"></script>
+        <script type="text/javascript" src="../jscode/starThread.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
         <?php
@@ -75,10 +75,10 @@
 		?>
 	    </div>
             <div id = "board">
-            	<?php
+                <?php
                 include_once('genPhp/generatePage.php');
                 generatePage();
-            	?>
+                ?>
 	    </div>
 
             <footer>

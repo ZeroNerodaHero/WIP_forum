@@ -30,6 +30,11 @@
 
             //check is it is a bad word
             $word = substr($content,$ws,$we-$ws);
+/*        
+            $offsetBack = 0;
+            $wordLen = $we-$ws;
+            while($word[$wordLen-$offsetBack] > 
+ */
             if(isBadWord($word)) return false;
             
             if($content[$we] == "\n" || $content[$we] == "\r\n" || 

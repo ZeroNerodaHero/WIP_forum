@@ -21,6 +21,9 @@
         /*------------------------------------*/
 
         echo "<div id=imgCommentCont>
+                <div id=commentToggleCont>
+                    <a href=javascript:toggleAnote()>toggle</a>
+                </div>
                 <div id=usrCommentCont>
                     <div id=usrCommentTitle>
                         Comment:
@@ -33,6 +36,7 @@
                         <button type='submit' id=usrCommentSubmit>Post</button>
                     </div>
                 </div>
+
                 <div id=otherCommentCont>
                 </div>
               </div>";

@@ -77,8 +77,6 @@ footer{
 }
 
 #board{
-    padding-left: 1%;
-    padding-right: 1%;
     padding-top: 1%;
     background-color: #808080e3;
     margin-bottom: 3%;
@@ -243,11 +241,15 @@ footer{
     border: 1px solid black;
 }
 
+.threadEncap{
+    padding-left : 1%;
+    padding-right: 1%;
+}
 .threadEncap:hover{
     background-image: linear-gradient(rgba(238,130,238,0.5) 0 0);
-    box-shadow: 0px -3px 1px 5px rgba(238,130,238,0.5);
-    -webkit-box-shadow: 0px -3px 1px 5px rgba(238,130,238,0.5);
-    -moz-box-shadow: 0px -3px 1px 5px rgba(238,130,238,0.5);
+    box-shadow:         0px -7px 2px 0px rgba(238,130,238,0.5);
+    -webkit-box-shadow: 0px -7px 2px 0px rgba(238,130,238,0.5);
+    -moz-box-shadow:    0px -7px 2px 0px rgba(238,130,238,0.5);
 }
 .thread_title{
     font-size: 20px; 
@@ -262,8 +264,10 @@ footer{
 	margin-left: 3px;
 }
 
-.postEncap(){
+.postEncap{
     margin-top: 0px;
+    padding-left: 1%;
+    padding-right: 1%;
 }
 
 .postContent{

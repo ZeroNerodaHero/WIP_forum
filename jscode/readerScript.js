@@ -1,6 +1,6 @@
 var global_lineWidth = 2;
 var imgWidth = 0, imgHeight = 0, imgLeft = 0, imgTop= 0;
-var minSize = 4;
+var minSize = 4, maxSize = 900000;
 var maxX=-1,maxY=-1,minX=-1,minY=-1;
 var itCount = 0;
 var colorSelect="red",colorRead="#f1897349";
@@ -52,6 +52,7 @@ function imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas){
     usrCanvas.width = botCanvas.width = highlightCanvas.width = imgWidth;
     usrCanvas.height = botCanvas.height = highlightCanvas.height = imgHeight;
 }
+
 function imgRenderInit(board,threadId){
     threadID = threadId;
     //for resizes
@@ -120,6 +121,7 @@ function imgRenderInit(board,threadId){
         clearCanvas(usrCtx);
         showComments(sx,sy,allComments);
     });
+    ////move
     usrCanvas.addEventListener(eventType[1],function(){
         var bound = event.target.getBoundingClientRect();
         moveX = (!deviceType) ? event.offsetX : (event.changedTouches[0].clientX-bound.left);
@@ -138,7 +140,7 @@ function imgRenderInit(board,threadId){
             clearCanvas(usrCtx,minX,minY,maxX,maxY,0);
             drawRect(usrCtx,sx,sy,ex,ey);
         } else{
-            highlightRect(highlightCtx,moveY,moveY,allComments);
+            highlightRect(highlightCtx,moveX,moveY,allComments);
         }
     });
     usrCanvas.addEventListener(eventType[2],function(){
@@ -150,13 +152,12 @@ function imgRenderInit(board,threadId){
             maxX=Math.max(maxX,ex),maxY=Math.max(maxY,ey);
             minX=Math.min(minX,ex),minY=Math.min(minY,ey);
 
-            if(Math.abs((ex-sx)*(ey-sy)) <= minSize){
-                //console.log(Math.abs((event.offsetX-sx)*(event.offsetY-sy)));
-                //console.log(event.offsetX+' '+sx+' '+event.offsetY+' '+sy);
-                //console.log(sx+','+sy+"-->"+ex+","+ey);
-                usrCommentEle.style.display="none";
-            } else{
+            var highSize = Math.abs((ex-sx)*(ey-sy));
+            console.log(highSize);
+            if(highSize > minSize && highSize < maxSize){
                 usrCommentEle.style.display="block";
+            } else{
+                usrCommentEle.style.display="none";
             }
 
             clearCanvas(usrCtx,minX,minY,maxX,maxY,0);

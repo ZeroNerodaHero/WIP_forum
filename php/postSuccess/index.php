@@ -9,14 +9,13 @@
     <head>
         <link rel="stylesheet" href="../../css/postSuccess.css">
         <link rel="icon" href="../../../res/icon/icon_0.png">
-		<script type="text/javascript" src="../../css/jscrap.js"></script>
+	<script type="text/javascript" src="../../jscode/jscrap.js"></script>
         <title>FUNCEL.XYZ</title>
     </head>
 
     <body class=postSuccessBody>
 
     <?php
-
 	$hasCaptcha = isset( $_POST["g-recaptcha-response"]);
         $responseKeys;
 	if($hasCaptcha){
@@ -149,6 +148,7 @@
                 return;
             }
             $content = str_replace("<","&lt;",$content);
+            $content = str_replace("\t","&nbsp&nbsp&nbsp&nbsp;",$content);
             $content = str_replace(">","&gt;",$content);
 
             $content = postParser($content) . "<br>";
@@ -405,6 +405,7 @@
                         ex float, 
                         ey float, 
                         comment varchar(5000), 
+                        responseStr MEDIUMTEXT NULL,
                         time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
                         primary key(postId))";
             myQuery($connBoards,$que);

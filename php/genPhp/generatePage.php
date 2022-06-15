@@ -68,7 +68,7 @@
     function generateBoard($board){
         include_once("acclaimGenerator/listAcclaim_func.php");
         global $boardThreads,$pgN,$threadsPerPage;
-	//post pinned threads
+
         for($i = $pgN * $threadsPerPage, $j = 0; $j < $threadsPerPage && 
          $i < count($boardThreads); $i++, $j++){
             $row = $boardThreads[$i]; 

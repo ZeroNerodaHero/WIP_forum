@@ -10,8 +10,8 @@ function jumpPost(val){
     
     var oldColor= ele.style.backgroundColor;
     ele.style.backgroundColor = "rgba(238,130,238,0.5)";
-    ele.style.boxShadow = "0px -3px 1px 5px rgba(238,130,238,0.5)";
-    ele.style.webkitBoxShadow = "0px -3px 1px 5px rgba(238,130,238,0.5)";
+    ele.style.boxShadow =       "0px -7px 2px 0px rgba(238,130,238,0.5)";
+    ele.style.webkitBoxShadow = "0px -7px 2px 0px rgba(238,130,238,0.5)";
 
     setTimeout(function() {
         ele.style.backgroundColor = oldColor;
