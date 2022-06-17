@@ -7,6 +7,7 @@ var colorSelect="red",colorRead="#f1897349";
 //used for quick access. no checks given whether or not
 //this is valid
 var threadID=-1;
+var boardName=null;
 
 //system matically generate all img.
 //post in succession
@@ -54,7 +55,9 @@ function imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas){
 }
 
 function imgRenderInit(board,threadId){
+    boardName=board;
     threadID = threadId;
+    
     //for resizes
     var otherCommentEle = document.getElementById("otherCommentCont");
     var allCommentEle = document.getElementById("imgCommentCont");
@@ -153,7 +156,6 @@ function imgRenderInit(board,threadId){
             minX=Math.min(minX,ex),minY=Math.min(minY,ey);
 
             var highSize = Math.abs((ex-sx)*(ey-sy));
-            console.log(highSize);
             if(highSize > minSize && highSize < maxSize){
                 usrCommentEle.style.display="block";
             } else{
@@ -263,27 +265,112 @@ function showComments(pos_x,pos_y,rectAr){
     deleteAllChildren(eleComments);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            showCommentText(eleComments,cObj.strComment,1,cObj.uid,cObj.time);
+            showCommentText(eleComments,cObj.strComment,1,cObj.pid,cObj.uid,cObj.time);
         }
     }
 }
-function showCommentText(eleComments,strComment,type=0,cId="",cTime="",color=""){
+function showCommentText(eleComments,strComment,type=0,pId="",uId="",cTime="",color=""){
     var tmp = document.createElement("div");
     tmp.className = "imgComment";
+    tmp.id= "iC_"+pId;
     var innerTXT= "<p class=contentCommentBox>"+strComment+"</p>";
     if(type==1){
-        innerTXT = "<div class=commentInfoCont>"+
-                "<span class=idCommentBox>"+cId+"</span>"+
-                "<span class=timeCommentBox>"+cTime+"</span>"+
-                "</div>"+innerTXT;
-
+        innerTXT = genericImgComment(uId,cTime,strComment);
     } else{
         tmp.style.backgroundColor="red";
     }
     tmp.innerHTML = "<div class=commentCont>"+innerTXT+"</div>";
 
+    tmp.addEventListener('click', function(){
+        //theoretically only 1 should exist if there is no expansion
+        if(document.getElementById("iC_"+pId).childElementCount == 1){
+            refreshResponseComments(pId);
+        }
+    });
+
     if(color!="")tmp.style.backgroundColor=color;
     eleComments.appendChild(tmp);
+}
+function genericImgComment(uId,cTime,strComment){
+    var innerTXT= "<div class=contentCommentBox><br>"+strComment+"</div>";
+    innerTXT = "<div class=commentInfoCont>"+
+            "<span class=idCommentBox>"+uId+"&nbsp&nbsp&nbsp&nbsp</span>"+
+            "<span class=timeCommentBox>"+cTime+"</span>"+
+            "</div>"+innerTXT;
+    return innerTXT;
+}
+
+function refreshResponseComments(pId){
+    var commentEle = document.getElementById("iC_"+pId);
+    var commentExpanded = document.getElementById("commentExpanded");
+    if(commentExpanded != null){
+        commentExpanded.remove();
+        console.log("removed");
+    }
+
+    commentExpanded = expandResponseComments(pId);
+    commentEle.appendChild(commentExpanded);
+    var commentResponseTextarea = createTextArea();
+    commentExpanded.appendChild(commentResponseTextarea);
+}
+
+function expandResponseComments(pId){
+    var eleExpandedComment = document.createElement("div");
+    eleExpandedComment.id = "commentExpanded";
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            //jsonify
+            /*
+            var commentResponse = document.createElement("div");
+            commentResponse.className = "commentResponse";
+            commentResponse.innerHTML = genericImgComment("user","14","test");
+            eleExpandedComment.appendChild(commentResponse);
+            */
+            eleExpandedComment.innerHTML = "<div class=commentResponse>"+
+                                           genericImgComment("user","14","test")+
+                                           "</div>"+
+                                           eleExpandedComment.innerHTML;
+        }
+    };
+    var selector = boardName+"_"+threadID;
+    xhttp.open("GET", "readerPhp/readerGetCommentResponse.php?selector="+selector+"&pId="+pId);
+    xhttp.send();
+    return eleExpandedComment;
+}
+
+function createTextArea(){
+    var eleResponseBox = document.createElement("div");
+    eleResponseBox.className = "newCommentCont";
+    eleResponseBox.id = "newCommentResponse";
+    var textBox= "<div class=usrCommentTitle>Comment</div>"+
+                 "<div class=usrTextConstraint><textarea class=usrCommentTextArea "+
+                 "id=usrCommentResponseText rows=3></textarea><br></div>";
+    eleResponseBox.innerHTML = textBox;
+
+    var eleButtonContainer = document.createElement("div");
+    eleButtonContainer.className = "usrCommentSubmitCont";
+    var eleButton = document.createElement("button");
+    eleButton.innerText="Post";
+
+    eleResponseBox.appendChild(eleButton);
+    return eleResponseBox;
+}
+
+function postResponseComment(pId,responseComment){
+    //can i use one xhttp instead of so many?
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            expandResponseComments(pId);
+        }
+    }
+    xhttp.open("POST", "readerPhp/readerGetCommentResponse.php?selector="+selector+"&pId="+pId);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("newResponse="+responseComment);
+                
 }
 
 function deleteAllChildren(ele){

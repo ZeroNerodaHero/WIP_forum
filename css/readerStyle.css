@@ -13,6 +13,11 @@
 .commentCont{
     padding: 5px 3px 8px 4px;
     word-break: break-all;
+
+    background-color: #345678a5;
+}
+.commentCont:hover{
+    background-color: #345678e5;
 }
 
 /*
@@ -45,7 +50,6 @@
 }
 .imgComment{
     width: 100%;
-    background-color: #345678a5;
     /*
     border: 2px solid black;
     border-radius: 3px;
@@ -53,9 +57,6 @@
     margin: 3px;
     */
     margin-top: 3px;
-}
-.imgComment:hover{
-    background-color: #345678e5;
 }
 .imgRenderCanvas{
     border: 2px solid black;
@@ -69,32 +70,34 @@
     grid-template-areas: "reader . comment";
 }
 #usrCommentCont{
+    display: none;
+}
+.newCommentCont{
     width: 100%;
     background-color: #345678b5;
     /*
     border: 2px solid black;
     border-radius: 3px;
 
-    margin: 3px;
     */
+    margin-top: 3px;
     padding: 6px 0px 6px 0px;
 
-    display: none;
     margin-bottom: 8px;
 }
-#usrTextConstraint{
+.usrTextConstraint{
     padding: 0px 3px 0px 3px;
     text-align: center;
 }
-#usrCommentTitle{
+.usrCommentTitle{
     margin-left: 3%;
 }
-#usrCommentText{
+.usrCommentTextArea{
     width: 95%;
     padding: 2px;
     resize:none;
 }
-#usrCommentSubmitCont{
+.usrCommentSubmitCont{
     margin-right: 3%;
     text-align: right;
 }
@@ -125,3 +128,17 @@
     text-align: center;
     margin-bottom:3px;
 }
+/*comment expandeds stuff
+ */
+#commentExpanded{
+    margin-left: 10px;
+}
+.commentResponse{
+    background-color: #345678a5;
+    margin-top: 3px;
+    padding: 5px 3px 8px 4px;
+}
+.commentResponse:hover{
+    background-color: #345678e5;
+}
+
