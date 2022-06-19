@@ -24,15 +24,15 @@
                 <div id=commentToggleCont>
                     <a href=javascript:toggleAnote()>toggle</a>
                 </div>
-                <div id=usrCommentCont>
-                    <div id=usrCommentTitle>
+                <div id=usrCommentCont class=newCommentCont>
+                    <div class=usrCommentTitle>
                         Comment:
                     </div>
-                    <div id=usrTextConstraint>
-                        <textarea id='usrCommentText' name='usrCommentText'
+                    <div class=usrTextConstraint>
+                        <textarea class=usrCommentTextArea id='usrCommentText' name='usrCommentText'
                          rows='5'></textarea><br>
                     </div>
-                    <div id=usrCommentSubmitCont>
+                    <div class=usrCommentSubmitCont>
                         <button type='submit' id=usrCommentSubmit>Post</button>
                     </div>
                 </div>

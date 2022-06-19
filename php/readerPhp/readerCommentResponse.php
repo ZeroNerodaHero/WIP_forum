@@ -10,6 +10,14 @@
         $TID=$_POST["tid"];
         $pId = $_POST["pId"];
         $uId = getUsrSafeHash(getUsrID(),$TID,8012921);
+
+        $newResponse= str_replace("<","&lt;",$newResponse);
+        $newResponse= str_replace(">","&gt;",$newResponse);
+        //$newResponse= nl2br($newResponse);
+        $newResponse= str_replace("\n","<br>",$newResponse);
+        $newResponse= str_replace("\"","\\\"",$newResponse);
+        //JSON doesn't like \
+        $newResponse= str_replace("/","\\/;",$newResponse);
     } else{
         $board=$_GET["board"];
         $TID=$_GET["tid"];
@@ -58,14 +66,14 @@
             $responseJSON= str_replace(']}',','.$newInsert."]}",
                                        $responseStr);
         } 
-//echo "\n$responseJSON\n";
+        //add slashes because slashes need slashes
+        $responseJSON = addslashes($responseJSON);
 
         $que = "UPDATE $selector
                 SET responseStr='$responseJSON',
                     responseCnt=$responseCnt
                 WHERE postId=$pId";
         $res = $connBoards->query($que);
-        //echo $que;
     }
-    echo $responseJSON;
+    echo $responseJSON."";
 ?>

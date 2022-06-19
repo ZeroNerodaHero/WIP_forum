@@ -284,13 +284,14 @@ function showCommentText(eleComments,strComment,type=0,pId="",uId="",cTime="",co
     commentMainBody.id="iC_"+pId+"_commentBody";
     commentMainBody.innerHTML = innerTXT;
 
-    commentMainBody.addEventListener('click', function(){
-        //theoretically only 1 should exist if there is no expansion
-        if(document.getElementById("iC_"+pId).childElementCount == 1){
-            refreshResponseComments(pId);
-            console.log("ok");
-        }
-    });
+    if(type!=0){
+        commentMainBody.addEventListener('click', function(){
+            //theoretically only 1 should exist if there is no expansion
+            if(document.getElementById("iC_"+pId).childElementCount == 1){
+                refreshResponseComments(pId);
+            }
+        });
+    }
     tmp.appendChild(commentMainBody);
 
     if(color!="")tmp.style.backgroundColor=color;
@@ -314,17 +315,8 @@ function refreshResponseComments(pId){
 
     commentExpanded = expandResponseComments(pId);
     commentEle.appendChild(commentExpanded);
-    var commentResponseTextarea = createTextArea();
+    var commentResponseTextarea = createTextArea(pId);
     commentExpanded.appendChild(commentResponseTextarea);
-
-    document.body.addEventListener('click',function(){
-        if(event.target.id == "usrResponseSubmit"){
-            var responseText = document.getElementById("usrResponseTextArea");
-//console.log("ok now it works");
-            postResponseComment(pId,responseText.value);
-console.log("the response text is "+responseText.value);
-        }
-    });
 }
 
 function expandResponseComments(pId){
@@ -338,21 +330,24 @@ function expandResponseComments(pId){
             eleResponseCont.id = "responseCommentCont";
 
             var responseComments = this.responseText;
-            console.log(responseComments);
-            var responseOBJ = JSON.parse(responseComments);
+            //console.log(responseComments);
+            if(typeof(responseComments) == "string" && responseComments.length > 0){
+                //console.log(responseComments);
+                var responseOBJ = JSON.parse(responseComments);
 
-            for(var i = 0; i<responseOBJ["data"].length;i++){
-                var responseItem = responseOBJ["data"][i];
-                console.log(responseOBJ["data"][i]);
+                for(var i = 0; i<responseOBJ["data"].length;i++){
+                    var responseItem = responseOBJ["data"][i];
+                    //console.log(responseOBJ["data"][i]);
 
-                var eleResponse = document.createElement("div");
-                eleResponse.className = "commentResponse";
-                eleResponse.innerHTML = genericImgComment(responseItem[1],
-                                                                 responseItem[2],
-                                                                 responseItem[3]);
-                eleResponseCont.appendChild(eleResponse);
+                    var eleResponse = document.createElement("div");
+                    eleResponse.className = "commentResponse";
+                    eleResponse.innerHTML = genericImgComment(responseItem[1],
+                                                                     responseItem[2],
+                                                                     responseItem[3]);
+                    eleResponseCont.appendChild(eleResponse);
+                }
+                eleExpandedComment.insertBefore(eleResponseCont,eleExpandedComment.firstChild);
             }
-            eleExpandedComment.appendChild(eleResponseCont);
             
             //jsonify
         }
@@ -363,7 +358,7 @@ function expandResponseComments(pId){
     return eleExpandedComment;
 }
 
-function createTextArea(){
+function createTextArea(pId){
     var eleResponseBox = document.createElement("div");
     eleResponseBox.className = "newCommentCont";
     eleResponseBox.id = "newCommentResponse";
@@ -379,6 +374,10 @@ function createTextArea(){
     eleButton.innerText="Post";
     eleButton.type="submit";
     eleButton.id = "usrResponseSubmit";
+    eleButton.addEventListener("click",function(){
+        var responseText = document.getElementById("usrResponseTextArea");
+        postResponseComment(pId,responseText.value);
+    });
 
     //temporary solution. using eleButton does not work for
     //some reason
@@ -389,23 +388,16 @@ function createTextArea(){
 }
 
 function postResponseComment(pId,responseComment){
-console.log("responseComment is "+responseComment);
     //can i use one xhttp instead of so many?
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            //refreshResponseComments(pId);
-            console.log("fin should post "+responseComment);
-            console.log("response to new response "+this.responseText);
+            //console.log("NEW POST RESPONSE\n\n"+this.responseText);
+            refreshResponseComments(pId);
         }
     }
-    /*
-    xhttp.open("POST", "readerPhp/readerCommentResponse.php?board="+
-                boardName+"&tid="+threadID+"&pId="+pId);
-                */
     xhttp.open("POST", "readerPhp/readerCommentResponse.php");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    //xhttp.send("newResponse="+responseComment);
     xhttp.send("board="+boardName+"&tid="+threadID+"&pId="+pId+
                "&responseComment="+responseComment);
 }
