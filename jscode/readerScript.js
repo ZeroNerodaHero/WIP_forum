@@ -279,14 +279,19 @@ function showCommentText(eleComments,strComment,type=0,pId="",uId="",cTime="",co
     } else{
         tmp.style.backgroundColor="red";
     }
-    tmp.innerHTML = "<div class=commentCont>"+innerTXT+"</div>";
+    var commentMainBody = document.createElement("div");
+    commentMainBody.className = "commentCont";
+    commentMainBody.id="iC_"+pId+"_commentBody";
+    commentMainBody.innerHTML = innerTXT;
 
-    tmp.addEventListener('click', function(){
+    commentMainBody.addEventListener('click', function(){
         //theoretically only 1 should exist if there is no expansion
         if(document.getElementById("iC_"+pId).childElementCount == 1){
             refreshResponseComments(pId);
+            console.log("ok");
         }
     });
+    tmp.appendChild(commentMainBody);
 
     if(color!="")tmp.style.backgroundColor=color;
     eleComments.appendChild(tmp);
@@ -305,13 +310,21 @@ function refreshResponseComments(pId){
     var commentExpanded = document.getElementById("commentExpanded");
     if(commentExpanded != null){
         commentExpanded.remove();
-        console.log("removed");
     }
 
     commentExpanded = expandResponseComments(pId);
     commentEle.appendChild(commentExpanded);
     var commentResponseTextarea = createTextArea();
     commentExpanded.appendChild(commentResponseTextarea);
+
+    document.body.addEventListener('click',function(){
+        if(event.target.id == "usrResponseSubmit"){
+            var responseText = document.getElementById("usrResponseTextArea");
+//console.log("ok now it works");
+            postResponseComment(pId,responseText.value);
+console.log("the response text is "+responseText.value);
+        }
+    });
 }
 
 function expandResponseComments(pId){
@@ -321,22 +334,31 @@ function expandResponseComments(pId){
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);
+            var eleResponseCont = document.createElement("div");
+            eleResponseCont.id = "responseCommentCont";
+
+            var responseComments = this.responseText;
+            console.log(responseComments);
+            var responseOBJ = JSON.parse(responseComments);
+
+            for(var i = 0; i<responseOBJ["data"].length;i++){
+                var responseItem = responseOBJ["data"][i];
+                console.log(responseOBJ["data"][i]);
+
+                var eleResponse = document.createElement("div");
+                eleResponse.className = "commentResponse";
+                eleResponse.innerHTML = genericImgComment(responseItem[1],
+                                                                 responseItem[2],
+                                                                 responseItem[3]);
+                eleResponseCont.appendChild(eleResponse);
+            }
+            eleExpandedComment.appendChild(eleResponseCont);
+            
             //jsonify
-            /*
-            var commentResponse = document.createElement("div");
-            commentResponse.className = "commentResponse";
-            commentResponse.innerHTML = genericImgComment("user","14","test");
-            eleExpandedComment.appendChild(commentResponse);
-            */
-            eleExpandedComment.innerHTML = "<div class=commentResponse>"+
-                                           genericImgComment("user","14","test")+
-                                           "</div>"+
-                                           eleExpandedComment.innerHTML;
         }
     };
-    var selector = boardName+"_"+threadID;
-    xhttp.open("GET", "readerPhp/readerGetCommentResponse.php?selector="+selector+"&pId="+pId);
+    xhttp.open("GET", "readerPhp/readerCommentResponse.php?board="+
+                boardName+"&tid="+threadID+"&pId="+pId);
     xhttp.send();
     return eleExpandedComment;
 }
@@ -347,30 +369,45 @@ function createTextArea(){
     eleResponseBox.id = "newCommentResponse";
     var textBox= "<div class=usrCommentTitle>Comment</div>"+
                  "<div class=usrTextConstraint><textarea class=usrCommentTextArea "+
-                 "id=usrCommentResponseText rows=3></textarea><br></div>";
+                 "id=usrResponseTextArea rows=3></textarea><br></div>";
     eleResponseBox.innerHTML = textBox;
 
     var eleButtonContainer = document.createElement("div");
     eleButtonContainer.className = "usrCommentSubmitCont";
+
     var eleButton = document.createElement("button");
     eleButton.innerText="Post";
+    eleButton.type="submit";
+    eleButton.id = "usrResponseSubmit";
 
-    eleResponseBox.appendChild(eleButton);
+    //temporary solution. using eleButton does not work for
+    //some reason
+    eleButtonContainer.appendChild(eleButton);
+
+    eleResponseBox.appendChild(eleButtonContainer);
     return eleResponseBox;
 }
 
 function postResponseComment(pId,responseComment){
+console.log("responseComment is "+responseComment);
     //can i use one xhttp instead of so many?
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            expandResponseComments(pId);
+            //refreshResponseComments(pId);
+            console.log("fin should post "+responseComment);
+            console.log("response to new response "+this.responseText);
         }
     }
-    xhttp.open("POST", "readerPhp/readerGetCommentResponse.php?selector="+selector+"&pId="+pId);
+    /*
+    xhttp.open("POST", "readerPhp/readerCommentResponse.php?board="+
+                boardName+"&tid="+threadID+"&pId="+pId);
+                */
+    xhttp.open("POST", "readerPhp/readerCommentResponse.php");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("newResponse="+responseComment);
-                
+    //xhttp.send("newResponse="+responseComment);
+    xhttp.send("board="+boardName+"&tid="+threadID+"&pId="+pId+
+               "&responseComment="+responseComment);
 }
 
 function deleteAllChildren(ele){
