@@ -74,6 +74,11 @@
                     responseCnt=$responseCnt
                 WHERE postId=$pId";
         $res = $connBoards->query($que);
+
+        $que = "SELECT postCnt FROM ".$board."Threads";
+        $res = $connBoards->query($que);
+
+        updatePostCnt($board,$TID);
     }
     echo $responseJSON."";
 ?>

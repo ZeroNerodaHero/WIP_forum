@@ -392,7 +392,7 @@ function postResponseComment(pId,responseComment){
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            //console.log("NEW POST RESPONSE\n\n"+this.responseText);
+//console.log("NEW POST RESPONSE\n\n"+this.responseText);
             refreshResponseComments(pId);
         }
     }

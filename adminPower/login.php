@@ -145,12 +145,16 @@ ini_set('display_errors',1);
 
     //use after post gets updated. not before. retard
     //also serves as a time updater
-    function updatePostCnt($board,$TID,$extra=""){
+    function updatePostCnt($board,$TID){
         global $connBoards;
-        $que = "SELECT * FROM $board"."_".$TID.$extra;
+        $que = "SELECT postCnt FROM $board"."Threads WHERE threadId=".$TID;
         $res = $connBoards->query($que);
+        $newPostCnt = -1;
+        if($res->num_rows > 0){ while($row = $res->fetch_assoc()){
+            $newPostCnt = $row["postCnt"];
+        }}
+        $newPostCnt++;
 
-        $newPostCnt = $res->num_rows;
         $que = "UPDATE $board"."Threads
                 SET postCnt = $newPostCnt, time=CURRENT_TIMESTAMP
                 WHERE threadId = $TID";

@@ -25,7 +25,7 @@
             echo "POST SUCCESS";
             //echo "$que";
             myQuery($connBoards,$que);
-            updatePostCnt($board,$TID,"_comments");
+            updatePostCnt($board,$TID);
         }
     } else{
         echo "EMPTY";
