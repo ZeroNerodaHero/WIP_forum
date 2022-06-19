@@ -12,7 +12,6 @@
     }
 
 
-
     include_once("../adminPower/login.php");
     $descript = "FUNCEL.XYZ is an anonymous text-board. ";
     $tabTitle = "[news]";
@@ -74,12 +73,15 @@
             while($row = $res->fetch_assoc())
                 $threadContent[] = $row; 
         }
-        $threadContentSize = sizeof($threadContent); 
     } else if( $typeOfPage == 1 && $threadType == 1){
         $que = "SELECT postId FROM ".$boardPageName."_".$threadID."_comments";
         $res = $connBoards->query($que);
-        $threadContentSize = $res->num_rows;
     }
+    $que = "SELECT postCnt FROM ".$boardPageName."Threads WHERE threadId=".$threadID;
+    $res = $connBoards->query($que);
+    if($res->num_rows > 0){ while($row = $res->fetch_assoc()){
+        $threadContentSize = $row["postCnt"];
+    }}
     /*
      *  allBoards -> done here to get the board descript and also used in nav
      *  boardThreads -> need here 
