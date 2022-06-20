@@ -137,6 +137,7 @@
     background-color: #345678a5;
     margin-top: 3px;
     padding: 5px 3px 8px 4px;
+    word-break: break-word;
 }
 .commentResponse:hover{
     background-color: #345678e5;

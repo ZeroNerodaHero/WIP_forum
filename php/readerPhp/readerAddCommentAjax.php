@@ -26,6 +26,7 @@
             //echo "$que";
             myQuery($connBoards,$que);
             updatePostCnt($board,$TID);
+            generalUsrUpdate();
         }
     } else{
         echo "EMPTY";
