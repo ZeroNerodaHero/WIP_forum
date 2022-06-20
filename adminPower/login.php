@@ -106,13 +106,19 @@ ini_set('display_errors',1);
                 WHERE usrId=".$usr_ID;
         myQuery($conn,$que);
     }
-
     function updateUsrTime($usr_ID){
         global $conn;
         $que = "UPDATE usrList SET lastPost=CURRENT_TIMESTAMP
                 WHERE usrId=".$usr_ID;
         myQuery($conn,$que);
     }
+    function generalUsrUpdate(){
+        $usr_ID = getUsrID();
+
+        updateUsrScore($usr_ID,10);
+        updateUsrTime($usr_ID);
+    }
+
     function usrCanPost($usr_ID){
         global $conn;
         $que = "SELECT lastPost,totalPoints FROM usrList WHERE usrId=".$usr_ID;
