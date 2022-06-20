@@ -234,6 +234,10 @@ footer{
     font-size: 14px;
     float: right;
 }
+.newsPostCont{
+    margin-left: 5px;
+    margin-right: 5px;
+}
 
 .UID{
     padding-left: 8px;

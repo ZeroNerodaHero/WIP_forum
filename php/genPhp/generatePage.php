@@ -58,11 +58,12 @@
     }
 
     function postNews($title,$datePost,$content){
+        echo "<div class=newsPostCont>";
         echo "<div class=newsPost_title>" . $title;
         echo "<span class=newsPost_time>" . $datePost . "</span>";
-        echo "</div><br>";
+        echo "</div>";
 
-        echo $content . "<br><br><hr>";
+        echo "<div class=newPost_main>".$content."</div><hr></div>";
     }
 
     function generateBoard($board){
