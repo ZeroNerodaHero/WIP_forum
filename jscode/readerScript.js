@@ -367,6 +367,12 @@ function createTextArea(pId){
                  "id=usrResponseTextArea rows=3></textarea><br></div>";
     eleResponseBox.innerHTML = textBox;
 
+    var eleCaptchaCont = document.createElement("div");
+    eleCaptchaCont.id="captchaCont";
+    eleCaptchaCont.innerHTML = "<div id=pcaptcha class='g-recaptcha' "+
+                "data-sitekey='6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_'></div>";
+    eleResponseBox.appendChild(eleCaptchaCont);
+
     var eleButtonContainer = document.createElement("div");
     eleButtonContainer.className = "usrCommentSubmitCont";
 

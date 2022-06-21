@@ -183,18 +183,3 @@
         echo "</div>";
     }
 ?>
-
-<script>
-    function addImg(){
-        document.getElementById("textArea").value += "[IMG]()";
-    }
-    function addLink(){
-        document.getElementById("textArea").value += "[LNK]()";
-    }
-    function addYTB(){
-        document.getElementById("textArea").value += "[YTB]()";
-    }
-    function addVIDEO(){
-        document.getElementById("textArea").value += "[VIDEO]()";
-    }
-</script>
