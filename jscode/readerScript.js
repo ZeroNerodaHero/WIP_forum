@@ -368,9 +368,12 @@ function createTextArea(pId){
     eleResponseBox.innerHTML = textBox;
 
     var eleCaptchaCont = document.createElement("div");
-    eleCaptchaCont.id="captchaCont";
-    eleCaptchaCont.innerHTML = "<div id=pcaptcha class='g-recaptcha' "+
-                "data-sitekey='6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_'></div>";
+    eleCaptchaCont.id="readerCaptchaCont";
+    var eleCaptcha = document.createElement("div");
+    eleCaptcha.id="readercaptcha";
+    grecaptcha.render(eleCaptcha,{'sitekey':'6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_',
+                                  'data-size':'compact'});
+    eleCaptchaCont.appendChild(eleCaptcha);
     eleResponseBox.appendChild(eleCaptchaCont);
 
     var eleButtonContainer = document.createElement("div");
@@ -458,4 +461,8 @@ function toggleAnote(){
         lowerEle.style.display = "none";
         highlightEle.style.display = "none";
     }
+}
+
+function captchaPopUp(){
+
 }
