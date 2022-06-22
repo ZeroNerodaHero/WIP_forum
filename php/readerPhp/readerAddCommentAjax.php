@@ -12,9 +12,11 @@
         $TID= $_POST["TID"];
 
         $errorChecker = newPostChecker($comment);
-        $newResponse= str_replace("<","&lt;",$newResponse);
-        $newResponse= str_replace(">","&gt;",$newResponse);
-        $newResponse= str_replace("\n","<br>",$newResponse);
+        $comment = str_replace("<","&lt;",$comment);
+        $comment= str_replace(">","&gt;",$comment);
+        $comment= str_replace("\n","++br",$comment);
+        //$comment= nl2br($comment);
+        echo $comment;
         $comment = addSlashes($comment);
 
 

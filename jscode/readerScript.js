@@ -234,6 +234,7 @@ function genComments(ctx,rectAr,cBoard,cThread){
     //console.log("READER GET " + cBoard + "_"+cThread);
     //console.log("readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
     xhttp.open("GET", "readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread,false);
+    console.log("readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
     xhttp.send();
 
     var xmlDoc=xhttp.responseXML.getElementsByTagName("encap");
@@ -246,11 +247,13 @@ function genComments(ctx,rectAr,cBoard,cThread){
         cEx = Math.floor(cEx*imgWidth);
         var cEy = parseFloat(xmlDoc[i].getElementsByTagName("ey")[0].childNodes[0].nodeValue);
         cEy = Math.floor(cEy*imgHeight);
+        var commentPre = xmlDoc[i].getElementsByTagName("comment")[0].childNodes[0].nodeValue;
+        var commentPost = commentPre.replace(/\+\+br/g,"<br>");
         rectAr.push(new commentRect(
             xmlDoc[i].getElementsByTagName("postId")[0].childNodes[0].nodeValue,
             xmlDoc[i].getElementsByTagName("userID")[0].childNodes[0].nodeValue,
             cSx,cSy,cEx,cEy,
-            xmlDoc[i].getElementsByTagName("comment")[0].childNodes[0].nodeValue,
+            commentPost,
             xmlDoc[i].getElementsByTagName("time")[0].childNodes[0].nodeValue)
         );
     }
@@ -450,6 +453,7 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
 
             var eleComments = document.getElementById("otherCommentCont");
             showCommentText(eleComments,this.responseText);
+            console.log(this.responseText);
         }
     }
     sx = sx/imgWidth; sy = sy/imgHeight;
