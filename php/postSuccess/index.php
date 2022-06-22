@@ -406,6 +406,7 @@
                         ey float, 
                         comment varchar(5000), 
                         responseStr MEDIUMTEXT NULL,
+                        responseCnt int NOT NULL DEFAULT 0,
                         time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
                         primary key(postId))";
             myQuery($connBoards,$que);

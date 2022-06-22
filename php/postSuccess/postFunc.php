@@ -52,4 +52,34 @@
         $retStr = str_replace(">","&gt;",$retStr);
         return $retStr;
     }
+
+    function newPostChecker($newResponse){
+        $errorChecker = 0;
+        $usrId = getUsrID();
+        if(!testString($newResponse,3000)){
+            $errorChecker = 1;
+        } else if(!textVerify($newResponse)){
+            $errorChecker = 2;
+        } else if(checkBan($usrId)){
+            $errorChecker = 3;
+        } else if(usrCanPost($usrId) != NULL){
+            $errorChecker = 4;
+        }
+        return $errorChecker;
+    }
+    function errorDisplay($errorCode){
+        if($errorCode== 1){
+            echo "Error: Comment too long";
+        }
+        else if($errorCode== 2){
+            echo "Error: Stop saying the n-word";
+        }
+        else if($errorCode== 3){
+            echo "Error: You are BANNED. WACKED.";
+            checkBan(getUsrId(),true);
+        }
+        else if($errorCode== 4){
+            echo "Error: Give it a minute. Posting too fast.";
+        }
+    }
 ?>
