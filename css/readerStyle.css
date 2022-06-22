@@ -101,6 +101,9 @@
     margin-right: 3%;
     text-align: right;
 }
+.readerCommentHead{
+    font-size:0.75rem;
+}
 
 /* width */
 ::-webkit-scrollbar {
@@ -110,13 +113,13 @@
 /* Track */
 ::-webkit-scrollbar-track {
   box-shadow:-top inset 0 0 5px grey;
-  border-radius: 10px;
+  border-radius: 3px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: red;
-  border-radius: 10px;
+  border-radius: 3px;
 }
 
 /* Handle on hover */

@@ -273,10 +273,12 @@ function showCommentText(eleComments,strComment,type=0,pId="",uId="",cTime="",co
     var tmp = document.createElement("div");
     tmp.className = "imgComment";
     tmp.id= "iC_"+pId;
+
     var innerTXT= "<p class=contentCommentBox>"+strComment+"</p>";
     if(type==1){
         innerTXT = genericImgComment(uId,cTime,strComment);
     } else{
+        innerTXT="<div class=readerCommentHead><u>SERVER_RESPONSE</u></div>"+innerTXT;
         tmp.style.backgroundColor="red";
     }
     var commentMainBody = document.createElement("div");
@@ -295,7 +297,11 @@ function showCommentText(eleComments,strComment,type=0,pId="",uId="",cTime="",co
     tmp.appendChild(commentMainBody);
 
     if(color!="")tmp.style.backgroundColor=color;
-    eleComments.appendChild(tmp);
+    if(type != 0) eleComments.appendChild(tmp);
+    else{
+        eleComments.insertBefore(tmp,eleComments.firstChild);
+    }
+
 }
 function genericImgComment(uId,cTime,strComment){
     var innerTXT= "<div class=contentCommentBox><br>"+strComment+"</div>";
@@ -367,6 +373,7 @@ function createTextArea(pId){
                  "id=usrResponseTextArea rows=3></textarea><br></div>";
     eleResponseBox.innerHTML = textBox;
 
+    /*
     var eleCaptchaCont = document.createElement("div");
     eleCaptchaCont.id="readerCaptchaCont";
     var eleCaptcha = document.createElement("div");
@@ -375,6 +382,7 @@ function createTextArea(pId){
                                   'data-size':'compact'});
     eleCaptchaCont.appendChild(eleCaptcha);
     eleResponseBox.appendChild(eleCaptchaCont);
+    */
 
     var eleButtonContainer = document.createElement("div");
     eleButtonContainer.className = "usrCommentSubmitCont";
@@ -403,6 +411,8 @@ function postResponseComment(pId,responseComment){
         if (this.readyState == 4 && this.status == 200) {
 //console.log("NEW POST RESPONSE\n\n"+this.responseText);
             refreshResponseComments(pId);
+            var eleComments = document.getElementById("otherCommentCont");
+            showCommentText(eleComments,this.responseText);
         }
     }
     xhttp.open("POST", "readerPhp/readerCommentResponse.php");
@@ -464,5 +474,10 @@ function toggleAnote(){
 }
 
 function captchaPopUp(){
-
+    //saved for later
+    //what i am thinking if it gets bad is to use an invisible captcha
+    //system so instead of not allowing the bot to post, we let it post
+    //but it will talk a long time. and we will track the ip of the bot
+    //and remember it so that cookieclearing doesn't work
 }
+

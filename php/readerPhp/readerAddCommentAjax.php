@@ -5,15 +5,21 @@
     $sx = $_POST["sx"]; $sy = $_POST["sy"]; $ex = $_POST["ex"]; $ey = $_POST["ey"];
     $comment = $_POST["comment"];
     if(!empty($sx) && !empty($sy) && !empty($ex) && !empty($ey) &&
+        $sx != $ex && $sy != $ey &&
         !empty($comment) && !empty($_POST["board"]) && !empty($_POST["TID"])){
 
         $board = $_POST["board"];
         $TID= $_POST["TID"];
 
-        if(!testString($comment,3000)){
-            echo "COMMENT IS TOO LONG";
-        } else if(!textVerify($comment)){
-            echo "U SAID SOMETHING BAD!!!";
+        $errorChecker = newPostChecker($comment);
+        $newResponse= str_replace("<","&lt;",$newResponse);
+        $newResponse= str_replace(">","&gt;",$newResponse);
+        $newResponse= str_replace("\n","<br>",$newResponse);
+        $comment = addSlashes($comment);
+
+
+        if($errorChecker != 0){
+            echo errorDisplay($errorChecker);
         } else{
             //use both post and get?
             $usrId = getUsrID();

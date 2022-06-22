@@ -428,6 +428,19 @@ img:hover {
     text-align: center;
     margin-top: 3px;
 }
+#readerCaptchaCont{
+    text-align: center;
+    margin-top: 3px;
+}
+#readercaptcha{
+    margin-top: 3px;
+    /*
+    transform: scaleX(0.5);
+    -webkit-transform: scaleX(0.5);
+    */
+    width:100px;
+    overflow: hidden;
+}
 /* VIDEO */
 .videoRed{
     font-size: 0.75rem;

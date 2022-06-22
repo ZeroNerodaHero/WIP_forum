@@ -19,11 +19,7 @@
         $pId = $_POST["pId"];
         $uId = getUsrSafeHash(getUsrID(),$TID,8012921);
 
-        if(!testString($newResponse,3000)){
-            $errorChecker = 1;
-        } else if(!textVerify($newResponse)){
-            $errorChecker = 2;
-        }
+        $errorChecker = newPostChecker($newResponse);
 
         $newResponse= str_replace("<","&lt;",$newResponse);
         $newResponse= str_replace(">","&gt;",$newResponse);
@@ -54,7 +50,6 @@
             }
         }
     }
-    //echo $que;
     /*note here
      * Json format example
      * {
@@ -71,12 +66,7 @@
      */
     if($type){
         if($errorChecker != 0){
-            if($errorChecker == 1){
-                echo "Error: Comment too long";
-            }
-            else if($errorChecker == 2){
-                echo "Error: Stop saying the n-word";
-            }
+            errorDisplay($errorChecker);
         } else {
             $time = date( 'n/d/y-H:i');
             $newInsert = '['.$responseCnt.','.$uId.',"'.
@@ -102,7 +92,9 @@
 
             updatePostCnt($board,$TID);
             generalUsrUpdate();
+            echo "Comment Posted";
         }
+    } else{
+        echo $responseJSON."";
     }
-    echo $responseJSON."";
 ?>
