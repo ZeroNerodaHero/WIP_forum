@@ -287,18 +287,26 @@ function showComments(pos_x,pos_y,rectAr){
     deleteAllChildren(eleComments);
     for(var cObj of rectAr){
         if(cObj.isInRectangle(pos_x,pos_y)){
-            showCommentText(eleComments,cObj.strComment,1,cObj.pid,cObj.uid,cObj.time);
+            showCommentText(eleComments,cObj.strComment,cObj);
         }
     }
 }
-function showCommentText(eleComments,strComment,type=0,pId="",uId="",cTime="",color=""){
+function showCommentText(eleComments,strComment,commentObj=null,color=""){
+    var pId = -1,uId=-1,cTime=-1;
+    var type = 0;
+    
+    if(commentObj != null){
+        pId = commentObj.pid,uId=commentObj.uid,cTime=commentObj.time;
+        type = 1;
+    }
+
     var tmp = document.createElement("div");
     tmp.className = "imgComment";
     tmp.id= "iC_"+pId;
 
     var innerTXT= "<p class=contentCommentBox>"+strComment+"</p>";
     if(type==1){
-        innerTXT = genericImgComment(uId,cTime,strComment);
+        innerTXT = genericImgComment(uId,cTime,strComment,pId,commentObj.responseCnt);
     } else{
         innerTXT="<div class=readerCommentHead><u>SERVER_RESPONSE</u></div>"+innerTXT;
         tmp.style.backgroundColor="red";
@@ -323,14 +331,17 @@ function showCommentText(eleComments,strComment,type=0,pId="",uId="",cTime="",co
     else{
         eleComments.insertBefore(tmp,eleComments.firstChild);
     }
-
 }
-function genericImgComment(uId,cTime,strComment){
+
+function genericImgComment(uId,cTime,strComment,pId=-1,responseCnt=-1){
+    var responseStr = (responseCnt == -1 ? "":
+                    "<div id=p_"+pId+"_responseCnt class=commentResponseCnt>"+
+                    "Comments: "+responseCnt+"</div>");
     var innerTXT= "<div class=contentCommentBox><br>"+strComment+"</div>";
     innerTXT = "<div class=commentInfoCont>"+
             "<span class=idCommentBox>"+uId+"&nbsp&nbsp&nbsp&nbsp</span>"+
-            "<span class=timeCommentBox>"+cTime+"</span>"+
-            "</div>"+innerTXT;
+            "<span class=timeCommentBox>"+cTime+"</span>"+"</div>"+
+            innerTXT + responseStr;
     return innerTXT;
 }
 
@@ -357,10 +368,13 @@ function expandResponseComments(pId){
 
 console.log(allComments);
     var responseOBJ = null; 
+    var responseCnt = -1;
     for(var cObj of allComments){
 //console.log(cObj.pid + " " +pId);
         if(cObj.pid == pId){
             responseOBJ = cObj.jsonResponse;
+            responseCnt = cObj.responseCnt;
+            break;
         }
     }
 
@@ -416,7 +430,7 @@ function postResponseComment(pId,responseComment){
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-console.log("NEW POST RESPONSE\n\n"+this.responseText);
+//console.log("NEW POST RESPONSE\n\n"+this.responseText);
             var jsonObj = JSON.parse(this.responseText);
             if(jsonObj["returnCode"] == 1){
                 //have to do a linear search. cannot do a refernece
@@ -501,3 +515,10 @@ function captchaPopUp(){
     //and remember it so that cookieclearing doesn't work
 }
 
+function getCommentWpid(pid){
+    for(var cObj of allComments){
+        if(pId == cObj.pid){
+            return cObj;
+        }
+    }
+}
