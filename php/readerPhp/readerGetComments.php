@@ -1,28 +1,30 @@
 <?php
-    header('Content-Type:text/xml');
     include_once("../../adminPower/login.php");
 
     $source = $_GET["board"]."_".$_GET["TID"]."_comments";
     $que = "SELECT * FROM ".$source;
 
     $res = $connBoards->query($que);
-    echo "<ALL>";
+    $hasStuff = false;
+
+    echo '{ "data":[';
     if($res->num_rows > 0){
         while($row = $res->fetch_assoc()){
             $UID = getUsrSafeHash($row["userID"],$_GET["TID"],ord($_GET["board"][0]));
             $fTime = $row["time"];
-            echo "<encap>";
-            echo "<postId>".$row["postId"]."</postId>";
-            echo "<userID>".$UID."</userID>";
-            echo "<sx>".$row["sx"]."</sx>";
-            echo "<sy>".$row["sy"]."</sy>";
-            echo "<ex>".$row["ex"]."</ex>";
-            echo "<ey>".$row["ey"]."</ey>";
-            echo "<comment>".$row["comment"]."</comment>";
-            //echo "<time>".$row["time"]."</time>";
-            echo "<time>".timeRegFormat($fTime)."</time>";
-            echo "</encap>";
+            if($hasStuff) echo ",";
+            $commentStr = nl2br($row["comment"]);
+            $responseStr = nl2br($row["responseStr"]);
+
+            $responseStr = substr($responseStr,9,strlen($responseStr)-9-2);
+
+            echo "[";
+            echo $row["postId"].",".$UID.',"'.timeRegFormat($fTime).'",';
+            echo "[".$row["sx"].",".$row["sy"].",".$row["ex"].",".$row["ey"]."],";
+            echo '"'.$commentStr.'",['.$responseStr.'],'.$row["responseCnt"];
+            echo "]";
+            $hasStuff = true;
         }
     }
-    echo "</ALL>";
+    echo ']}';
 ?>

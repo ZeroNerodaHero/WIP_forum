@@ -14,7 +14,7 @@
         $errorChecker = newPostChecker($comment);
         $comment = str_replace("<","&lt;",$comment);
         $comment= str_replace(">","&gt;",$comment);
-        $comment= str_replace("\n","++br",$comment);
+        $comment= str_replace("\n","<br>",$comment);
         //$comment= nl2br($comment);
         echo $comment;
         $comment = addSlashes($comment);

@@ -66,7 +66,9 @@
      */
     if($type){
         if($errorChecker != 0){
+            echo '{"returnCode":0,"responseStr":"';
             errorDisplay($errorChecker);
+            echo '"}';
         } else {
             $time = date( 'n/d/y-H:i');
             $newInsert = '['.$responseCnt.','.$uId.',"'.
@@ -79,11 +81,11 @@
                                            $responseStr);
             } 
             //add slashes because slashes need slashes
-            $responseJSON = addslashes($responseJSON);
+            $queJSON = addslashes($responseJSON);
 
             $que = "UPDATE $selector
-                    SET responseStr='$responseJSON',
-                        responseCnt=$responseCnt
+                    SET responseStr='$queJSON',
+                        responseCnt=".($responseCnt+1)."
                     WHERE postId=$pId";
             $res = $connBoards->query($que);
 
@@ -92,7 +94,10 @@
 
             updatePostCnt($board,$TID);
             generalUsrUpdate();
-            echo "Comment Posted";
+            $responseJSON = substr($responseJSON,0,strlen($responseJSON)-1).
+                            ',"responseCnt":'.($responseCnt+1).
+                            ',"responseStr":"Comment Posted","returnCode":1}';
+            echo $responseJSON;
         }
     } else{
         echo $responseJSON."";

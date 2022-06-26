@@ -8,34 +8,48 @@ var colorSelect="red",colorRead="#f1897349";
 //this is valid
 var threadID=-1;
 var boardName=null;
+const allComments = [];
 
 //system matically generate all img.
 //post in succession
 class commentRect{
-    constructor(pid,uid,sx,sy,ex,ey,strComment,time=0){
-        if(sx > ex){
-            sx += ex;
-            ex = sx - ex;
-            sx -= ex;
+    constructor(pid,uid,time,pSx,pSy,pEx,pEy,strComment,jsonResponse,responseCnt){
+        if(pSx > pEx){
+            [pSx,pEx]=[pEx,pSx];
         }
-        if(sy > ey){
-            sy += ey;
-            ey = sy - ey;
-            sy -= ey;
+        if(pSy > pEy){
+            [pSy,pEy]=[pEy,pSy];
         }
 
         this.pid =pid;
         this.uid =uid;
-        this.sx=sx;
-        this.sy=sy;
-        this.ex=ex;
-        this.ey=ey;
+
+        //proportional
+        this.pSx=pSx;
+        this.pSy=pSy;
+        this.pEx=pEx;
+        this.pEy=pEy;
+
+        //calculauted
+        this.sx=Math.floor(pSx*imgWidth);
+        this.sy=Math.floor(pSy*imgHeight);
+        this.ex=Math.floor(pEx*imgWidth);
+        this.ey=Math.floor(pEy*imgHeight);
+
         this.strComment = strComment;
         this.time = time;
+        this.jsonResponse = jsonResponse;
+        this.responseCnt= responseCnt;
     }
     isInRectangle(x,y){
         return (this.sx <= x && this.ex >= x && 
                 this.sy <= y && this.ey >= y);
+    }
+    updateNewDimension(){
+        this.sx=Math.floor(this.pSx*imgWidth);
+        this.sy=Math.floor(this.pSy*imgHeight);
+        this.ex=Math.floor(this.pEx*imgWidth);
+        this.ey=Math.floor(this.pEy*imgHeight);
     }
 
     print(){
@@ -65,7 +79,6 @@ function imgRenderInit(board,threadId){
     allCommentEle.style.height=nheight+"px";
     otherCommentEle.style.height=(nheight-100)+"px";
 
-    const allComments = [];
     var usrCommentEle= document.getElementById("usrCommentCont");
 
     var imgLayer = document.getElementById("imgContLayer");
@@ -80,7 +93,7 @@ function imgRenderInit(board,threadId){
         if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
             //console.log("resize "+imgLayer.offsetWidth + " " +imgLayer.offsetHeight );
             imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas);
-            genComments(botCtx,allComments,board,threadId);
+            redrawComments(botCtx);
         }
     });
     imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas);
@@ -183,7 +196,7 @@ function imgRenderInit(board,threadId){
         if(imgWidth != imgLayer.offsetWidth || imgHeight !=imgLayer.offsetHeight ){
             //console.log("reloaded well");
             imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas);
-            genComments(botCtx,allComments,board,threadId);
+            redrawComments(botCtx,allComments,board,threadId);
             timeCheck = 0;
         } else{
             if(timeCheck >= 3000) {
@@ -231,34 +244,40 @@ function clearCanvas(ctx,sx=0,sy=0,ex=imgWidth,ey=imgHeight,isCanvas=true){
 function genComments(ctx,rectAr,cBoard,cThread){
     rectAr.length=0;
     const xhttp = new XMLHttpRequest();
-    //console.log("READER GET " + cBoard + "_"+cThread);
-    //console.log("readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
-    xhttp.open("GET", "readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread,false);
-    console.log("readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var jsonVal = this.responseText;
+            var jsonObj = JSON.parse(jsonVal);
+            var mainData = jsonObj["data"];
+
+            for(var i = 0; i<mainData.length;i++){
+                var subData = mainData[i];
+                /*
+                var bSx = Math.floor(subData[3][0]*imgWidth);
+                var bSy = Math.floor(subData[3][1]*imgHeight);
+                var bEx = Math.floor(subData[3][2]*imgWidth);
+                var bEy = Math.floor(subData[3][3]*imgHeight);
+                */
+                rectAr.push(new commentRect(
+                    subData[0],subData[1],subData[2],
+                    subData[3][0],subData[3][1],subData[3][2],subData[3][3],
+                    subData[4],
+                    subData[5],subData[6],
+                ));
+            }
+        }
+        for(var cObj of rectAr){
+            drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey,colorRead);
+        }
+    }
+    xhttp.open("GET", "readerPhp/readerGetComments.php?board="+cBoard+"&TID="+cThread);
     xhttp.send();
 
-    var xmlDoc=xhttp.responseXML.getElementsByTagName("encap");
-    for(var i = 0; i < xmlDoc.length; i++){
-        var cSx = parseFloat(xmlDoc[i].getElementsByTagName("sx")[0].childNodes[0].nodeValue);
-        cSx = Math.floor(cSx*imgWidth);
-        var cSy = parseFloat(xmlDoc[i].getElementsByTagName("sy")[0].childNodes[0].nodeValue);
-        cSy = Math.floor(cSy*imgHeight);
-        var cEx = parseFloat(xmlDoc[i].getElementsByTagName("ex")[0].childNodes[0].nodeValue);
-        cEx = Math.floor(cEx*imgWidth);
-        var cEy = parseFloat(xmlDoc[i].getElementsByTagName("ey")[0].childNodes[0].nodeValue);
-        cEy = Math.floor(cEy*imgHeight);
-        var commentPre = xmlDoc[i].getElementsByTagName("comment")[0].childNodes[0].nodeValue;
-        var commentPost = commentPre.replace(/\+\+br/g,"<br>");
-        rectAr.push(new commentRect(
-            xmlDoc[i].getElementsByTagName("postId")[0].childNodes[0].nodeValue,
-            xmlDoc[i].getElementsByTagName("userID")[0].childNodes[0].nodeValue,
-            cSx,cSy,cEx,cEy,
-            commentPost,
-            xmlDoc[i].getElementsByTagName("time")[0].childNodes[0].nodeValue)
-        );
-    }
-
-    for(var cObj of rectAr){
+}
+function redrawComments(ctx){
+    //i need to update the bSxs
+    for(var cObj of allComments){
+        cObj.updateNewDimension();
         drawRect(ctx,cObj.sx,cObj.sy,cObj.ex,cObj.ey,colorRead);
     }
 }
@@ -321,6 +340,7 @@ function refreshResponseComments(pId){
     if(commentExpanded != null){
         commentExpanded.remove();
     }
+console.log("uhhh update");
 
     commentExpanded = expandResponseComments(pId);
     commentEle.appendChild(commentExpanded);
@@ -332,38 +352,33 @@ function expandResponseComments(pId){
     var eleExpandedComment = document.createElement("div");
     eleExpandedComment.id = "commentExpanded";
 
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var eleResponseCont = document.createElement("div");
-            eleResponseCont.id = "responseCommentCont";
+    var eleResponseCont = document.createElement("div");
+    eleResponseCont.id = "responseCommentCont";
 
-            var responseComments = this.responseText;
-            //console.log(responseComments);
-            if(typeof(responseComments) == "string" && responseComments.length > 0){
-                //console.log(responseComments);
-                var responseOBJ = JSON.parse(responseComments);
-
-                for(var i = 0; i<responseOBJ["data"].length;i++){
-                    var responseItem = responseOBJ["data"][i];
-                    //console.log(responseOBJ["data"][i]);
-
-                    var eleResponse = document.createElement("div");
-                    eleResponse.className = "commentResponse";
-                    eleResponse.innerHTML = genericImgComment(responseItem[1],
-                                                                     responseItem[2],
-                                                                     responseItem[3]);
-                    eleResponseCont.appendChild(eleResponse);
-                }
-                eleExpandedComment.insertBefore(eleResponseCont,eleExpandedComment.firstChild);
-            }
-            
-            //jsonify
+console.log(allComments);
+    var responseOBJ = null; 
+    for(var cObj of allComments){
+//console.log(cObj.pid + " " +pId);
+        if(cObj.pid == pId){
+            responseOBJ = cObj.jsonResponse;
         }
-    };
-    xhttp.open("GET", "readerPhp/readerCommentResponse.php?board="+
-                boardName+"&tid="+threadID+"&pId="+pId);
-    xhttp.send();
+    }
+
+    if(responseOBJ == null) return eleExpandedComment;
+//console.log(responseOBJ);
+    for(var i = 0; i<responseOBJ.length;i++){
+        var responseItem = responseOBJ[i];
+        //console.log(responseOBJ["data"][i]);
+
+        var eleResponse = document.createElement("div");
+        eleResponse.className = "commentResponse";
+        eleResponse.innerHTML = genericImgComment(responseItem[1],
+                                                  responseItem[2],
+                                                  responseItem[3]);
+        eleResponseCont.appendChild(eleResponse);
+    }
+    eleExpandedComment.insertBefore(eleResponseCont,eleExpandedComment.firstChild);
+
     return eleExpandedComment;
 }
 
@@ -375,17 +390,6 @@ function createTextArea(pId){
                  "<div class=usrTextConstraint><textarea class=usrCommentTextArea "+
                  "id=usrResponseTextArea rows=3></textarea><br></div>";
     eleResponseBox.innerHTML = textBox;
-
-    /*
-    var eleCaptchaCont = document.createElement("div");
-    eleCaptchaCont.id="readerCaptchaCont";
-    var eleCaptcha = document.createElement("div");
-    eleCaptcha.id="readercaptcha";
-    grecaptcha.render(eleCaptcha,{'sitekey':'6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_',
-                                  'data-size':'compact'});
-    eleCaptchaCont.appendChild(eleCaptcha);
-    eleResponseBox.appendChild(eleCaptchaCont);
-    */
 
     var eleButtonContainer = document.createElement("div");
     eleButtonContainer.className = "usrCommentSubmitCont";
@@ -412,10 +416,23 @@ function postResponseComment(pId,responseComment){
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-//console.log("NEW POST RESPONSE\n\n"+this.responseText);
+console.log("NEW POST RESPONSE\n\n"+this.responseText);
+            var jsonObj = JSON.parse(this.responseText);
+            if(jsonObj["returnCode"] == 1){
+                //have to do a linear search. cannot do a refernece
+                for(var cObj of allComments){
+                    if(pId == cObj.pid){
+                        cObj.responseCnt = jsonObj["responseCnt"];
+                        cObj.jsonResponse = jsonObj["data"];
+                        break;
+                    }
+                }
+            }
+
+            //need to update the things
             refreshResponseComments(pId);
             var eleComments = document.getElementById("otherCommentCont");
-            showCommentText(eleComments,this.responseText);
+            showCommentText(eleComments,jsonObj["responseStr"]);
         }
     }
     xhttp.open("POST", "readerPhp/readerCommentResponse.php");
@@ -453,7 +470,6 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
 
             var eleComments = document.getElementById("otherCommentCont");
             showCommentText(eleComments,this.responseText);
-            console.log(this.responseText);
         }
     }
     sx = sx/imgWidth; sy = sy/imgHeight;
