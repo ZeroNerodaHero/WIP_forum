@@ -336,7 +336,7 @@ function showCommentText(eleComments,strComment,commentObj=null,color=""){
 function genericImgComment(uId,cTime,strComment,pId=-1,responseCnt=-1){
     var responseStr = (responseCnt == -1 ? "":
                     "<div id=p_"+pId+"_responseCnt class=commentResponseCnt>"+
-                    "Comments: "+responseCnt+"</div>");
+                    "Comment(s): "+responseCnt+"</div>");
     var innerTXT= "<div class=contentCommentBox><br>"+strComment+"</div>";
     innerTXT = "<div class=commentInfoCont>"+
             "<span class=idCommentBox>"+uId+"&nbsp&nbsp&nbsp&nbsp</span>"+
@@ -366,7 +366,7 @@ function expandResponseComments(pId){
     var eleResponseCont = document.createElement("div");
     eleResponseCont.id = "responseCommentCont";
 
-console.log(allComments);
+//console.log(allComments);
     var responseOBJ = null; 
     var responseCnt = -1;
     for(var cObj of allComments){
@@ -441,10 +441,14 @@ function postResponseComment(pId,responseComment){
                         break;
                     }
                 }
-            }
+                //need to update the things
+                refreshResponseComments(pId);
 
-            //need to update the things
-            refreshResponseComments(pId);
+                var responseCntEle = document.getElementById("p_"+pId+"_responseCnt");
+                if(responseCntEle != null){
+                    responseCntEle.innerText = "Comment(s): "+jsonObj["responseCnt"];
+                }
+            }
             var eleComments = document.getElementById("otherCommentCont");
             showCommentText(eleComments,jsonObj["responseStr"]);
         }
