@@ -52,6 +52,8 @@ function iterateCnter(board){
     }
 }
 
+//terrible name wtf
+//sounds like js is doing the backend
 function updateLastThread(board,TID,pCnt){
     var boardData = getBoardJson();
 

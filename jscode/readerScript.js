@@ -351,8 +351,6 @@ function refreshResponseComments(pId){
     if(commentExpanded != null){
         commentExpanded.remove();
     }
-console.log("uhhh update");
-
     commentExpanded = expandResponseComments(pId);
     commentEle.appendChild(commentExpanded);
     var commentResponseTextarea = createTextArea(pId);
@@ -436,8 +434,11 @@ function postResponseComment(pId,responseComment){
                 //have to do a linear search. cannot do a refernece
                 for(var cObj of allComments){
                     if(pId == cObj.pid){
+                        totalContent -= cObj.responseCnt;
+
                         cObj.responseCnt = jsonObj["responseCnt"];
                         cObj.jsonResponse = jsonObj["data"];
+                        totalContent += cObj.responseCnt;
                         break;
                     }
                 }
@@ -447,6 +448,9 @@ function postResponseComment(pId,responseComment){
                 var responseCntEle = document.getElementById("p_"+pId+"_responseCnt");
                 if(responseCntEle != null){
                     responseCntEle.innerText = "Comment(s): "+jsonObj["responseCnt"];
+                }
+                if(threadID != -1 && boardName != null){
+                    updateLastThread(boardName,threadID,totalContent);
                 }
             }
             var eleComments = document.getElementById("otherCommentCont");
@@ -486,8 +490,15 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
             //console.log("COMMENT: "+this.responseText);
             commentSec.value = "";
 
+            var jsonObj = JSON.parse(this.responseText);
+            if(jsonObj["returnCode"] == 1){
+                totalContent += 1;
+                updateLastThread(boardName,threadID,totalContent);
+            }
+
+
             var eleComments = document.getElementById("otherCommentCont");
-            showCommentText(eleComments,this.responseText);
+            showCommentText(eleComments,jsonObj["msg"]);
         }
     }
     sx = sx/imgWidth; sy = sy/imgHeight;

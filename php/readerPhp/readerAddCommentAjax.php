@@ -16,12 +16,14 @@
         $comment= str_replace(">","&gt;",$comment);
         $comment= str_replace("\n","<br>",$comment);
         //$comment= nl2br($comment);
-        echo $comment;
+        //echo $comment;
         $comment = addSlashes($comment);
 
 
         if($errorChecker != 0){
+            echo '{"returnCode":0,"msg":"';
             echo errorDisplay($errorChecker);
+            echo '"}';
         } else{
             //use both post and get?
             $usrId = getUsrID();
@@ -30,14 +32,14 @@
             $tableName = $board."_".$TID."_comments";
             $que = "INSERT INTO $tableName(userId,sx,sy,ex,ey,comment) 
                     VALUES($usrId,$sx,$sy,$ex,$ey,'$comment')";
-            echo "POST SUCCESS";
+            echo '{"returnCode":1,"msg":"POST SUCCESS"}';
             //echo "$que";
             myQuery($connBoards,$que);
             updatePostCnt($board,$TID);
             generalUsrUpdate();
         }
     } else{
-        echo "EMPTY";
+        echo '{"returnCode":0,"msg":"POST FAILED"}';
     }
 
     //do reload page or just do a semi-update to lower canvas?
