@@ -28,14 +28,19 @@
 /*
  * img render
  */
-.imgContLayer{
+#imgContLayer{
     grid-area: reader;
+    border: 2px solid black;
 }
 .imgLayer{
     width: 100%;
-    -moz-user-select: -moz-none;
-    -webkit-user-select: none;
+
+    user-drag: none;
     user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 #imgCommentCont{
     grid-area: comment;
@@ -64,7 +69,7 @@
     margin-top: 3px;
 }
 .imgRenderCanvas{
-    border: 2px solid black;
+    /*border: 2px solid black;*/
     position: absolute;
     user-select: none;
 }

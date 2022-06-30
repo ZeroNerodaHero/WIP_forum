@@ -512,14 +512,31 @@ function postComment(sx,sy,ex,ey,cBoard,cThread){
 function toggleAnote(){
     var lowerEle = document.getElementById("lowerCanvas");
     var highlightEle = document.getElementById("highlightCanvas");
+    var upperEle = document.getElementById("upperCanvas");
+    var commentContEle = document.getElementById("commentViewCont");
+
+    var imgRenderContEle = document.getElementById("imgRenderCont");
+
+    var toggleEle = document.getElementById("commentToggle");
 
     if(lowerEle.style.display=="none"){
         lowerEle.style.display = "block";
         highlightEle.style.display = "block";
+        upperEle.style.display = "block";
+        commentContEle.style.display = "block";
+        toggleEle.innerText = ">>";
+
+        imgRenderContEle.style.gridTemplateColumns = "74% 1% 25%";
     } else{
         lowerEle.style.display = "none";
         highlightEle.style.display = "none";
+        upperEle.style.display = "none";
+        commentContEle.style.display = "none";
+        toggleEle.innerText = "<<";
+
+        imgRenderContEle.style.gridTemplateColumns = "96% 1% 3%";
     }
+    //imgRenderSizeUpdate(imgLayer,usrCanvas,botCanvas,highlightCanvas){
 }
 
 function captchaPopUp(){

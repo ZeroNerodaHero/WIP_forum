@@ -22,22 +22,24 @@
 
         echo "<div id=imgCommentCont>
                 <div id=commentToggleCont>
-                    <a href=javascript:toggleAnote()>toggle</a>
+                    <a id=commentToggle href=javascript:toggleAnote()>>></a>
                 </div>
-                <div id=usrCommentCont class=newCommentCont>
-                    <div class=usrCommentTitle>
-                        Comment:
+                <div id=commentViewCont>
+                    <div id=usrCommentCont class=newCommentCont>
+                        <div class=usrCommentTitle>
+                            Comment:
+                        </div>
+                        <div class=usrTextConstraint>
+                            <textarea class=usrCommentTextArea id='usrCommentText' 
+                            name='usrCommentText' rows='5'></textarea><br>
+                        </div>
+                        <div class=usrCommentSubmitCont>
+                            <button type='submit' id=usrCommentSubmit>Post</button>
+                        </div>
                     </div>
-                    <div class=usrTextConstraint>
-                        <textarea class=usrCommentTextArea id='usrCommentText' name='usrCommentText'
-                         rows='5'></textarea><br>
-                    </div>
-                    <div class=usrCommentSubmitCont>
-                        <button type='submit' id=usrCommentSubmit>Post</button>
-                    </div>
-                </div>
 
-                <div id=otherCommentCont>
+                    <div id=otherCommentCont>
+                    </div>
                 </div>
               </div>";
         echo "</div>";

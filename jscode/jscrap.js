@@ -142,6 +142,7 @@ function expandImg(){
     var allImg = document.getElementsByTagName("img");
 
     for(let it of allImg){
+        if(it.className != '') continue;
         it.addEventListener("click",function(){
             it.style.width=(it.style.width != "100%") ?"100%":"100px";}
         );
