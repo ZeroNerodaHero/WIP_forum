@@ -36,6 +36,9 @@
         $board= $_POST["board"];            
         $tId= $_POST["tId"];            
         $isAnote = $_POST["isAnote"];
+        $pId=$_POST["pId"];
+        $rId=$_POST["rpId"];
+        deleteStuff($opt,$board,$tId,$isAnote,$pId,$rId);
     }
 
     function generalSideBar(){
@@ -118,8 +121,10 @@
                     $content = $row["content"];
                     $uID = $row["ip"];
 
+                    $deleteRef = "javascript:deleteStuff('$board',$threadId,0,$pId)";
+
                     echo "<tr><th>$pId</th><th>$time</th><th>$content</th>
-                        <th>Delete</th><th>Ban</th></tr>";
+                        <th><a href=\"$deleteRef\">Delete</a></th><th>Ban</th></tr>";
                 }
                 echo "</table>";
             }
@@ -143,20 +148,85 @@
                     $responseCnt = $row["responseCnt"];
                     $responseStr = $row["responseStr"];
 
+                    $deleteRef = "javascript:deleteStuff('$board',$threadId,1,$pId)";
                     echo "<tr><th>$pId</th><th>$time</th><th>$content</th>
-                        <th>($sx,$sy) to ($ex,$ey)</th><th>$responseCnt</th></tr>";
+                        <th>($sx,$sy) to ($ex,$ey)</th><th>$responseCnt</th>
+                        <th><a href=\"$deleteRef\">Delete</a></th></tr>";
                     if($responseCnt != 0){
                         echo "<tr><th></th><th>PostId</th><th>Time</th>
                             <th>Content</th><tr>";
                         $jsonObj = json_decode($responseStr);
                         $responseAr = $jsonObj->data;
                         foreach($responseAr as $obj){
+                            $deleteRef = "javascript:deleteStuff('$board',$threadId,1,$pId,$obj[0])";
                             echo "<tr><th></th><th>$obj[0]</th><th>$obj[1]</th>
-                                <th>$obj[2]</th><th>$obj[3]</th></tr>";
+                                <th>$obj[2]</th><th>$obj[3]</th><th>
+                                <a href=\"$deleteRef\">Delete</a></tr>";
                         }
                     }
-                }
+                } 
                 echo "</table>";
+            } else{
+                echo "EMPTY POST";
+            }
+        }
+    }
+    function deleteStuff($opt,$board,$tId,$isAnote,$pId,$rId){
+        global $connBoards;
+        if($opt == 0 || $opt == 1){
+            $que = "DELETE FROM ".$board."Threads
+                    WHERE threadId=".$tId;
+            myQuery($connBoards,$que);
+            
+            if($opt==0){
+                $que = "DROP TABLE ".$board."_".$tId;
+                myQuery($connBoards,$que);
+            } else{
+                $que = "DROP TABLE ".$board."_".$tId."_comments";
+                myQuery($connBoards,$que);
+                $que = "DROP TABLE ".$board."_".$tId."_imgs";
+                myQuery($connBoards,$que);
+            }
+        }
+        else if($opt == 2){
+            $que = "DELETE FROM ".$board."_".$tId."
+                    WHERE postId=".$pId;
+            myQuery($connBoards,$que);
+        } 
+        else if($opt == 3){
+            $que = "DELETE FROM ".$board."_".$tId."_comments
+                    WHERE postId=".$pId;
+            myQuery($connBoards,$que);
+        } 
+        else if($opt == 4){
+            $que = "SELECT responseStr,responseCnt FROM ".$board."_".$tId."_comments
+                    WHERE postId=".$pId;
+            $res = $connBoards->query($que);
+            if($res->num_rows > 0){
+                $responseObj = NULL;
+                $responseCnt = 0;
+                while($row = $res->fetch_assoc()) {
+                    $responseObj = json_decode($row["responseStr"])->data;
+                    $responseCnt = $row["responseCnt"];
+                }
+
+                $newResponse = "{\"data\":[";
+                $isFirst = 1;
+                foreach($responseObj as $val){
+                    if($val[0] != $rId){
+                        if(!$isFirst) $newResponse .= ',';
+                        $isFirst = 0;
+                        $newResponse .= "[$val[0],$val[1],\"$val[2]\",\"$val[3]\"]";
+                    }
+                }
+                $newResponse .= "]}";
+
+                $newResponse = addSlashes($newResponse);
+                $que = "UPDATE ".$board."_".$tId."_comments
+                        SET responseStr='$newResponse',
+                            responseCnt=".($responseCnt-1)."
+                        WHERE postId=$pId";
+                myQuery($connBoards,$que);
             }
         }
     }

@@ -93,7 +93,7 @@ console.log("dlete stuff");
     else if(board != null && threadId == null) POSTdata += '1&board='+board;
     else if(threadId != null && threadId != null) 
         POSTdata += '2&board='+board+'&threadId='+threadId+"&isAnote="+isAnote;
-    console.log(POSTdata);
+//console.log(POSTdata);
 
     xhttp.open("POST", "backgroundAdmin.php");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -117,10 +117,11 @@ function deleteStuff(board,threadId,isAnote=null,postId=null,responsePID=null){
     else
         POSTdata += "&opt=0";
 
-    console.log(POSTdata);
+//console.log(POSTdata);
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
+//console.log(this.responseText);
             //if null then just null
             if(postId != null){
                 renderDelete(3,board,threadId,isAnote);
