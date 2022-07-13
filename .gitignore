@@ -4,6 +4,7 @@ bkup/
 
 # ignore log files and databases
 *.swp
+*.log
 commWserver.php
 
 gitAuthKeyStupidDumbShit

@@ -22,10 +22,16 @@
         displayDeleteStuff($pageType,$_POST["board"],$_POST["threadId"],$_POST["isAnote"]);
     }
     else if($typeCode == 4){
+        //ban list
+        generateBanList();
     }
     else if($typeCode == 5){
+        //banned words
+        generateBadWordList();
     }
     else if($typeCode == 6){
+        //advert manager
+        generateAdvert();
     }
     else if($typeCode == 7){
     }
@@ -39,6 +45,58 @@
         $pId=$_POST["pId"];
         $rId=$_POST["rpId"];
         deleteStuff($opt,$board,$tId,$isAnote,$pId,$rId);
+    }
+    else if($typeCode == 9){
+        //ban user
+        $reason=$_POST["reason"];
+        $reason="WTF";
+        $board= $_POST["board"];            
+        $tId= $_POST["tId"];            
+        $pId=$_POST["pId"];
+        
+        if(empty($_POST["rpId"])){
+            banUsrFromPost($reason,$board,$tId,$pId);
+        }else{
+            banUsrFromPost($reason,$board,$tId,$pId,$_POST["rpId"]);
+        }
+    }
+    function banUsrFromPost($reason,$board,$tId,$pId,$rId=NULL,$time="1 0:0:0"){
+        global $connBoards;
+        $usrId = NULL;
+        if($rId==NULL){
+            //normal
+            $que = "SELECT ip FROM $board"."_$tId
+                    WHERE postId = $pId";
+            echo $que;
+            $res = $connBoards->query($que);
+
+            if($res->num_rows > 0){
+                while($row = $res->fetch_assoc()){
+                    $usrId=$row["ip"];
+                }
+            }
+        } else{
+            //resposne
+            $que = "SELECT responseStr FROM $board"."_$tid"."_comments
+                    WHERE postId = $pId";
+            echo $que;
+            $res = $connBoards->query($que);
+
+            if($res->num_rows > 0){
+                while($row = $res->fetch_assoc()){
+                    $responseObj=json_decode($row["responseStr"])->data;
+
+                    foreach($responseObj as $val){
+                        if($val[0] == $rId){
+                            $usrId=$val[1];
+                        }
+                    }
+                }
+            }
+        }
+        banUsr($usrId,$reason,$time); 
+        adminLog("Banned Usr ".$usrId);
+
     }
 
     function generalSideBar(){
@@ -63,6 +121,7 @@
         //1 - show board threads
         //2 - show threadComments
         if($pageType == 0){
+            echo "<h1>MODERATION</h1>";
             $que = "SELECT * FROM boards";
             $res = $conn->query($que);
 
@@ -82,7 +141,9 @@
             }
         } 
         else if($pageType == 1){
-            echo '<a href="javascript:renderDelete(3)"> Go Back</a>';
+            echo "<h1>MODERATING Board:$board </h1>";
+            echo "<div class=backLink>
+                <a href=\"javascript:renderDelete(3)\"> Go Back</a></div>";
             $que = "SELECT * FROM ".$board."Threads";
             $res = $connBoards->query($que);
 
@@ -100,14 +161,17 @@
                     $redirect= "javascript:renderDelete(3,'".$board."',$tId".
                                 ($tags&1 ? ",1":"").")";
                     echo "<tr><th>$tId</th><th>$title</th><th>$time</th>".
-                        "<th>$tags</th><th><a href=\"".$scriptTXT."\">Delete</a></th>
+                        "<th>$tags</th>
+                        <th class=noBreak><a href=\"".$scriptTXT."\">Delete</a></th>
                         <th><a href=\"".$redirect."\"> >> </a></th></tr>";
                 }
                 echo "</table>";       
             }
         }
         else if($pageType == 2 && $isAnote == false){
-            echo "<a href=\"javascript:renderDelete(3,'$board')\"> Go Back</a>";
+            echo "<h1>MODERATING Board:$board Thread:$threadId</h1>";
+            echo "<div class=backLink>
+                <a href=\"javascript:renderDelete(3,'$board')\"> Go Back</a></div>";
             $que = "SELECT * FROM ".$board."_".$threadId;
             $res = $connBoards->query($que);
 
@@ -122,21 +186,26 @@
                     $uID = $row["ip"];
 
                     $deleteRef = "javascript:deleteStuff('$board',$threadId,0,$pId)";
+                    $banRef= "javascript:uhOhBan('$board',$threadId,$pId)";
 
-                    echo "<tr><th>$pId</th><th>$time</th><th>$content</th>
-                        <th><a href=\"$deleteRef\">Delete</a></th><th>Ban</th></tr>";
+                    echo "<tr><th>$pId</th><th>$time</th>
+                        <th class=constrainedBox>$content</th>
+                        <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
+                        <th class=noBreak><a href=\"$banRef\">Ban</a></th></tr>";
                 }
                 echo "</table>";
             }
         }
         else if($pageType == 2 && $isAnote == true){
-            echo "<a href=\"javascript:renderDelete(3,'$board')\"> Go Back</a>";
+            echo "<h1>MODERATING Board:$board Thread:$threadId</h1>";
+            echo "<div class=backLink>
+                <a href=\"javascript:renderDelete(3,'$board')\"> Go Back</a></div>";
             $que = "SELECT * FROM ".$board."_".$threadId."_comments";
             $res = $connBoards->query($que);
             if($res->num_rows > 0){
                 echo "<table>";       
-                echo "<tr><th>PostId</th><th>Time</th><th>Content</th>
-                      <th>Positions</th><th>Response Count</th></tr>";
+                echo "<tr><th class=noBreak>PostId</th><th>Time</th><th>Content</th>
+                      <th>Positions</th><th class=noBreak>Response Count</th></tr>";
                 while($row = $res->fetch_assoc()){
                     $pId = $row["postId"];
                     $time = $row["time"];
@@ -149,19 +218,30 @@
                     $responseStr = $row["responseStr"];
 
                     $deleteRef = "javascript:deleteStuff('$board',$threadId,1,$pId)";
-                    echo "<tr><th>$pId</th><th>$time</th><th>$content</th>
-                        <th>($sx,$sy) to ($ex,$ey)</th><th>$responseCnt</th>
-                        <th><a href=\"$deleteRef\">Delete</a></th></tr>";
+                    $banRef = "javascript:uhOhBan('$board',$threadId,$pId)";
+
+                    echo "<tr><th>$pId</th>
+                        <th class=noBreak>".timeRegFormat($time)."</th>
+                        <th>$content</th>
+                        <th class=noBreak>(".number_format($sx,2).",".
+                            number_format($sy,2).") to (".
+                            number_format($ex,2).",".number_format($ey,2).")</th>
+                        <th>$responseCnt</th>
+                        <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
+                        <th class=noBreak><a href=\"$banRef\">Ban</a></tr>";
                     if($responseCnt != 0){
-                        echo "<tr><th></th><th>PostId</th><th>Time</th>
-                            <th>Content</th><tr>";
+                        echo "<tr><th class=emptyEntry></th>
+                            <th>PostId</th><th>Time</th><th>Content</th></tr><tr></tr>";
                         $jsonObj = json_decode($responseStr);
                         $responseAr = $jsonObj->data;
                         foreach($responseAr as $obj){
                             $deleteRef = "javascript:deleteStuff('$board',$threadId,1,$pId,$obj[0])";
-                            echo "<tr><th></th><th>$obj[0]</th><th>$obj[1]</th>
-                                <th>$obj[2]</th><th>$obj[3]</th><th>
-                                <a href=\"$deleteRef\">Delete</a></tr>";
+                            $banRef= "javascript:uhOhBan('$board',$threadId,$pId,$obj[0])";
+                            echo "<tr><th class=emptyEntry></th>
+                                <th>$obj[0]</th>
+                                <th>$obj[2]</th><th>$obj[3]</th>
+                                <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
+                                <th class=noBreak><a href=\"$banRef\">Ban</a></tr>";
                         }
                     }
                 } 
@@ -230,4 +310,77 @@
             }
         }
     }
+    function generateBanList(){
+        global $conn;
+        echo "banlist";
+        $que = "SELECT * from ipBans";
+        $res = $conn->query($que);
+        if($res->num_rows > 0){
+            echo "<table>";
+            echo "<tr><th>usrId</th><th>Reason</th><th>Time</th>
+                <th>Expire</th><tr>";
+            while($row = $res->fetch_assoc()) {
+                $ip = $row["ip"];
+                $reason = $row["reason"];
+                $time= $row["time"];
+                $expire= $row["expire"];
+                echo "<tr><th>$ip</th><th>$reason</th><th>$time</th>
+                    <th>$expire</th><tr>";
+            }
+            echo "</table>";
+        } else{
+            echo "EMPTY";
+        }
+    }
+    function generateBadWordList(){
+        global $conn;
+        $que = "SELECT * from badWord";
+        $res = $conn->query($que);
+        if($res->num_rows > 0){
+            echo "<table>";
+            echo "<tr><th>Word</th><tr>";
+            while($row = $res->fetch_assoc()) {
+                $word= $row["word"];
+                echo "<tr><th>$word</th><tr>";
+            }
+            echo "</table>";
+        } else{
+            echo "EMPTY";
+        }
+    }
+    function generateAdvert(){
+        global $conn;
+        $que = "SELECT * from peepoAds";
+        echo $que;
+        $res = $conn->query($que);
+        if($res->num_rows > 0){
+            echo "<table>";
+            echo "<tr><th>id</th>
+                <th>Image</th>
+                <th>Link to Site</th>
+                <th>Point System(loads+click/max)</th>
+                <th>Boards Limited</th>
+                <th>Date Added</th>
+                <tr>";
+            while($row = $res->fetch_assoc()) {
+                $id = $row["id"];
+                $linktoImg = $row["linkToImg"];
+                $linktoSite= $row["linkToSite"];
+                $totalLoads=$row["totalLoads"];
+                $totalClicks=$row["totalClicks"];
+                $maxPoints=$row["maxPoints"];
+                $boardLimited=$row["boardLimited"];
+                $dateAdded=$row["dateAdded"];
+                echo "<tr><th>$id</th><th><img src=$linktoImg></th>
+                    <th>$linktoSite <a href='$linktoSite'>[Link]</a></th>
+                    <th>$totalLoads + $totalCLicks / $maxPoints</th>
+                    <th>$boardLimited</th>
+                    <th>$dateAdded</th></tr>";
+            }
+            echo "</table>";
+        }
+
+    }
+
+    
 ?>

@@ -31,9 +31,9 @@ function showSelected(typeCode){
     if(typeCode == 1) postingNews(selectedEle);
     else if(typeCode == 2) createBoard(selectedEle);
     else if(typeCode == 3) renderDelete(typeCode);
-    else if(typeCode == 4) listBans(typeCode,selectedEle);
-    else if(typeCode == 5) listBadWords(typeCode,selectedEle);
-    else if(typeCode == 6) advertManager(typeCode,selectedEle);
+    else if(typeCode == 4) updatePage(typeCode,selectedEle);
+    else if(typeCode == 5) updatePage(typeCode,selectedEle);
+    else if(typeCode == 6) updatePage(typeCode,selectedEle);
     else if(typeCode == 7) updateMysql(selectedEle);
 }
 function expandAdminContent(){
@@ -42,7 +42,6 @@ function expandAdminContent(){
 }
 
 function postingNews(ele) {
-console.log("news"); 
     ele.innerHTML = 
         '<h1>Ur Posting News</h1>'+
         '<form action="updateNews.php" method="post">'+
@@ -134,18 +133,38 @@ function deleteStuff(board,threadId,isAnote=null,postId=null,responsePID=null){
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(POSTdata);
 }
+function uhOhBan(board,tId,pId,rId=null){
+    var postData = "typeCode=9&board="+board+"&tId="+tId+
+                    "&pId="+pId;
+    if(rId != null){
+        postData += "&rId="+rId;
+    }
+    console.log(postData);
+    
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            console.log(this.responseText);
+        }
+    }
+    xhttp.open("POST", "backgroundAdmin.php");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postData);
+}
 /*
 /*
  * Deletes stuff
  */
-function listBans(ele) {
-console.log("list bans"); 
-}
-function listBadWords(ele) {
-console.log("badowrds"); 
-}
-function advertManager(ele) {
-console.log("Adverts"); 
+function updatePage(typeCode,ele) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            ele.innerHTML = this.responseText;
+        }
+    }
+    xhttp.open("POST", "backgroundAdmin.php");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("typeCode="+typeCode);
 }
 function updateMysql(ele) {
 console.log("updateMysql"); 

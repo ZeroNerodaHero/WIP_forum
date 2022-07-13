@@ -177,4 +177,12 @@ ini_set('display_errors',1);
         $mysqldate = date( 'n/d/y-H:i', $phpdate );
         return $mysqldate;
     }
+    //new stuff
+    //you have to create a adminLog.log inorder for things to work
+    function adminlog($newLog){
+        $logFile = fopen("adminLog.log","a") or die("Failed to Open File");
+        fwrite($logFile,date("n/d/y h:i").":::: ".$newLog."\n");
+        echo "wrote something";
+        fclose($logFile);
+    }
 ?>
