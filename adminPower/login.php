@@ -1,6 +1,6 @@
 <?php
 
-if(1){
+if(0){
 error_reporting(-1);
 ini_set('display_errors',1);
 }
@@ -18,10 +18,9 @@ ini_set('display_errors',1);
     function myQuery($mcon,$que,$msg=""){
         if($mcon->query($que)){
             //echo "successfully added " .$msg;
-        } else{
-            echo "failed to add " . $que;
-            echo "<br>";
+            return true;
         }
+        return false;
     }
 
     //this techinically is usr id but eh what am i to sya
@@ -54,39 +53,51 @@ ini_set('display_errors',1);
         return $_COOKIE["usrId"];
     } 
 
-    function checkBan($usr_IP){
+    function checkBan($usr_IP,$print=false){
         global $conn;
-        $curTime = date("Y-m-d H:i:s",time());
+        $curTime = date("m/d/Y H:i",time());
         
         //dev
         $que = "SELECT * FROM ipBans WHERE ip = '$usr_IP'";
         $res = $conn->query($que); 
 
+        $echoStr = "";
+        $ret = false;
+
         if(!empty($res) && $res->num_rows != 0){
             while($row = $res->fetch_assoc()){
-                echo $curTime. " ::::: " . $row["expire"] . "<br>";
-                echo "Reason for ban: " . $row["reason"] . "<br>";
+                $echoStr .= "<br>START: ".$curTime. " <br> EXPIRES: " . $row["expire"] . "<br>";
+                $echoStr .= "Reason for ban: " . $row["reason"] . "<br>";
                 if($curTime > $row['expire']){
-                    echo "BAN HAS BEEN LIFTED<br>";
+                    $echoStr .= "BAN HAS EXPIRED AND BEEN LIFTED<br>";
                     $que = "DELETE FROM ipBans WHERE ip='$usr_IP'";
                     myQuery($conn,$que);
-                    return false;
                 } else{
-                    echo "banned checkBan<br>";
-                    return true;
+                    $ret = true;
                 }
             }
         } 
-        return false;
+        if($print) echo $echoStr;
+        return $ret;
+    }
+    function unBanUsr($usrId){
+        global $conn;
+        $que = "DELETE FROM ipBans WHERE ip='$usrId'";
+        if(!myQuery($conn,$que)){
+            echo "error";
+        }
     }
 
     function banUsr($usr_ID,$reason,$expire_time){
+        if($usr_ID == NULL) return;
         global $conn;
         $que = "INSERT INTO ipBans(ip,reason,expire)
                 VALUES ('$usr_ID','$reason',
                 ADDTIME(CURRENT_TIMESTAMP,'$expire_time'))";
-        myQuery($conn,$que); 
-        updateUsrScore($usr_ID,-100);
+        if(myQuery($conn,$que)){
+            updateUsrScore($usr_ID,-100);
+            adminLog("BANNED USR: $usr_ID \nFOR: $reason \nEXPIRES: $expire_time");
+        }
     }
 
     function isBadWord($word){
@@ -174,5 +185,13 @@ ini_set('display_errors',1);
         $phpdate = strtotime( $time);
         $mysqldate = date( 'n/d/y-H:i', $phpdate );
         return $mysqldate;
+    }
+    //new stuff
+    //you have to create a adminLog.log inorder for things to work
+    function adminlog($newLog){
+        $logFile = fopen("adminLog.log","a") or die("Failed to Open File");
+        fwrite($logFile,date("n/d/y h:i")."\n::::\n".$newLog.
+                "\n.....................................\n");
+        fclose($logFile);
     }
 ?>
