@@ -22,18 +22,16 @@ function updateBody(typeCode){
     console.log('currently on loginPage');
 }
 
-
 function showSelected(typeCode){
     expandAdminContent();
 
-    console.log(typeCode);
     var selectedEle = document.getElementById("selectedBody");
     if(typeCode == 1) postingNews(selectedEle);
     else if(typeCode == 2) createBoard(selectedEle);
     else if(typeCode == 3) renderDelete(typeCode);
-    else if(typeCode == 4) updatePage(typeCode,selectedEle);
-    else if(typeCode == 5) updatePage(typeCode,selectedEle);
-    else if(typeCode == 6) updatePage(typeCode,selectedEle);
+    else if(typeCode == 4) generatePage(typeCode,selectedEle);
+    else if(typeCode == 5) generatePage(typeCode,selectedEle);
+    else if(typeCode == 6) generatePage(typeCode,selectedEle);
     else if(typeCode == 7) updateMysql(selectedEle);
 }
 function expandAdminContent(){
@@ -44,14 +42,24 @@ function expandAdminContent(){
 function postingNews(ele) {
     ele.innerHTML = 
         '<h1>Ur Posting News</h1>'+
-        '<form action="updateNews.php" method="post">'+
-            'Title: <input type="text" name="title" class="tit"> <br>'+
-            'Message: <br>'+
-                '<textarea name="content" rows="6" cols="100" ></textarea>'+
-            '<br>'+
-            'Password: <input type="text" name="password">'+
-            '<input type="submit" value="Post">'+
-        '</form>';
+        'Title: <input id="newsTitle" class="tit"> <br>'+
+        'Message: <br>'+
+            '<textarea id="newsContent" rows="6" cols="100" ></textarea>'+
+        '<br>'+
+        '<button onclick=postNews()>Post News</button>';
+}
+
+function postNews(){
+    var titleEle = document.getElementById("newsTitle");
+    var contentEle= document.getElementById("newsContent");
+    var title = titleEle.value;
+    var content= contentEle.value;
+
+    var postData = "typeCode=1&title="+title+"&content="+content;
+    console.log(postData);
+    connectWServer(1,postData,function(){
+        titleEle.value = contentEle.value = "";
+    });
 }
 
 /*
@@ -64,21 +72,38 @@ console.log("boards");
         '<h1>Create Board</h1><ul><li> Don\'t add / to the thing. No need. </li>'+
         '<li> Use the pinned post as a way to post rules and stuff. yea </li></ul><br>'+
 
-        '<form action="updateBoard.php" method="post">'+
-        'Board Name: <input type="text" name="boardName" class="tit"><br>'+
+        'Board Name: <input id="boardName" class="tit"><br>'+
         'Description: <br>'+
-        '<textarea name="descript" rows="2" cols="100" ></textarea><br>'+
-        'Post Title: <input type="text" name="pinTit" class="tit"> <br>'+
+        '<textarea id="descript" rows="2" cols="100" ></textarea><br>'+
+        'Post Title: <input id="pinTit" class="tit"> <br>'+
         'Pinned Post: <br>'+
-        '<textarea name="pinned" rows="6" cols="100" ></textarea><br>'+
-        'Password: <input type="text" name="password">'+
-        '<input type="submit" value="Post"></form><br>';
+        '<textarea id="pinned" rows="6" cols="100" ></textarea><br>'+
+        '<button onclick=addBoard()>Create Board</button>';
+}
+function addBoard(){
+    var boardNameEle = document.getElementById("boardName");
+    var descriptEle = document.getElementById("descript");
+    var titleEle = document.getElementById("pinTit");
+    var pinnedContentEle = document.getElementById("pinned");
+
+    var boardName = boardNameEle.value;
+    var descript = descriptEle.value;
+    var title = titleEle.value;
+    var pinnedContent = pinnedContentEle.value;
+
+    var postData = "typeCode=2&board="+boardName+"&descript="+descript+
+                "&title="+title+"&pinnedContent="+pinnedContent;
+    console.log(postData);
+    connectWServer(2,postData,function(){
+        /*
+        boardNameEle.value = descriptEle.value = "";
+        titleEle.value = pinnedContentEle.value = ""; 
+        */});
 }
 /*
  * creat stuff
 */
 function renderDelete(typeCode,board=null,threadId=null,isAnote=0) {
-console.log("dlete stuff"); 
     var ele = document.getElementById("selectedBody");
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -134,28 +159,30 @@ function deleteStuff(board,threadId,isAnote=null,postId=null,responsePID=null){
     xhttp.send(POSTdata);
 }
 function uhOhBan(board,tId,pId,rId=null){
-    var postData = "typeCode=9&board="+board+"&tId="+tId+
-                    "&pId="+pId;
+    var postData = "typeCode=9&reason="+reason+
+                    "board="+board+"&tId="+tId+"&pId="+pId;
     if(rId != null){
         postData += "&rId="+rId;
     }
-    console.log(postData);
     
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            console.log(this.responseText);
+//console.log(this.responseText);
         }
     }
     xhttp.open("POST", "backgroundAdmin.php");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postData);
 }
+function unBanUsr(usrId){
+    updatePage(4,"typeCode=10&usrId="+usrId);
+}
 /*
 /*
  * Deletes stuff
  */
-function updatePage(typeCode,ele) {
+function generatePage(typeCode,ele) {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
@@ -166,6 +193,51 @@ function updatePage(typeCode,ele) {
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("typeCode="+typeCode);
 }
+function updatePage(typeCode,postData){
+    connectWServer(typeCode,postData,function(){
+        showSelected(typeCode);
+    });
+}
+function connectWServer(typeCode,postData,runFunc){
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200){
+            if(runFunc != null) runFunc();
+        }
+    }
+    xhttp.open("POST", "backgroundAdmin.php");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postData);
+}
+/*
+ * banned words
+ */
+function deleteWord(word){
+    updatePage(5,"typeCode=11&word="+word);
+}
+function addWord(){
+    var word = document.getElementById("newBannedWord").value;
+    if(word != "") updatePage(5,"typeCode=12&word="+word);
+}
+//////////////////////////////////
+function updateAdvert(id,opt){
+    var postData = "typeCode=13&"; 
+    if(opt== 0){
+        var newImg = document.getElementById("chngImgLnk_"+id).value;
+        var oldImg = document.getElementById("adlinkImg_"+id).innerText;
+        postData += "id="+id+"&opt="+opt+"&value="+newImg+"&oldValue="+oldImg;
+    } else if(opt== 1){
+        var newLink = document.getElementById("chngSiteLnk_"+id).value;
+        var oldLink = document.getElementById("adlinkSite_"+id).innerText;
+        postData += "id="+id+"&opt="+opt+"&value="+newLink+"&oldValue="+oldLink;
+    } else if(opt==2){
+        var newValue = document.getElementById("chngMaxPoint_"+id).value;
+        var oldValue = document.getElementById("maxPoint_"+id).innerText;
+        postData += "id="+id+"&opt="+opt+"&value="+newValue+"&oldValue="+oldValue;
+    }
+    if(postData != null) updatePage(6,postData);
+}
+//////////////////////////////////
 function updateMysql(ele) {
 console.log("updateMysql"); 
 }

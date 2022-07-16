@@ -14,8 +14,17 @@
         }
     } 
     else if($typeCode == 1){
+        $title = $_POST["title"];
+        $content= $_POST["content"];
+
+        postNews($title,$content);
     }
     else if($typeCode == 2){
+        $board = $_POST["board"];
+        $descript= $_POST["descript"];
+        $title = $_POST["title"];
+        $postContent = $_POST["pinnedContent"];
+        createBoard($board,$descript,$title,$postContent);
     }
     else if($typeCode == 3){
         $pageType = $_POST["pageType"];
@@ -60,6 +69,83 @@
             banUsrFromPost($reason,$board,$tId,$pId,$_POST["rpId"]);
         }
     }
+    else if($typeCode == 10){
+        $usrId=$_POST["usrId"];
+        unBanUsr($usrId);
+    } 
+    else if($typeCode == 11){
+        $word = $_POST["word"];
+        updateBannedWord(1,$word);
+    }
+    else if($typeCode == 12){
+        $word = $_POST["word"];
+        updateBannedWord(0,$word);
+    } else if($typeCode == 13){
+        $id = $_POST["id"];
+        $opt = $_POST["opt"];
+        $value = $_POST["value"];
+        $oldValue = $_POST["oldValue"];
+        updateAdvert($id,$opt,$value,$oldValue);
+    }
+    function postNews($title,$msg){
+        global $conn;
+        $title = addslashes($title);
+
+        $msg = nl2br($msg);
+        $msg = addslashes($msg);
+
+        $que = "INSERT INTO frontNews(news_title,post_time,news_content) 
+                VALUES('$title',CURRENT_TIMESTAMP(),'$msg')";
+        myQuery($conn,$que);
+    }
+    function createBoard($boardName,$boardDescript,$pinnedTit,$pinnedPost){
+        global $conn,$connBoards;
+        /************************************************/
+        //create board threads
+        $que = "CREATE TABLE " . $boardName . "Threads (
+                    title varchar(300),
+                    threadId int NOT NULL AUTO_INCREMENT,
+                    time TIMESTAMP,
+                    tags VARCHAR(50) NULL,
+                    postCnt int NOT NULL DEFAULT 0,
+                    acclaim VARCHAR(999) NULL,
+                    newTag int NOT NULL DEFAULT 0,
+                    PRIMARY KEY(threadId)
+                )";
+myQuery($connBoards,$que);
+        
+        $que = "INSERT INTO ". $boardName. "Threads (title,tags,newTag)
+            VALUES('$pinnedTit','pin',1)";
+myQuery($connBoards,$que);
+
+        $newTable = $boardName . "_1";
+
+        /************************************************/
+
+        $que = "INSERT INTO boards(typeOfBoard,boardName,descript)
+                VALUES(\"shit\",'$boardName','$boardDescript')";
+myQuery($conn,$que);
+
+        /************************************************/
+
+        //create post table and post
+        $que = "CREATE TABLE " . $newTable . "(
+                    postId int NOT NULL AUTO_INCREMENT,
+                    time TIMESTAMP,
+                    content varchar(7500),
+                    ip bigint,
+                    PRIMARY KEY(postId)
+                )";
+myQuery($connBoards,$que);
+
+        $usrIP = getUsrID(); 
+        echo "ip is " .$usrIP . " and " . empty($usrIP) ."<br>";
+        $que = "INSERT INTO ". $newTable . "(content,ip) VALUES( '$pinnedPost',";
+        if(!empty($usrIP)) $que .= $usrIP.")";
+        else $que .= "NULL)";
+myQuery($connBoards,$que);
+adminLog("Created a Board called $boardName");
+    }
     function banUsrFromPost($reason,$board,$tId,$pId,$rId=NULL,$time="1 0:0:0"){
         global $connBoards;
         $usrId = NULL;
@@ -67,7 +153,6 @@
             //normal
             $que = "SELECT ip FROM $board"."_$tId
                     WHERE postId = $pId";
-            echo $que;
             $res = $connBoards->query($que);
 
             if($res->num_rows > 0){
@@ -79,7 +164,6 @@
             //resposne
             $que = "SELECT responseStr FROM $board"."_$tid"."_comments
                     WHERE postId = $pId";
-            echo $que;
             $res = $connBoards->query($que);
 
             if($res->num_rows > 0){
@@ -95,8 +179,6 @@
             }
         }
         banUsr($usrId,$reason,$time); 
-        adminLog("Banned Usr ".$usrId);
-
     }
 
     function generalSideBar(){
@@ -191,7 +273,8 @@
                     echo "<tr><th>$pId</th><th>$time</th>
                         <th class=constrainedBox>$content</th>
                         <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
-                        <th class=noBreak><a href=\"$banRef\">Ban</a></th></tr>";
+                        <th class=noBreak><input type=text id=banReason>
+                            <a href=\"$banRef\">Ban</a></th></tr>";
                 }
                 echo "</table>";
             }
@@ -204,8 +287,9 @@
             $res = $connBoards->query($que);
             if($res->num_rows > 0){
                 echo "<table>";       
-                echo "<tr><th class=noBreak>PostId</th><th>Time</th><th>Content</th>
-                      <th>Positions</th><th class=noBreak>Response Count</th></tr>";
+                echo "<tr><th class=noBreak>PostId</th><th>Time</th>
+                    <th class=noBreak>Content</th>
+                    <th>Positions</th><th class=noBreak>Response Count</th></tr>";
                 while($row = $res->fetch_assoc()){
                     $pId = $row["postId"];
                     $time = $row["time"];
@@ -228,7 +312,8 @@
                             number_format($ex,2).",".number_format($ey,2).")</th>
                         <th>$responseCnt</th>
                         <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
-                        <th class=noBreak><a href=\"$banRef\">Ban</a></tr>";
+                        <th class=noBreak><input type=text id=banReason>
+                            <a href=\"$banRef\">Ban</a></tr>";
                     if($responseCnt != 0){
                         echo "<tr><th class=emptyEntry></th>
                             <th>PostId</th><th>Time</th><th>Content</th></tr><tr></tr>";
@@ -241,7 +326,8 @@
                                 <th>$obj[0]</th>
                                 <th>$obj[2]</th><th>$obj[3]</th>
                                 <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
-                                <th class=noBreak><a href=\"$banRef\">Ban</a></tr>";
+                                <th class=noBreak><input type=text id=banReason>
+                                    <a href=\"$banRef\">Ban</a></tr>";
                         }
                     }
                 } 
@@ -287,24 +373,28 @@
                 $responseCnt = 0;
                 while($row = $res->fetch_assoc()) {
                     $responseObj = json_decode($row["responseStr"])->data;
-                    $responseCnt = $row["responseCnt"];
+                    $responseCnt = $row["responseCnt"]-1;
                 }
 
                 $newResponse = "{\"data\":[";
-                $isFirst = 1;
-                foreach($responseObj as $val){
-                    if($val[0] != $rId){
-                        if(!$isFirst) $newResponse .= ',';
-                        $isFirst = 0;
-                        $newResponse .= "[$val[0],$val[1],\"$val[2]\",\"$val[3]\"]";
+                if($responseCnt != 0){
+                    $isFirst = 1;
+                    foreach($responseObj as $val){
+                        if($val[0] != $rId){
+                            if(!$isFirst) $newResponse .= ',';
+                            $isFirst = 0;
+                            $newResponse .= "[$val[0],$val[1],\"$val[2]\",\"$val[3]\"]";
+                        }
                     }
+                    $newResponse .= "]}";
+                } else{
+                    $newResponse = "";
                 }
-                $newResponse .= "]}";
 
                 $newResponse = addSlashes($newResponse);
                 $que = "UPDATE ".$board."_".$tId."_comments
                         SET responseStr='$newResponse',
-                            responseCnt=".($responseCnt-1)."
+                            responseCnt=".$responseCnt."
                         WHERE postId=$pId";
                 myQuery($connBoards,$que);
             }
@@ -320,12 +410,14 @@
             echo "<tr><th>usrId</th><th>Reason</th><th>Time</th>
                 <th>Expire</th><tr>";
             while($row = $res->fetch_assoc()) {
-                $ip = $row["ip"];
+                $usrId = $row["ip"];
                 $reason = $row["reason"];
                 $time= $row["time"];
                 $expire= $row["expire"];
-                echo "<tr><th>$ip</th><th>$reason</th><th>$time</th>
-                    <th>$expire</th><tr>";
+                $unBanRef = "javascript:unBanUsr('$usrId')";
+                echo "<tr><th>$usrId</th><th>$reason</th><th>$time</th>
+                    <th>$expire</th>
+                    <th><a href=\"$unBanRef\">Unban</a><tr>";
             }
             echo "</table>";
         } else{
@@ -341,12 +433,28 @@
             echo "<tr><th>Word</th><tr>";
             while($row = $res->fetch_assoc()) {
                 $word= $row["word"];
-                echo "<tr><th>$word</th><tr>";
+                $deleteWord = "javascript:deleteWord('$word')";
+                echo "<tr><th>$word</th>
+                    <th><a href=\"$deleteWord\">Delete</a></th><tr>";
             }
             echo "</table>";
         } else{
             echo "EMPTY";
         }
+        echo "<br>ADD A WORD<br><input type=text id=newBannedWord><br>
+            <button type=submit onclick='addWord()'>Add</button>";
+    }
+    function updateBannedWord($code,$word){
+        global $conn;
+
+        $que = NULL;
+        if($code == 0){
+            $que = "INSERT INTO badWord(word) VALUE('$word')";
+        } else{
+            $que = "DELETE FROM badWord WHERE word = '$word'";
+        }
+        if($que != NULL)
+            myQuery($conn,$que);
     }
     function generateAdvert(){
         global $conn;
@@ -355,11 +463,11 @@
         $res = $conn->query($que);
         if($res->num_rows > 0){
             echo "<table>";
-            echo "<tr><th>id</th>
+            echo "<tr><th class=noBreak>id</th>
                 <th>Image</th>
-                <th>Link to Site</th>
-                <th>Point System(loads+click/max)</th>
-                <th>Boards Limited</th>
+                <th>Ad Info</th>
+                <th class=noBreak>Point System(loads+click/max)</th>
+                <th class=noBreak>Boards Limited</th>
                 <th>Date Added</th>
                 <tr>";
             while($row = $res->fetch_assoc()) {
@@ -368,19 +476,61 @@
                 $linktoSite= $row["linkToSite"];
                 $totalLoads=$row["totalLoads"];
                 $totalClicks=$row["totalClicks"];
+                if($totalClicks == NULL) $totalClicks = "ERROR";
                 $maxPoints=$row["maxPoints"];
                 $boardLimited=$row["boardLimited"];
                 $dateAdded=$row["dateAdded"];
                 echo "<tr><th>$id</th><th><img src=$linktoImg></th>
-                    <th>$linktoSite <a href='$linktoSite'>[Link]</a></th>
-                    <th>$totalLoads + $totalCLicks / $maxPoints</th>
+                    <th>
+                        <div class=advertHeader><u>LINK TO IMAGE</u></div>
+                        <div class=adlinkImg id=adlinkImg_$id>$linktoImg</div>
+                        <input type=text id=chngImgLnk_$id value=$linktoImg>
+                        <button onclick=updateAdvert($id,0)>Update Img</button>
+                        <hr>
+                        <div class=advertHeader><u>LINK TO SITE</u></div>
+                        <span id=adlinkSite_$id>$linktoSite</span>
+                        <a href='$linktoSite'>[Link]</a><br>
+                        <input type=text id=chngSiteLnk_$id value=$linktoSite>
+                        <button onclick=updateAdvert($id,1)>Update Link</button>
+                        <hr>
+                    </th>
+                    <th>
+                        <div>$totalLoads + $totalCLicks / 
+                            <span id=maxPoint_$id>$maxPoints<span></div>
+                        <div>
+                            <input size=4 id=chngMaxPoint_$id>
+                            <button onclick=updateAdvert($id,2)>Update</button>
+                        </div>
+                    </th>
                     <th>$boardLimited</th>
                     <th>$dateAdded</th></tr>";
             }
             echo "</table>";
         }
-
+        echo "<br>NEW ADD<br>";
     }
+    function updateAdvert($id,$opt,$value,$oldValue){
+        global $conn;
+        $que = "UPDATE peepoAds SET ";
+        $log = "Changed ad_$id's ";
+        if($opt==0){
+            $que .= "linkToImg='$value' ";
+            $log .= "Image Link ";
+        } 
+        else if($opt==1){
+            $que .= "linkToSite='$value' ";
+            $log .= "Site Link ";
+        }
+        else if($opt==2){
+            $value += $oldValue;
+            $que .= "maxPoints='$value' ";
+            $log .= "Max Points ";
+        }
+        $que .= "WHERE id=$id";
+        $log .= "from ".$oldValue." to ".$value;
 
-    
+        if(myQuery($conn,$que)){
+            adminLog($log);
+        }
+    }
 ?>
