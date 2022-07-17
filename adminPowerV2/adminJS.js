@@ -2,12 +2,11 @@
 //0 - login page
 function updateBody(typeCode){
     var adminBody = document.getElementById('adminBody');
-
-
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
             adminBody.innerHTML = this.responseText; 
+            updateLog();
         }
     }
 
@@ -33,6 +32,7 @@ function showSelected(typeCode){
     else if(typeCode == 5) generatePage(typeCode,selectedEle);
     else if(typeCode == 6) generatePage(typeCode,selectedEle);
     else if(typeCode == 7) updateMysql(selectedEle);
+    updateLog();
 }
 function expandAdminContent(){
     var adminEle = document.getElementById("adminContent");
@@ -56,8 +56,7 @@ function postNews(){
     var content= contentEle.value;
 
     var postData = "typeCode=1&title="+title+"&content="+content;
-    console.log(postData);
-    connectWServer(1,postData,function(){
+    connectWServer(postData,function(){
         titleEle.value = contentEle.value = "";
     });
 }
@@ -67,7 +66,6 @@ function postNews(){
 */
 
 function createBoard(ele) {
-console.log("boards"); 
     ele.innerHTML = 
         '<h1>Create Board</h1><ul><li> Don\'t add / to the thing. No need. </li>'+
         '<li> Use the pinned post as a way to post rules and stuff. yea </li></ul><br>'+
@@ -93,12 +91,10 @@ function addBoard(){
 
     var postData = "typeCode=2&board="+boardName+"&descript="+descript+
                 "&title="+title+"&pinnedContent="+pinnedContent;
-    console.log(postData);
-    connectWServer(2,postData,function(){
-        /*
+    connectWServer(postData,function(){
         boardNameEle.value = descriptEle.value = "";
         titleEle.value = pinnedContentEle.value = ""; 
-        */});
+    });
 }
 /*
  * creat stuff
@@ -158,22 +154,19 @@ function deleteStuff(board,threadId,isAnote=null,postId=null,responsePID=null){
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(POSTdata);
 }
-function uhOhBan(board,tId,pId,rId=null){
+function uhOhBan(board,tId,pId,isAnote=0,rId=null){
+    var selector = "banReason_"+pId;
+    if(rId != null) selector += "_"+rId;
+    var reasonEle = document.getElementById(selector);
+    var reason = reasonEle.value;
+
     var postData = "typeCode=9&reason="+reason+
-                    "board="+board+"&tId="+tId+"&pId="+pId;
-    if(rId != null){
-        postData += "&rId="+rId;
-    }
+                    "&board="+board+"&tId="+tId+"&pId="+pId+"&isAnote="+isAnote;
+    if(rId != null) postData += "&rId="+rId;
     
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200){
-//console.log(this.responseText);
-        }
-    }
-    xhttp.open("POST", "backgroundAdmin.php");
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(postData);
+    connectWServer(postData,function(){
+        reasonEle.value = "";
+    },1);
 }
 function unBanUsr(usrId){
     updatePage(4,"typeCode=10&usrId="+usrId);
@@ -194,15 +187,21 @@ function generatePage(typeCode,ele) {
     xhttp.send("typeCode="+typeCode);
 }
 function updatePage(typeCode,postData){
-    connectWServer(typeCode,postData,function(){
+    connectWServer(postData,function(){
         showSelected(typeCode);
     });
 }
-function connectWServer(typeCode,postData,runFunc){
+function connectWServer(postData,runFunc=null,setEle=null,debug=0){
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            if(runFunc != null) runFunc();
+            //if(runFunc != null) runFunc();
+            if(runFunc != null) runFunc(this.responseText);
+            if(setEle != null) setEle = this.responseText;
+
+            if(debug) console.log(this.responseText);
+
+
         }
     }
     xhttp.open("POST", "backgroundAdmin.php");
@@ -241,5 +240,13 @@ function updateAdvert(id,opt){
 function updateMysql(ele) {
 console.log("updateMysql"); 
 }
-
-
+//////////////////////////////////
+function updateLog() {
+    var logEle = document.getElementById("adminLog");
+    //in all honesty i don't even know why passing a parameter works like
+    //this. other functions don't have a parameter, will this cause a problem?
+    var logVal = connectWServer("typeCode=99",function(logStr){
+        logEle.innerHTML = "<pre>"+logStr+"</pre>";
+        logEle.scrollTop = logEle.scrollHeight;
+    });
+}

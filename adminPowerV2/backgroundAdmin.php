@@ -7,7 +7,6 @@
         $passwd = $_POST["passwd"];
 
         if($passwd == $admin_ppassword || $passwd == $mod_ppassword){
-            echo "Login Success";
             generalSideBar();
         } else{
             echo "Wrong Password";
@@ -58,15 +57,16 @@
     else if($typeCode == 9){
         //ban user
         $reason=$_POST["reason"];
-        $reason="WTF";
         $board= $_POST["board"];            
         $tId= $_POST["tId"];            
         $pId=$_POST["pId"];
+        $isAnote=$_POST["isAnote"];
+//echo "$reason $board $tId $pId $isAnote \n";
         
-        if(empty($_POST["rpId"])){
-            banUsrFromPost($reason,$board,$tId,$pId);
+        if(empty($_POST["rId"])){
+            banUsrFromPost($reason,$board,$tId,$pId,$isAnote);
         }else{
-            banUsrFromPost($reason,$board,$tId,$pId,$_POST["rpId"]);
+            banUsrFromPost($reason,$board,$tId,$pId,$isAnote,$_POST["rId"]);
         }
     }
     else if($typeCode == 10){
@@ -86,6 +86,8 @@
         $value = $_POST["value"];
         $oldValue = $_POST["oldValue"];
         updateAdvert($id,$opt,$value,$oldValue);
+    } else if($typeCode == 99){
+        echo returnLog();
     }
     function postNews($title,$msg){
         global $conn;
@@ -114,8 +116,8 @@
                 )";
 myQuery($connBoards,$que);
         
-        $que = "INSERT INTO ". $boardName. "Threads (title,tags,newTag)
-            VALUES('$pinnedTit','pin',1)";
+        $que = "INSERT INTO ". $boardName. "Threads (title,tags)
+            VALUES('$pinnedTit','pin')";
 myQuery($connBoards,$que);
 
         $newTable = $boardName . "_1";
@@ -146,23 +148,29 @@ myQuery($connBoards,$que);
 myQuery($connBoards,$que);
 adminLog("Created a Board called $boardName");
     }
-    function banUsrFromPost($reason,$board,$tId,$pId,$rId=NULL,$time="1 0:0:0"){
+    function banUsrFromPost($reason,$board,$tId,$pId,$isAnote,$rId=NULL,$time="1 0:0:0"){
         global $connBoards;
         $usrId = NULL;
         if($rId==NULL){
-            //normal
+            $schema = "ip";
             $que = "SELECT ip FROM $board"."_$tId
                     WHERE postId = $pId";
+            if($isAnote){
+                $schema = "userId";
+                $que = "SELECT userId FROM $board"."_$tId"."_comments
+                        WHERE postId = $pId";
+            }
+
             $res = $connBoards->query($que);
 
             if($res->num_rows > 0){
                 while($row = $res->fetch_assoc()){
-                    $usrId=$row["ip"];
+                    $usrId=$row[$schema];
                 }
             }
         } else{
             //resposne
-            $que = "SELECT responseStr FROM $board"."_$tid"."_comments
+            $que = "SELECT responseStr FROM $board"."_$tId"."_comments
                     WHERE postId = $pId";
             $res = $connBoards->query($que);
 
@@ -178,7 +186,7 @@ adminLog("Created a Board called $boardName");
                 }
             }
         }
-        banUsr($usrId,$reason,$time); 
+        if($usrId != NULL) banUsr($usrId,$reason,$time); 
     }
 
     function generalSideBar(){
@@ -188,12 +196,23 @@ adminLog("Created a Board called $boardName");
                           "Update MySql");
         $count = count($optionAr);
 
-        echo "<div id=adminContent><div id=adminSelector>";
+        echo "<div id=adminContent><div id=adminSelector>
+            <div id=adminOptCont>";
         for($i = 0; $i < $count; $i++){
             echo "<div class=adminOption onclick='showSelected(".($i+1).")'>".
                 $optionAr[$i]."</div>";
         }
-        echo "</div><div id=selectedBody></div></div>";
+        echo "</div><hr>
+            <div id=adminLogCont>
+                <div id=adminLogTit><u>LOG</u></div>
+                <div id=adminLog><pre>ERROR LOG NOT LOADED</pre></div>
+            </div></div>";
+        echo "<div id=selectedCont>
+                <div id=selectedBody>
+                    Login Success...<br>
+                    <img src='../res/emotes/emote_2.png' style='width: 100%'><br>
+                    Welcum
+                </div></div></div>";
     }
 
     function displayDeleteStuff($pageType,$board = -1,$threadId = -1,$isAnote=0){
@@ -273,7 +292,7 @@ adminLog("Created a Board called $boardName");
                     echo "<tr><th>$pId</th><th>$time</th>
                         <th class=constrainedBox>$content</th>
                         <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
-                        <th class=noBreak><input type=text id=banReason>
+                        <th class=noBreak><input type=text id=banReason_$pId>
                             <a href=\"$banRef\">Ban</a></th></tr>";
                 }
                 echo "</table>";
@@ -302,7 +321,7 @@ adminLog("Created a Board called $boardName");
                     $responseStr = $row["responseStr"];
 
                     $deleteRef = "javascript:deleteStuff('$board',$threadId,1,$pId)";
-                    $banRef = "javascript:uhOhBan('$board',$threadId,$pId)";
+                    $banRef = "javascript:uhOhBan('$board',$threadId,$pId,1)";
 
                     echo "<tr><th>$pId</th>
                         <th class=noBreak>".timeRegFormat($time)."</th>
@@ -312,7 +331,7 @@ adminLog("Created a Board called $boardName");
                             number_format($ex,2).",".number_format($ey,2).")</th>
                         <th>$responseCnt</th>
                         <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
-                        <th class=noBreak><input type=text id=banReason>
+                        <th class=noBreak><input type=text id=banReason_$pId>
                             <a href=\"$banRef\">Ban</a></tr>";
                     if($responseCnt != 0){
                         echo "<tr><th class=emptyEntry></th>
@@ -320,13 +339,14 @@ adminLog("Created a Board called $boardName");
                         $jsonObj = json_decode($responseStr);
                         $responseAr = $jsonObj->data;
                         foreach($responseAr as $obj){
-                            $deleteRef = "javascript:deleteStuff('$board',$threadId,1,$pId,$obj[0])";
-                            $banRef= "javascript:uhOhBan('$board',$threadId,$pId,$obj[0])";
+                            $rId = $obj[0];
+                            $deleteRef = "javascript:deleteStuff('$board',$threadId,1,$pId,$rId)";
+                            $banRef= "javascript:uhOhBan('$board',$threadId,$pId,1,$rId)";
                             echo "<tr><th class=emptyEntry></th>
                                 <th>$obj[0]</th>
                                 <th>$obj[2]</th><th>$obj[3]</th>
                                 <th class=noBreak><a href=\"$deleteRef\">Delete</a></th>
-                                <th class=noBreak><input type=text id=banReason>
+                                <th class=noBreak><input type=text id=banReason_$pId"."_$rId>
                                     <a href=\"$banRef\">Ban</a></tr>";
                         }
                     }

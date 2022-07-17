@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Admin</title>
-        <link rel="stylesheet" href="../css/adminstyle.css">
+        <link rel="stylesheet" href="adminstyle.css">
         <link rel="icon" href="../../res/icon/icon_0.png">
         <script type="text/javascript" src="adminJS.js"></script>
     </head>

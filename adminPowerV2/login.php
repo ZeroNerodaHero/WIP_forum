@@ -194,4 +194,11 @@ ini_set('display_errors',1);
                 "\n.....................................\n");
         fclose($logFile);
     }
+    function returnLog(){
+        $fileName = "adminLog.log";
+        $logFile = fopen($fileName,"r") or die("Failed to Open File");
+        $contents = fread($logFile,filesize($fileName));
+        fclose($logFile);
+        return $contents;
+    }
 ?>

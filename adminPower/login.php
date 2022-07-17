@@ -18,9 +18,10 @@ ini_set('display_errors',1);
     function myQuery($mcon,$que,$msg=""){
         if($mcon->query($que)){
             //echo "successfully added " .$msg;
-            return true;
+        } else{
+            echo "failed to add " . $que;
+            echo "<br>";
         }
-        return false;
     }
 
     //this techinically is usr id but eh what am i to sya
@@ -80,24 +81,14 @@ ini_set('display_errors',1);
         if($print) echo $echoStr;
         return $ret;
     }
-    function unBanUsr($usrId){
-        global $conn;
-        $que = "DELETE FROM ipBans WHERE ip='$usrId'";
-        if(!myQuery($conn,$que)){
-            echo "error";
-        }
-    }
 
     function banUsr($usr_ID,$reason,$expire_time){
-        if($usr_ID == NULL) return;
         global $conn;
         $que = "INSERT INTO ipBans(ip,reason,expire)
                 VALUES ('$usr_ID','$reason',
                 ADDTIME(CURRENT_TIMESTAMP,'$expire_time'))";
-        if(myQuery($conn,$que)){
-            updateUsrScore($usr_ID,-100);
-            adminLog("BANNED USR: $usr_ID \nFOR: $reason \nEXPIRES: $expire_time");
-        }
+        myQuery($conn,$que); 
+        updateUsrScore($usr_ID,-100);
     }
 
     function isBadWord($word){
@@ -185,13 +176,5 @@ ini_set('display_errors',1);
         $phpdate = strtotime( $time);
         $mysqldate = date( 'n/d/y-H:i', $phpdate );
         return $mysqldate;
-    }
-    //new stuff
-    //you have to create a adminLog.log inorder for things to work
-    function adminlog($newLog){
-        $logFile = fopen("adminLog.log","a") or die("Failed to Open File");
-        fwrite($logFile,date("n/d/y h:i")."\n::::\n".$newLog.
-                "\n.....................................\n");
-        fclose($logFile);
     }
 ?>
