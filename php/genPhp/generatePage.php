@@ -136,13 +136,11 @@
         $redirect = 'postSuccess/index.php?page=' . $board;
         echo 
         '<br><div class=newPostBox>
-        <form action=' . $redirect. ' method="post">
-            Title: <input type="text" name="title" class="tit" size="65"> 
-            Anote Thread: <input type="checkbox" name="anote" value="yes">
-            <input type="submit" value="Post"><br>
-            Message: <br> ' .
+        <form action=' . $redirect. ' method="post" id=pageForm>
+            Title: <input type="text" name="title" class="tit" size="65"><br>'.
             showTextArea() .
-            ' <div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
+            'Anote Thread: <input type="checkbox" name="anote" value="yes">
+            <div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
                 data-sitekey="6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_">
             </div></div><br>
         </form></div>'; 
@@ -152,8 +150,7 @@
         $redirect = 'postSuccess/index.php?page='.$board."&TID=".$TID;
         echo 
         '<br><div class=newPostBox>
-        <form action=' . $redirect. ' method="post">
-            Message: <input type="submit" value="Post"> <br> '.
+        <form action=' . $redirect. ' method="post" id=pageForm>'.
             showTextArea() .
             '<div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
                 data-sitekey="6Ld7YKAeAAAAAJRQRJyy3TX5uGz3O4BwQDOOgGw_">
@@ -163,12 +160,8 @@
 
     function showTextArea(){
         return '
-            <textarea id="textArea" name="content" rows="6" cols="30" ></textarea> <br>
-            ADD: 
-            <button onclick="addImg()" type="button"> IMG </button>
-            <button onclick="addLink()" type="button"> LNK </button>
-	    <button onclick="addYTB()" type="button"> YTB </button>
-	    <button onclick="addVIDEO()" type="button"> VIDEO </button>
+            <input name="content" id=hiddenTextInput>
+            <script>document.getElementById("pageForm").appendChild(generateTextArea())</script>
         ';
     }
 

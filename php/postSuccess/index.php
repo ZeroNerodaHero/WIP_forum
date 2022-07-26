@@ -150,6 +150,9 @@
             $content = str_replace("\t","&nbsp&nbsp&nbsp&nbsp;",$content);
             $content = str_replace(">","&gt;",$content);
 
+            //original had a <br> here. Im not too sure why. 
+            //when u have a <br> as a last child of a div or p
+            //nothing happens.
             //$content = postParser($content) . "<br>";
             $content = postParser($content); 
             $content = nl2br($content);

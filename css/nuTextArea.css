@@ -1,0 +1,87 @@
+:root{
+    --textBkgColor: #ffe1fc;
+    --textHoverBkgColor: #ea82df;
+
+    --buttonBkgColor: #ffe1fc;
+    --buttonHoverBkgColor: #ea82df;
+    --buttonPadding: 1px 3px 1px 3px;
+}
+
+/* TEXT EDITOR STYLE*/
+#nuTextEditor{
+    display: grid;
+    grid-template-columns: auto;
+    color: black;
+}
+#textButtonButtonCont{
+    display: flex;
+    justify-content: center;
+}
+#textButtonCont{
+    width: 50%;
+    padding-top: 5px;
+    margin-top: 3px;
+}
+.textButton{
+    border: 1px black dotted;
+    border-width: 1px 1px 0px 1px;
+    background-color: var(--buttonBkgColor);
+    padding: var(--buttonPadding);
+}
+.textButton:hover{
+    background-color: var(--buttonHoverBkgColor);
+    padding-top: 5px;
+}
+
+/* SUBMIT STYLE*/
+#newTextAreaCont{
+    display: flex;
+    justify-content: center;
+}
+#newTextArea{
+    border: 1px black solid;
+    width: 50%;    
+    height: 200px;
+    overflow: auto;
+    word-break: break-all;
+    padding: 3px;
+
+    background-color: var(--textBkgColor);
+    resize: vertical;
+    text-align: start;
+}
+#newTextArea img{
+    width: 50%;
+    display: block;
+}
+#newTextArea:hover{
+    background-color: var(--textHoverBkgColor);
+}
+#newTextArea:focus{
+    background-color: var(--textHoverBkgColor);
+}
+.insertLinkArea{
+    font-style: italic;
+}
+
+/* SUBMIT STYLE*/
+#submitCont{
+    display: flex;
+    justify-content: center;
+}
+#submitButtonCont{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+}
+#submitButton{
+    width: fit-content;
+    border: 1px black dotted;
+    border-width: 0px 1px 1px 1px;
+    background-color: var(--buttonBkgColor);
+    padding: var(--buttonPadding);
+}
+#submitButton:hover{
+    background-color: var(--buttonHoverBkgColor);
+    padding-bottom:5px;
+}

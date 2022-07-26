@@ -4,12 +4,14 @@
         <link rel="stylesheet" href="../css/mainstyle.css">
         <link rel="stylesheet" href="../css/reuseStyle.css">
         <link rel="stylesheet" href="../css/readerStyle.css">
+        <link rel="stylesheet" href="../css/nuTextArea.css">
         <link rel="icon" href="../res/icon/icon_0.png">
         <script type="text/javascript" src="../jscode/jscrap.js"></script>
         <script type="text/javascript" src="../jscode/cookieSetting.js"></script>
         <script type="text/javascript" src="../jscode/lastView.js"></script>
         <script type="text/javascript" src="../jscode/readerScript.js"></script>
         <script type="text/javascript" src="../jscode/starThread.js"></script>
+        <script type="text/javascript" src="../jscode/nuTextArea.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
         <?php
@@ -49,8 +51,6 @@
                     name=font_size min=0 max=4><br>
             </div>
         </details>
-        <script>
-        </script>
     </span>
     <div id = "PageHeader">
         <?php 
