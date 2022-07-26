@@ -45,7 +45,8 @@ function integrate_LNK($tmpLNK,$option=""){
 function integrate_YTB($tmpLNK,$option=""){
     $youtubeRegex = "/https:\/\/www.youtube.com\/watch\?v=/i";
     $youtubeId = preg_replace($youtubeRegex, "", $tmpLNK);
-    $newStr = '<div><iframe width="420" height="315" src="https://www.youtube.com/embed/'.$youtubeId.'" allowfullscreen> </iframe> </div>';
+    $newStr = '<div><iframe width="420" height="315" src="https://www.youtube.com/embed/'.
+                $youtubeId.'" allowfullscreen></iframe></div>';
     return $newStr;
 }
 /* ------------------YTB ENDS----------------------*/

@@ -118,7 +118,6 @@
             //deletes tables when > maxThreads
             if(!empty($res) && $res->num_rows > $maxThreads){
                 $diff = max($res->num_rows-$maxThreads-1,0);
-	        //echo "diff ". $diff . "<br>";
 
                 while($row = $res->fetch_assoc()){
 		    if($diff <= 0) continue;
@@ -151,7 +150,8 @@
             $content = str_replace("\t","&nbsp&nbsp&nbsp&nbsp;",$content);
             $content = str_replace(">","&gt;",$content);
 
-            $content = postParser($content) . "<br>";
+            //$content = postParser($content) . "<br>";
+            $content = postParser($content); 
             $content = nl2br($content);
             $content = addslashes($content); 
             $que = "INSERT INTO ". $threadTable . "(time,content,ip) 
@@ -300,12 +300,21 @@
                         $newStr = integrate_VIDEO($tmpLNK,$tmpOPT);
                     }
 
+                    //this is used to detect if the next thing is a new line.
+                    $newLineOffset = 1;
+                    while($pos[5]+$newLineOffset < strlen($content) && 
+                        ($content[$pos[5]+$newLineOffset] == "\r" || 
+                        $content[$pos[5]+$newLineOffset] == "\n" ||
+                        $content[$pos[5]+$newLineOffset] == "\n\r" || 
+                        $content[$pos[5]+$newLineOffset] == "\r\n")){
+                            $newLineOffset++;
+                    }
+                    $newLineOffset--;
                     //so what happens here is bc the way 
                     //i made this is that the endpoints are not
                     //counted...have to add 2
                     //old ver that replaces the whole word
-                    $findStr = substr($content,$pos[0],$pos[5]-$pos[0]+1); 
-
+                    $findStr = substr($content,$pos[0],$pos[5]-$pos[0]+1+$newLineOffset); 
                     $retStr = str_replace($findStr,$newStr,$retStr);
                 }
                 //what is wrong with this. i dont rememberdoing it like this

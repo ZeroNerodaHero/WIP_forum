@@ -125,7 +125,7 @@
         echo "<span class=threadInfo>" . $time . " :::: PID: " .
             "<a href='javascript:quotePost($PID)'>".  sprintf("%'.07d\n",$PID) . "</a><br>";
         echo "</span>";
-        echo "<p class=postContent>" . $content . "</p>";
+        echo "<div class=postContent>" . $content . "</div>";
         echo "<hr>";
         echo "</div>";
     }
