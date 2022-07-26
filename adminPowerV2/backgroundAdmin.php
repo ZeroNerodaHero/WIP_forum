@@ -15,7 +15,7 @@
     else if($typeCode == 1){
         $title = $_POST["title"];
         $content= $_POST["content"];
-
+adminLog("INSERT $title AND $content");
         postNews($title,$content);
     }
     else if($typeCode == 2){

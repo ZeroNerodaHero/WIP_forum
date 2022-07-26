@@ -55,6 +55,8 @@ function postNews(){
     var title = titleEle.value;
     var content= contentEle.value;
 
+    content = encodeURIComponent(content);
+
     var postData = "typeCode=1&title="+title+"&content="+content;
     connectWServer(postData,function(){
         titleEle.value = contentEle.value = "";
