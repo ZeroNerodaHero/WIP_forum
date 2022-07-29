@@ -12,7 +12,10 @@ function addVIDEO(){
 }
 
 function quotePost(val){
-    document.getElementById("textArea").value += "##"+ val+"\n";
+    var toBeInsert = document.createElement("div");
+    toBeInsert.innerHTML ="##"+ val+" ";
+    document.getElementById("newTextArea").appendChild(toBeInsert);
+    document.getElementById("newTextArea").append(document.createElement("br"));
     buttonDown();
 }
 
@@ -258,4 +261,14 @@ function genMod(num){
     }
     return ret;
 }
-
+function updateTitle(){
+    var titEle =document.getElementById("tit"); 
+    if(titEle.value=="Title"){
+        titEle.value="";
+        titEle.style.color="#00000096";
+    }
+    else if(titEle.value ==""){
+        titEle.value="Title";
+        titEle.style.color="black";
+    }
+}

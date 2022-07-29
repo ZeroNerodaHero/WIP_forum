@@ -216,7 +216,7 @@
                     $we = $ws+2;
                     while($we < $clen && $content[$we] != "\n" &&
                       $content[$we] != "\r" && $content[$we] != "\r\n" &&
-                      $content[$we] != "\n\r"){
+                      $content[$we] != "\n\r" && $content[$we] != " "){
                         $we++;
                     }
                     //

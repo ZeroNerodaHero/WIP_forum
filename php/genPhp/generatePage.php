@@ -84,9 +84,9 @@
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
         echo "<div id=p_$TID class=threadEncap onclick='threadRedirect(\"$newLink\",$TID)' 
                 onmouseover=threadHover($TID) onmouseout=threadUnHover($TID) >";
-        echo "<span class=threadInfo>" . $time . " :::: TID: " .$TID. " | 
-            (<span class=postCnter id=cnt_$TID> ".$postCnt." </span>) 
-            <span id=pDiff_$TID></span>
+        echo "<span class=threadInfo>" . $time . " :::: TID:" .$TID. " | 
+            (<span class=postCnter id=cnt_$TID>".$postCnt."</span>)".
+            "<span id=pDiff_$TID></span>
             <a href='$newLink'> >>> </a></span>";
 		echo "<div class='thread_title $classTag'>" . $title . "</div>";
 
@@ -122,7 +122,7 @@
         echo "<div class=postEncap id=pd".$PID.">";
         echo "<style> #".$id_sel." { background-color:#".$UID."; } </style>";
         echo "<span class=UID id='$id_sel'>" . $UID . "</span>";
-        echo "<span class=threadInfo>" . $time . " :::: PID: " .
+        echo "<span class=threadInfo>" . $time . " :::: PID:" .
             "<a href='javascript:quotePost($PID)'>".  sprintf("%'.07d\n",$PID) . "</a><br>";
         echo "</span>";
         echo "<div class=postContent>" . $content . "</div>";
@@ -137,7 +137,8 @@
         echo 
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post" id=pageForm>
-            Title: <input type="text" name="title" class="tit" size="65"><br>'.
+            <input name="title" id="tit" value=Title onclick="updateTitle()"
+            onfocusout="updateTitle()"><br>'.
             showTextArea() .
             'Anote Thread: <input type="checkbox" name="anote" value="yes">
             <div id=captchaCont><div id=pcaptcha class="g-recaptcha" 
@@ -160,7 +161,7 @@
 
     function showTextArea(){
         return '
-            <input name="content" id=hiddenTextInput>
+            <textarea name="content" id=hiddenTextInput></textarea>
             <script>document.getElementById("pageForm").appendChild(generateTextArea())</script>
         ';
     }

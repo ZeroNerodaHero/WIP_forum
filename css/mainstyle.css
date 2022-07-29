@@ -1,3 +1,7 @@
+:root{
+    font-family: monospace;
+}
+
 body{
     background-color: #404040;
     background-image: url("../../res/emotes/emote_0.png");
@@ -78,7 +82,7 @@ footer{
 
 #board{
     padding-top: 1%;
-    background-color: #808080e3;
+    background-color: #808080f3;
     margin-bottom: 3%;
     padding-bottom: 3%;
 
@@ -269,13 +273,13 @@ footer{
 }
 
 .postEncap{
-    margin-top: 0px;
+    margin-top: 5px;
     padding-left: 1%;
     padding-right: 1%;
 }
 
 .postContent{
-    margin-top: 12px;
+    margin-top: 8px;
     margin-bottom: 8px;
     word-wrap: break-word;
 }
@@ -303,8 +307,15 @@ footer{
     padding: 1%;
 }
 
-.tit{
+#tit{
     width: 70%;
+    background: var(--textBkgColor);
+    color: #00000096;
+
+    font-family: monospace;
+}
+#tit:focus{
+    background: var(--textHoverBkgColor);
 }
 
 img {

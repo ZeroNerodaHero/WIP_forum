@@ -54,6 +54,7 @@ function extractString(node){
     }
 
     var retStr="";
+    if(node.nodeName == "DIV") retStr += "\n";
     var nodeChildren = node.childNodes;
     for(var childNode of nodeChildren){
         retStr += extractString(childNode);
