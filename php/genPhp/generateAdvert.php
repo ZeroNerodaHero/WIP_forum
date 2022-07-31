@@ -14,7 +14,7 @@
         $res = $conn->query($que);
         while($row = $res->fetch_assoc()){
             echoImg($row["linkToImg"],$row["linkToSite"],"advertImg");
-	    if($row["totalLoads"] > $row["maxPoints"]){
+	    if($row["totalLoads"] >= $row["maxPoints"]){
 	        deleteAd($row["id"]);
 	    } else{
 	        $que = "UPDATE peepoAds SET totalLoads=".

@@ -134,3 +134,18 @@ img:hover{
     padding: 10px 20px;
     background-color: #3c505f;
 }
+/* ............................ */
+#addAdvertCenter{
+    display: flex;
+    justify-content: center;
+}
+#addAdvertCont{
+    width: fit-content;
+    border: 2px black dotted;
+    padding: 4px 5px;
+}
+#submitNewAdvert{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 2px;
+}

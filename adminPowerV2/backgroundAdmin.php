@@ -2,6 +2,7 @@
     include_once("login.php");
 
     $typeCode = $_POST["typeCode"];
+adminLog("fine ".$typeCode);
 
     if($typeCode == 0){
         $passwd = $_POST["passwd"];
@@ -15,7 +16,6 @@
     else if($typeCode == 1){
         $title = $_POST["title"];
         $content= $_POST["content"];
-adminLog("INSERT $title AND $content");
         postNews($title,$content);
     }
     else if($typeCode == 2){
@@ -85,7 +85,15 @@ adminLog("INSERT $title AND $content");
         $opt = $_POST["opt"];
         $value = $_POST["value"];
         $oldValue = $_POST["oldValue"];
+adminLog("CAN READ?? ".$value);
         updateAdvert($id,$opt,$value,$oldValue);
+    } else if($typeCode == 14){
+        $imgLnk = $_POST["imgLnk"];
+        $siteLnk = $_POST["siteLnk"];
+        $points = $_POST["points"];
+        $boardsLimited = $_POST["boardsLimited"];
+adminLog("NEW READ?? ".$imgLnk);
+        addAdvert($imgLnk,$siteLnk,$points,$boardsLimited);
     } else if($typeCode == 99){
         echo returnLog();
     }
@@ -527,7 +535,14 @@ adminLog("Created a Board called $boardName");
             }
             echo "</table>";
         }
-        echo "<br>NEW ADD<br>";
+        echo "<br><div id=addAdvertCenter><div id=addAdvertCont>
+            <b>ADD ADVERT</b><hr><br>
+            Image Link: <input id=imageLnk><br>
+            Link To Site: <input id=siteLnk><br>
+            Max Points: <input id=points><br>
+            Boards Limited: <input id=boardsLimited><br>
+            <button id=submitNewAdvert onclick=addAdvert()>Add Advert
+                </button></div></div>";
     }
     function updateAdvert($id,$opt,$value,$oldValue){
         global $conn;
@@ -552,5 +567,11 @@ adminLog("Created a Board called $boardName");
         if(myQuery($conn,$que)){
             adminLog($log);
         }
+    }
+    function addAdvert($imgLnk,$siteLnk,$points,$boardsLimited){
+        global $conn;
+        $que = "INSERT INTO peepoAds(linkToImg,linkToSite,maxPoints,boardLimited)
+                VALUE('$imgLnk','$siteLnk','$points','$boardsLimited')";
+        myQuery($conn,$que);
     }
 ?>

@@ -200,10 +200,7 @@ function connectWServer(postData,runFunc=null,setEle=null,debug=0){
             //if(runFunc != null) runFunc();
             if(runFunc != null) runFunc(this.responseText);
             if(setEle != null) setEle = this.responseText;
-
             if(debug) console.log(this.responseText);
-
-
         }
     }
     xhttp.open("POST", "backgroundAdmin.php");
@@ -223,20 +220,24 @@ function addWord(){
 //////////////////////////////////
 function updateAdvert(id,opt){
     var postData = "typeCode=13&"; 
+    var newValue="";
+    var oldValue="";
     if(opt== 0){
-        var newImg = document.getElementById("chngImgLnk_"+id).value;
-        var oldImg = document.getElementById("adlinkImg_"+id).innerText;
-        postData += "id="+id+"&opt="+opt+"&value="+newImg+"&oldValue="+oldImg;
+        newValue = document.getElementById("chngImgLnk_"+id).value;
+        oldValue = document.getElementById("adlinkImg_"+id).innerText;
     } else if(opt== 1){
-        var newLink = document.getElementById("chngSiteLnk_"+id).value;
-        var oldLink = document.getElementById("adlinkSite_"+id).innerText;
-        postData += "id="+id+"&opt="+opt+"&value="+newLink+"&oldValue="+oldLink;
+        newValue = document.getElementById("chngSiteLnk_"+id).value;
+        oldValue = document.getElementById("adlinkSite_"+id).innerText;
     } else if(opt==2){
-        var newValue = document.getElementById("chngMaxPoint_"+id).value;
-        var oldValue = document.getElementById("maxPoint_"+id).innerText;
-        postData += "id="+id+"&opt="+opt+"&value="+newValue+"&oldValue="+oldValue;
+        newValue = document.getElementById("chngMaxPoint_"+id).value;
+        oldValue = document.getElementById("maxPoint_"+id).innerText;
     }
-    if(postData != null) updatePage(6,postData);
+    if(newValue != ""){
+        newValue= encodeURIComponent(newValue);
+        oldValue= encodeURIComponent(oldValue);
+        postData += "id="+id+"&opt="+opt+"&value="+newValue+"&oldValue="+oldValue;
+        if(postData != null) updatePage(6,postData);
+    }
 }
 //////////////////////////////////
 function updateMysql(ele) {
@@ -251,4 +252,21 @@ function updateLog() {
         logEle.innerHTML = "<pre>"+logStr+"</pre>";
         logEle.scrollTop = logEle.scrollHeight;
     });
+}
+/////////////////////////////////
+function addAdvert(){
+    var imgLnk = document.getElementById("imageLnk");
+    var siteLnk= document.getElementById("siteLnk");
+    var points = document.getElementById("points");
+    var boardsLimited= document.getElementById("boardsLimited");
+
+    if(imgLnk && siteLnk && points && boardsLimited &&
+       imgLnk.value!="" && siteLnk.value!="" && points.value!=""){
+        var postData = "typeCode=14&imgLnk="+encodeURIComponent(imgLnk.value)+
+                        "&siteLnk="+encodeURIComponent(siteLnk.value)+
+                        "&points="+points.value+"&boardsLimited="+boardsLimited.value;
+        if(postData != null) updatePage(6,postData);
+        console.log(postData);
+    }
+
 }
