@@ -137,8 +137,7 @@
         echo 
         '<br><div class=newPostBox>
         <form action=' . $redirect. ' method="post" id=pageForm>
-            <input name="title" id="tit" value=Title onclick="updateTitle()"
-            onfocusout="updateTitle()"><br>'.
+            <input name="title" id="tit" value=Title><br>'.
             showTextArea() .
             'Anote Thread: <input type="checkbox" name="anote" value="yes">
             <div id=captchaCont><div id=pcaptcha class="g-recaptcha" 

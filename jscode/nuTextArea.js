@@ -24,9 +24,12 @@ function addVIDEO(){
 }
 function submitValue(){
     var newTextAreaEle = document.getElementById("newTextArea");
+    var titEle = document.getElementById("tit");
+    if(titEle) titEle.focus();
+    newTextAreaEle.focus(); 
+
     var textVal=extractString(newTextAreaEle);
     textVal = standardizeText(textVal);
-
     var hiddenTextInput = document.getElementById("hiddenTextInput");
     hiddenTextInput.value = textVal;
     var postForm = document.getElementById("pageForm");
@@ -53,19 +56,24 @@ function extractString(node){
         }
     }
 
-    var retStr="";
-    if(node.nodeName == "DIV") retStr += "\n";
     var nodeChildren = node.childNodes;
-    for(var childNode of nodeChildren){
-        retStr += extractString(childNode);
+    var retStr="";
+    if(nodeChildren.length){
+        if(node.nodeName == "DIV") retStr += "\n";
+        for(var childNode of nodeChildren){
+            retStr += extractString(childNode);
+        }
+        if(node.nodeName == "DIV") retStr += "\n";
     }
-    if(node.nodeName == "DIV") retStr += "\n";
     return retStr;
 }
 function standardizeText(inputStr){
+    if(inputStr=="") return "";
     var i = 0;
     //used to remove inital " " and newlines
-    while(inputStr[i] == " " || inputStr[i] == "\n") i++;
+    while(i < inputStr.length && (inputStr[i] == " " || inputStr[i] == "\n")){
+        i++;
+    }
     var outputStr = ""+inputStr[i];
     var outputOffset = 1;
     i++;
@@ -201,3 +209,31 @@ function replaceView(){
         }
     }
 }
+
+function nuTextAreaDefaults(){
+    var newTextAreaEle = document.getElementById("newTextArea");
+    if(newTextAreaEle == null) return;
+
+    newTextAreaEle.innerHTML = "Please Use the Buttons or correct format to insert images, links..."+
+        "If you do it right, it will automatically transform to the selected item"+
+        "<br><img src='../res/emotes/bumoass.gif' style='text-align: center;width: 100px;display:inline;'>"+
+        "<span>(click to remove bumo's(bury fumo) ass)</span>";
+    newTextAreaEle.style.color="#00000096";
+    newTextAreaEle.addEventListener("focus",function(){
+        newTextAreaEle.innerText = "";
+        newTextAreaEle.style.color="#000000";
+        newTextAreaEle.removeEventListener("focus",arguments.callee,false);
+    });
+
+    var titEle = document.getElementById("tit");
+    if(titEle){
+        titEle.value="Title";
+        titEle.style.color="#00000096";
+        titEle.addEventListener("focus",function(){
+            titEle.value= "";
+            titEle.style.color="#000000";
+            titEle.removeEventListener("focus",arguments.callee,false);
+        });
+    }
+}
+

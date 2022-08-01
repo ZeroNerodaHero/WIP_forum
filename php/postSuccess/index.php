@@ -52,8 +52,9 @@
         else if($isThread && testString($_POST["title"],301) && 
           testString($_POST["content"],7500)){
             $opt = 0; 
-            if(!empty($_POST["anote"]) && ($_POST["anote"]=="yes"))
+            if(!empty($_POST["anote"]) && ($_POST["anote"]=="yes")){
                 $opt = 1;
+            }
             manageNewThread($_POST["title"],$_POST["content"],$board,$opt);
         } 
         //new post

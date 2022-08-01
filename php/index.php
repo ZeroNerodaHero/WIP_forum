@@ -173,5 +173,6 @@
     <script>
         generatePageStyle();
         expandImg();
+        nuTextAreaDefaults();
     </script>
 </html>

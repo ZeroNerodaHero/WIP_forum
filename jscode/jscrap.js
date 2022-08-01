@@ -261,14 +261,3 @@ function genMod(num){
     }
     return ret;
 }
-function updateTitle(){
-    var titEle =document.getElementById("tit"); 
-    if(titEle.value=="Title"){
-        titEle.value="";
-        titEle.style.color="#00000096";
-    }
-    else if(titEle.value ==""){
-        titEle.value="Title";
-        titEle.style.color="black";
-    }
-}
