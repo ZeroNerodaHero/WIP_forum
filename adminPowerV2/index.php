@@ -16,7 +16,7 @@
             <form>
                 <div>
                     Password: 
-                    <input type='text' id=passwd name=passwd><br><br>
+                    <input type='password' id=passwd name=passwd><br><br>
                     <button type='button' onclick='updateBody(0)'>Next</button>
                 </div>
             </form>

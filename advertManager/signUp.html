@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign Up</title>
+        <link rel="stylesheet" href="advertManager.css">
+        <link rel="icon" href="../../res/icon/icon_0.png">
+        <script type="text/javascript" src="advertJS.js"></script>
+    </head>
+
+    <body>
+        <div id=advertLoginFlexCont>
+            <div id=advertLoginCont>
+                <div id=topBack>
+                    <a href="/advertManager">< Back</a>
+                </div>
+                <h1 id=loginHeader>
+                    Sign Up
+                </h1>
+                <hr>
+            
+                <div>
+                    <form>
+                        <div id=signUpText>
+                            <div class=inputCont>
+                                <span class=inputText>Username: </span>
+                                <input id=username name=username>
+                                </div>
+                            <div class=inputCont>
+                                <br><span class=inputText>Password: </span>
+                                <input type='password' id=passwd name=passwd><br>
+                                <div id=passwordDisclaimer>
+                                * Pick a good password<br>
+                                * If you forget this password, you will have to email me 
+                                until I set up my server to send email. This could take 1hr
+                                to 48hr(to never).
+                                </div>
+                            </div>
+                            <div class=inputCont>
+                                <br><span class=inputText>Retype Your Password: </span>
+                                <input type='password' id=repasswd name=repasswd><br><br>
+                            </div>
+                            <div class=inputCont>
+                                <br><span class=inputText>Email: </span>
+                                <input id=email name=email><br><br>
+                            </div>
+                            <button type='button' id=signUpButton onclick='updateBody(0)'>
+                                Register
+                            </button>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <div id=externalLink>
+            <a href="">Sign Up</a> | 
+            <a href="">Info</a> | 
+            <a href="">Terms Of Service</a> | 
+            <a href="">Back to Funcel</a>
+        </div>
+    </body>
+</html>

@@ -2,7 +2,6 @@
     include_once("login.php");
 
     $typeCode = $_POST["typeCode"];
-adminLog("fine ".$typeCode);
 
     if($typeCode == 0){
         $passwd = $_POST["passwd"];
@@ -258,8 +257,8 @@ adminLog("Created a Board called $boardName");
 
             if($res->num_rows > 0){
                 echo "<table>";       
-                echo "<tr><th>Thread Id</th><th>Title</th><th>Time</th>";
-                echo "<th>Tags</th></tr>";
+                echo "<tr><th class=noBreak>Thread Id</th><th>Title</th>
+                    <th class=noBreak>Time</th><th class=noBreak>Tags</th></tr>";
                 while($row = $res->fetch_assoc()){
                     $tId = $row["threadId"];
                     $title = $row["title"];
@@ -269,10 +268,11 @@ adminLog("Created a Board called $boardName");
                                     $tId.",".($tags&1?"1":"0").")";
                     $redirect= "javascript:renderDelete(3,'".$board."',$tId".
                                 ($tags&1 ? ",1":"").")";
-                    echo "<tr><th>$tId</th><th>$title</th><th>$time</th>".
+                    echo "<tr><th>$tId</th><th>$title</th>
+                        <th class=noBreak>".timeRegFormat($time)."</th>".
                         "<th>$tags</th>
                         <th class=noBreak><a href=\"".$scriptTXT."\">Delete</a></th>
-                        <th><a href=\"".$redirect."\"> >> </a></th></tr>";
+                        <th><a href=\"".$redirect."\" class=noBreak> >> </a></th></tr>";
                 }
                 echo "</table>";       
             }
