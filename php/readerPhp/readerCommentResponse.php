@@ -1,5 +1,5 @@
 <?php
-    include_once("../../adminPower/login.php");
+    include_once("../../adminPowerV2/login.php");
     include_once("../postSuccess/postFunc.php");
 
     $board= $TID=$pId=$uId=$newResponse= NULL;

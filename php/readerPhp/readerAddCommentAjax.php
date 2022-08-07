@@ -1,5 +1,5 @@
 <?php
-    include_once("../../adminPower/login.php");
+    include_once("../../adminPowerV2/login.php");
     include_once("../postSuccess/postFunc.php");
 
     $sx = $_POST["sx"]; $sy = $_POST["sy"]; $ex = $_POST["ex"]; $ey = $_POST["ey"];

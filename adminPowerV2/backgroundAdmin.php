@@ -84,14 +84,12 @@
         $opt = $_POST["opt"];
         $value = $_POST["value"];
         $oldValue = $_POST["oldValue"];
-adminLog("CAN READ?? ".$value);
         updateAdvert($id,$opt,$value,$oldValue);
     } else if($typeCode == 14){
         $imgLnk = $_POST["imgLnk"];
         $siteLnk = $_POST["siteLnk"];
         $points = $_POST["points"];
         $boardsLimited = $_POST["boardsLimited"];
-adminLog("NEW READ?? ".$imgLnk);
         addAdvert($imgLnk,$siteLnk,$points,$boardsLimited);
     } else if($typeCode == 99){
         echo returnLog();
@@ -494,7 +492,7 @@ adminLog("Created a Board called $boardName");
             echo "<tr><th class=noBreak>id</th>
                 <th>Image</th>
                 <th>Ad Info</th>
-                <th class=noBreak>Point System(loads+click/max)</th>
+                <th class=noBreak>Point System (loads+click/max)</th>
                 <th class=noBreak>Boards Limited</th>
                 <th>Date Added</th>
                 <tr>";
@@ -507,7 +505,7 @@ adminLog("Created a Board called $boardName");
                 if($totalClicks == NULL) $totalClicks = "ERROR";
                 $maxPoints=$row["maxPoints"];
                 $boardLimited=$row["boardLimited"];
-                $dateAdded=$row["dateAdded"];
+                $dateAdded=timeRegFormat($row["lastTime"]);
                 echo "<tr><th>$id</th><th><img src=$linktoImg></th>
                     <th>
                         <div class=advertHeader><u>LINK TO IMAGE</u></div>
@@ -568,10 +566,10 @@ adminLog("Created a Board called $boardName");
             adminLog($log);
         }
     }
-    function addAdvert($imgLnk,$siteLnk,$points,$boardsLimited){
+    function addAdvert($imgLnk,$siteLnk,$points){
         global $conn;
-        $que = "INSERT INTO peepoAds(linkToImg,linkToSite,maxPoints,boardLimited)
-                VALUE('$imgLnk','$siteLnk','$points','$boardsLimited')";
+        $que = "INSERT INTO peepoAds(linkToImg,linkToSite,maxPoints)
+                VALUE('$imgLnk','$siteLnk','$points')";
         myQuery($conn,$que);
     }
 ?>

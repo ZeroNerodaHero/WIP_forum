@@ -3,8 +3,10 @@
     if(!empty($_GET["page"])) $page=$_GET["page"];
 
     $que = "select * from peepoAds";
+/*
     if($page != "news")
         $que .= " where (boardLimited='' || boardLimited='$page')";
+ */
 
     $res = $conn->query($que);
     if(!empty($res) && $res->num_rows > 0){

@@ -1,5 +1,5 @@
 <?php
-    include_once("../../adminPower/login.php"); 
+    include_once("../../adminPowerV2/login.php"); 
 
     $limit = (empty($_GET["limit"]) ? 10 : $_GET["limit"]);
     if(!empty($_GET["board"])){

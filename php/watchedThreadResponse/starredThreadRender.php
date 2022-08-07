@@ -1,5 +1,5 @@
 <?php
-    include_once("../../adminPower/login.php");
+    include_once("../../adminPowerV2/login.php");
 
     $json = $_POST["json"];
     //true here to make it associative array

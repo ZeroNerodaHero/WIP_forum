@@ -44,7 +44,7 @@ ini_set('display_errors',1);
             $que = "INSERT INTO usrList(usrId,lastPost) 
                     VALUES($usrId,'0000-00-00 00:00:00')";
             myQuery($conn,$que);
-            setcookie("usrId",$usrId,time()+(86400 * 365 * 5),"/");
+            setcookie("usrId",$usrId,time()+(86400 * 365 * 5),"/php");
             return $usrId;
         } 
         //i initially threw away that first return $usrId uptop
@@ -189,13 +189,13 @@ ini_set('display_errors',1);
     //new stuff
     //you have to create a adminLog.log inorder for things to work
     function adminlog($newLog){
-        $logFile = fopen("adminLog.log","a") or die("Failed to Open File");
+        $logFile = fopen($badPath."../adminPowerV2/adminLog.log","a") or die("Failed to Open File");
         fwrite($logFile,date("n/d/y h:i")."\n:::::::::::\n".$newLog.
                 "\n.....................................\n");
         fclose($logFile);
     }
     function returnLog(){
-        $fileName = "adminLog.log";
+        $fileName = "../adminPowerV2/adminLog.log";
         $logFile = fopen($fileName,"r") or die("Failed to Open File");
         $contents = fread($logFile,filesize($fileName));
         fclose($logFile);

@@ -1,35 +1,19 @@
+:root{
+    --hoverColor: #ffe1fc;
+}
 body{
     background-color: #ffc0cb;
     text-align: center; 
     color: #515870;
 }
-
 a{
     color: #6627ff;
 }
-li{
-    text-align: start;
-}
-pre{
-    margin: 0px;
-    white-space: break-spaces;
-    overflow: hidden;
-}
-table, th, td {
-    margin: 0 auto;
-    border: 1px solid black;
-    word-break:break-all;
-}
-th{
-    padding-left: 3px;
-    padding-right: 3px;
-}
-th:hover{
-    background-color: #555555;
-}
 input{
     display: inline;
-    float: right;
+    background-color: #00000000;
+    border:0px black solid;
+    border-bottom:1px black solid;
 }
 
 #loginHeader{
@@ -44,6 +28,7 @@ input{
 #advertLoginCont{
     width:fit-content;
     border:2px black solid;
+    border-top-width: 10px;
     padding: 7px 13px;
     margin-bottom: 5px;
     background-color: #f89cad;
@@ -58,10 +43,126 @@ input{
 #signUpButton{
     float: right;
 }
-#passwordDisclaimer{
+.passwordDisclaimer{
     padding-left: 2%;
     width: 300px;
 }
 .inputText{
     padding-right: 70px;
 }
+.checkInput{
+    display:inline;
+    float: right;
+}
+.nullGood{
+    color: #00000000;
+    user-select: none;
+    -webkit-user-select: none; /*Safari*/
+    -moz-user-select: none; /*Firefox*/
+}
+#registerInput{
+    float: right;
+}
+.errorMsg{
+    color: red;
+}
+
+#advertMainBody{
+    margin-top: 3%;
+    padding: 2% 1%;
+}
+#mainContent{
+    border: 2px black solid;
+    padding: 11px 13px;
+}
+#advertTopLeft{
+    text-align: end;
+}
+#advertHeader{
+    color: black;
+    font-size: 1.3rem;
+}
+#advertGridView{
+    display: grid;
+    grid-template-columns: 15% 85%;
+}
+.myAdvertTab{
+    border-left: 2px black solid;
+    border-right: 2px black solid;
+    margin-bottom: 3px;
+    background-color: #FFFFFF09;
+    padding: 2px;
+}
+.myAdvertTab:hover{
+    background-color: var(--hoverColor);
+    font-size: 1.1rem;
+}
+#advertStuff{
+    padding-left: 1%;
+}
+#addAdHeader{
+    text-align: right;
+    font-size: 1.5rem;
+    color: black;
+    padding-left: 5%;
+    padding-right: 2%;
+
+    border: 1px black solid;
+    background-color: #7554ff52;
+}
+#addAdHeaderText{
+    float: left;
+}
+#addAdvertGrid{
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+#addAdvertInfo{
+    padding-top: 9px;
+    padding-left: 13px;
+}
+#addAdvertInfoNotice{
+    font-size: 0.8rem;
+}
+#advertImgPreview{
+    border: 2px black solid;
+    border-top: 1px black solid;
+    width: 100%;
+}
+#addAdvertInputCont{
+    text-align: left;
+}
+.inputEncap{
+    float: right;
+}
+#lnkToImg{
+    width: 90%;
+}
+#lnkToSite{
+    width: 90%;
+}
+.inputRightEncap{
+    text-align: right;
+}
+#addAdCredits{
+    width: 90px;
+}
+#addDisclaimer{
+    font-size: 0.8rem;
+}
+#submitNewAdCont{
+    text-align: right;
+    margin-right: 5%;
+}
+#submitButton{
+    color: black;
+    border: 1px black solid;
+    border-width: 1px 0px;
+    padding: 3px 11px;
+    padding-bottom: 1px;
+}
+#submitButton:hover{
+    font-size: 1.1rem;
+    background-color: var(--hoverColor);
+}
+

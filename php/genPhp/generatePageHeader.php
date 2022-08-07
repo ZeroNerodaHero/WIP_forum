@@ -12,7 +12,7 @@
     }
 
 
-    include_once("../adminPower/login.php");
+    include_once("../adminPowerV2/login.php");
     $descript = "FUNCEL.XYZ is an anonymous text-board. ";
     $tabTitle = "[news]";
 

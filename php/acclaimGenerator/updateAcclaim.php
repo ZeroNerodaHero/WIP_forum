@@ -1,6 +1,6 @@
 <?php
     $pointsForEmote = 100;
-    include_once("../../adminPower/login.php");
+    include_once("../../adminPowerV2/login.php");
     include_once("listAcclaim_func.php");
     $usrId = getUsrID();
     $aboard = $_GET['board'];

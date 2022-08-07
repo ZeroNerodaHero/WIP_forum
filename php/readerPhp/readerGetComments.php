@@ -1,5 +1,5 @@
 <?php
-    include_once("../../adminPower/login.php");
+    include_once("../../adminPowerV2/login.php");
 
     $source = $_GET["board"]."_".$_GET["TID"]."_comments";
     $que = "SELECT * FROM ".$source;

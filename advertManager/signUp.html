@@ -19,16 +19,27 @@
                 <hr>
             
                 <div>
-                    <form>
+                    <form action="backgroundSignUp.php" method=post>
                         <div id=signUpText>
                             <div class=inputCont>
                                 <span class=inputText>Username: </span>
-                                <input id=username name=username>
+                                <span>
+                                <div class=checkInput>
+                                    <input id=username name=username 
+                                           oninput="uniqueUserName()">
+                                    <span id="goodusername" style="padding-left: 5px">
+                                        &#9646;&#9646;<span>
+                                    </span>
                                 </div>
+                            </div>
                             <div class=inputCont>
                                 <br><span class=inputText>Password: </span>
-                                <input type='password' id=passwd name=passwd><br>
-                                <div id=passwordDisclaimer>
+                                <div class=checkInput>
+                                    <input type='password' id=passwd name=passwd>
+                                    <span class=nullGood style="padding-left: 5px">
+                                        &#9646;&#9646;<span>
+                                </div>
+                                <div class=passwordDisclaimer>
                                 * Pick a good password<br>
                                 * If you forget this password, you will have to email me 
                                 until I set up my server to send email. This could take 1hr
@@ -37,15 +48,34 @@
                             </div>
                             <div class=inputCont>
                                 <br><span class=inputText>Retype Your Password: </span>
-                                <input type='password' id=repasswd name=repasswd><br><br>
+                                <div class=checkInput>
+                                    <input type='password' id=repasswd name=repasswd 
+                                        oninput="checkPasswds()">
+                                    <span id="goodRetype" style="padding-left: 5px">
+                                        &#9646;&#9646;</span>
+                                </div>
+                                <div class=passwordDisclaimer>
+                                * Passwords Are The Same: 
+                                </div>
                             </div>
                             <div class=inputCont>
                                 <br><span class=inputText>Email: </span>
-                                <input id=email name=email><br><br>
+                                <div class=checkInput>
+                                    <input id=email name=email oninput="uniqueEmail()">
+                                    <span id="goodemail" style="padding-left: 5px">
+                                        &#9646;&#9646;<span>
+                                </div>
                             </div>
-                            <button type='button' id=signUpButton onclick='updateBody(0)'>
-                                Register
-                            </button>
+                            <div class=inputCont>
+                                <br><span class=inputText>Promo: </span>
+                                <div class=checkInput>
+                                    <input id=promo name=promo>
+                                    <span class=nullGood style="padding-left: 5px">
+                                        &#9646;&#9646;</span>
+                                </div>
+                            </div>
+                            <br>
+                            <input id=registerInput type=submit value=Register disabled>
                         </div>
                     </form>
                     <br>
@@ -53,7 +83,7 @@
             </div>
         </div>
         <div id=externalLink>
-            <a href="">Sign Up</a> | 
+            <a href="/advertManager/">Login</a> | 
             <a href="">Info</a> | 
             <a href="">Terms Of Service</a> | 
             <a href="">Back to Funcel</a>
