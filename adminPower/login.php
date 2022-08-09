@@ -45,7 +45,7 @@ ini_set('display_errors',1);
             $que = "INSERT INTO usrList(usrId,lastPost) 
                     VALUES($usrId,'0000-00-00 00:00:00')";
             myQuery($conn,$que);
-            setcookie("usrId",$usrId,time()+(86400 * 365 * 5),"/");
+            setcookie("usrId",$usrId,time()+(86400 * 365 * 5),"/php");
             return $usrId;
         } 
         //i initially threw away that first return $usrId uptop

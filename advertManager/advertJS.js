@@ -1,14 +1,12 @@
 function updateBody(typeCode){
     if(typeCode == 0){
+        //cannot set it as 1 in postdata bc
+        //empty(0) is false not true
         login();
     }
-    else if(typeCode == 1){
-
-    }
-    else if(typeCode == 2){
-        showAdvert
-    }
-    else if(typeCode == 3){
+    else if(typeCode >= 2 && typeCode <= 6){
+        var ele = document.getElementById("advertStuff");
+        toServer("typeCode="+typeCode,1,ele);
     }
 }
 function login(){
@@ -29,7 +27,6 @@ function toServer(postData,responseType=0,stuff=0){
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
-            console.log(this.responseText);
             if(responseType==1){
                 stuff.innerHTML = this.responseText;
             }
@@ -45,12 +42,12 @@ function toServer(postData,responseType=0,stuff=0){
 
 function updatePreviewImg(){
     var imgValEle = document.getElementById("lnkToImg");
-    var imgPreviewEle = document.getElementById("advertImgPreview");
+    var imgPreviewEle = document.getElementById("addAdvertImgPreview");
     if(imgValEle != null && imgPreviewEle !=null) imgPreviewEle.src=imgValEle.value;
 }
 function updatePreviewLnk(){
     var lnkValEle = document.getElementById("lnkToSite");
-    var lnkPreviewEle = document.getElementById("advertLnkPreview");
+    var lnkPreviewEle = document.getElementById("addAdvertLnkPreview");
     if(lnkValEle != null && lnkPreviewEle !=null) lnkPreviewEle.href=lnkValEle.value;
 }
 function newAd(){
@@ -63,8 +60,8 @@ function newAd(){
     console.log(postData);
     toServer(postData,2,function(){
         imgValEle.value = lnkValEle.value = creditEle.value = "";
-        document.getElementById("advertImgPreview").src="../res/emotes/emote_2.png";
-        document.getElementById("advertLnkPreview").href="";
+        document.getElementById("addAdvertImgPreview").src="../res/emotes/emote_2.png";
+        document.getElementById("addAdvertLnkPreview").href="";
     });
 }
 /*-----------------------------------------*/
@@ -112,7 +109,7 @@ function checkUnique(toCheck,value){
             checkRegister();
         }
     }
-    xhttp.open("POST", "backgroundAdvert.php");
+    xhttp.open("POST", "backgroundSignUp.php");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postData);
 }

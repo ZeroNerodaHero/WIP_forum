@@ -1,10 +1,10 @@
 :root{
     --hoverColor: #ffe1fc;
+    --headerBkgColor: #7554ff52;
 }
 body{
     background-color: #ffc0cb;
     text-align: center; 
-    color: #515870;
 }
 a{
     color: #6627ff;
@@ -66,7 +66,16 @@ input{
 .errorMsg{
     color: red;
 }
-
+#advertPageHeader{
+    font-size: 1.5rem;
+    margin-bottom: 7px;
+    border: 2px black solid;
+    border-left: 31px black solid;
+    border-right: 31px black solid;
+}
+#advertPageReturn{
+    width: 31px;
+}
 #advertMainBody{
     margin-top: 3%;
     padding: 2% 1%;
@@ -100,15 +109,23 @@ input{
 #advertStuff{
     padding-left: 1%;
 }
+#addAdvertCont{
+    margin-bottom: 3%;
+}
+#addAdvertButton{
+    position: sticky;
+    height: fit-content;
+    top: 7px;
+}
 #addAdHeader{
     text-align: right;
     font-size: 1.5rem;
     color: black;
-    padding-left: 5%;
+    padding-left: 1%;
     padding-right: 2%;
 
     border: 1px black solid;
-    background-color: #7554ff52;
+    background-color: var(--headerBkgColor);
 }
 #addAdHeaderText{
     float: left;
@@ -116,6 +133,9 @@ input{
 #addAdvertGrid{
     display: grid;
     grid-template-columns: 40% 60%;
+    padding: 3px;
+    padding-bottom: 7px;
+    background-color: #ff8ca0fa;
 }
 #addAdvertInfo{
     padding-top: 9px;
@@ -124,7 +144,7 @@ input{
 #addAdvertInfoNotice{
     font-size: 0.8rem;
 }
-#advertImgPreview{
+#addAdvertImgPreview{
     border: 2px black solid;
     border-top: 1px black solid;
     width: 100%;
@@ -165,4 +185,95 @@ input{
     font-size: 1.1rem;
     background-color: var(--hoverColor);
 }
+#yourAdHeader{
+    text-align: left;
+    font-size: 1.75rem;
+    color: black;
+}
+.displayAdvertCont{
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+.displayAdvertPreview{
+    border: 1px black solid;
+    margin-bottom: 17px;
+    background-color: #ff8ca0fa;
+    height: fit-content;
+}
+.displayAdvertImgPreview{
+    width: 100%;
+    border-top: 3px black solid;
+    border-bottom: 7px black solid;
+}
+.displayAdvertLinkPreview{
+    margin-bottom: 3px;
+}
+.displayAdvertInfoCont{
+    padding: 3px 5px;
+    margin-top: 4px;
+    background-color: #ff8ca0fa;
+    height: fit-content;
+    text-align: left;
+}
+.displayAdId{
+    text-align: right;
+    font-size: 0.7rem;
+}
+.displayTextRight{
+    text-align: right;
+    word-break: break-all;
+}
+.displayAdCredits{
+    margin-top: 9px;
+    text-align: right;
+    text-decoration: overline;
+}
+.displayLastLoadTime{
+    text-align: right;
+    text-decoration: underline;
+}
+.displayLoadHistoryCont{
+    margin-left: -5px;
+    margin-right: -5px;
+}
+.loadHistoryHeaderCont{
+    text-align: right;
+    background-color: var(--headerBkgColor);
+}
+.loadHistoryHeader{
+    float: left;
+}
+.loadHistoryGraph{
+    padding-left: 21px;
+}
+.deleteAdCont{
+    float:right;
+    padding-right: 7px;
+}
+.deleteAdButton{
+    border-top: 1px black solid; 
+    border-bottom: 1px black solid; 
+    margin: 5px 3px 3px 3px;
+    width: fit-content;
+}
+.deleteAdButton:hover{
+    background-color:var(--hoverColor);
+}
+.displayLogLine{
+    display: grid;
+    grid-template-columns: fit-content(300px) fit-content(300px) fit-content(300px) 1fr;
+    margin-bottom: 5px;
+}
+.displayLogTime{
+    padding-right: 11px;
+    padding-left: 7px;
+    border-right: 1px black solid;
+}
+.displayLogHeader{
+    padding-left: 7px;
+}
+.displayLogInfo{
+    padding-left: 7px;
+}
+
 
