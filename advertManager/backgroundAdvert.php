@@ -17,7 +17,7 @@
                         WHERE userId=".$usrAccount['userId'];
                 myQuery($conn,$que);
                 setcookie("newSessionId", $newSessionId, time() + (60*60));
-                genMainPage();
+                genMainPage($usrAccount);
             } else{
                 genLoginPage("No User Found Please <a href='signUp.html'>Sign Up</a>");
             }
@@ -33,16 +33,21 @@
             } else if($typeCode== 3){
                 echo genTransaction($usrAccount);
             } else if($typeCode== 4){
-                echo genAddCredits($usrId);
+                echo genAddCredits($usrAccount);
             } else if($typeCode== 5){
-                echo genAccountInfo($usrId);
+                echo genAccountInfo($usrAccount);
             } else if($typeCode== 6){
-                echo genMessages($usrId);
+                echo genMessages($usrAccount);
+            } else if($typeCode== 7){
+                genMainPage($usrAccount);
             } else if($typeCode== 10){
                 $lnkToImg = $_POST["lnkToImg"];
                 $lnkToSite= $_POST["lnkToSite"];
                 $credits = $_POST["credits"];    
                 addAdvert($usrAccount,$lnkToImg,$lnkToSite,$credits);
+            } else if($typeCode== 11){
+                $adId= $_POST["adId"];
+                deleteAdvert($usrAccount,$adId);
             }
         }
     }
@@ -68,8 +73,7 @@
         }
         return $account;
     }
-    function genMainPage(){
-        global $usrAccount;
+    function genMainPage($usrAccount){
         echo "
             <div id=advertMainBody>
                 <div id=mainContent>
@@ -110,7 +114,7 @@
             </div>";
     }
     function genPageHeader($txt){
-        return "<div id=advertPageHeader>$txt</div><hr id=advertPageReturn>";
+        return "<div id=advertPageHeader><b>$txt</b></div><hr id=advertPageReturn>";
     }
     function genLoginPage($errorMsg=""){
         echo "<div id=advertLoginFlexCont><div id=advertLoginCont>
@@ -243,10 +247,35 @@
         updateUserCredits($usrAccount,$credits);
         updateTransactionHistory($usrAccount,$adId,1,$credits);
     }
-    //type tells us if 0-add,1-delete,3 change?
+    function deleteAdvert($usrAccount,$adId){
+        global $conn;
+        $usrId = $usrAccount["userId"];
+        $nuCredit= $usrAccount["credits"];
+        $refund=0;$original=0;
+        $que= "SELECT * FROM peepoAds WHERE id=$adId && uploaderId=$usrId";
+        $res = $conn->query($que);
+        if($res && $res->num_rows > 0){
+            while($row = $res->fetch_assoc()){
+                $original= $row["maxPoints"]-$row["totalLoads"];
+                $refund= ceil($original*0.9);
+            }
+        }
+        $que = "DELETE FROM peepoAds WHERE id=$adId";
+        myQuery($conn,$que);
+
+        $nuCredit+=$refund;
+
+        $que = "UPDATE advertManager 
+                SET credits=$nuCredit
+                WHERE userId=$usrId";
+        myQuery($conn,$que);
+        updateTransactionHistory($usrAccount,$adId,0,$original);
+    }
+    //type tells us if 0-delete,1-add,3 change?
     function updateTransactionHistory($usrAccount,$adId,$type,$credits){
         global $conn;
-        $newLog = array("time"=>time(),"adId"=>$adId,"type"=>$type,"credits"=>$credits,
+        $newLog = array("time"=>timeRegFormat(time()),"adId"=>$adId,
+                    "type"=>$type,"credits"=>$credits,
                     "accountCredits"=>$usrAccount["credits"]);
 
         $transactionHistory=$usrAccount["transactionHistory"];
@@ -267,18 +296,24 @@
     }
     function genTransaction($usrAccount){
         $transactionObj = json_decode($usrAccount["transactionHistory"],true); 
+        $transactionLog = array_reverse($transactionObj["log"]);
         $ret = "";
-        foreach($transactionObj["log"] as $logRow){
-            $ret .="<div class=displayLogLine>";
+        $shade = 0;
+        foreach($transactionLog as $logRow){
+            $ret .="<div class='displayLogLine".($shade?" shadeLogLine":"")."'>";
             $ret .="<div class=displayLogTime>".$logRow["time"]."</div> ";
             $ret .= "<div class=displayLogHeader><b>Log:</b></div>";
             $ret .= "<div class=displayLogInfo>";
-            if($logRow["type"] == 1){
+            if($logRow["type"] == 0){
+                $ret .= "Deleted ad#".$logRow["adId"]." with ".$logRow["credits"].
+                    " credits<br>Refund is ".ceil($logRow["credits"]*0.9)."<br>";
+            } else if($logRow["type"] == 1){
                 $ret .= "Added ad#".$logRow["adId"]." with ".$logRow["credits"].
                     " credits<br>";
             }
             $ret.= "Current Account Credits: ".
                 $logRow["accountCredits"]."</div></div>";
+            $shade ^= 1;
         }
         if($ret == "") $ret = "<div id=noAds>Empty Transaction History</div>";
         else{
@@ -289,15 +324,39 @@
         }
         return genPageHeader("Transaction History").$ret;
     }
-    function genAddCredits($usrId){
+    function genAddCredits($usrAccount){
         return genPageHeader("Add Credits").
             "";
     }
-    function genAccountInfo($usrId){
+    function genAccountInfo($usrAccount){
         return genPageHeader("Account Info").
-            "";
+            "<div id=displayUsrInfo>
+                <div class=usrInfoLeft><b>Username:</b>
+                    <span class=usrInfoRight>".$usrAccount["username"]."</span></div>".
+                "<div class=usrInfoLeft><b>Email:</b>
+                    <span class=usrInfoRight>".$usrAccount["email"]."</span></div>".
+                "<div class=usrInfoLeft><b>UserId:</b>
+                    <span class=usrInfoRight>".$usrAccount["userId"]."</span></div>
+                <div id=changePWordCont>
+                    <div id=changePWordHeader>
+                        <b>Change Password</b>
+                    </div>
+                    <div id=oldPWordCont class=pwordInputCont>
+                        <b>Old Password:</b><input id=oldPword class=PWordChng>
+                    </div>
+                    <div id=newPWordCont class=pwordInputCont>
+                        <b>New Password:</b><input id=newPword class=PWordChng>
+                    </div>
+                    <div id=retypePWordCont class=pwordInputCont>
+                        <b>Retype Password:</b><input id=retypePword class=PWordChng>
+                    </div>
+                    <div id=changePWordButtonCont>
+                        <span id=changePWordButton>Change</span>
+                    </div>
+                </div>
+            </div>";
     }
-    function genMessages($usrId){
+    function genMessages($usrAccount){
         return genPageHeader("Messages").
             "";
     }

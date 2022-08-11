@@ -62,6 +62,13 @@ function newAd(){
         imgValEle.value = lnkValEle.value = creditEle.value = "";
         document.getElementById("addAdvertImgPreview").src="../res/emotes/emote_2.png";
         document.getElementById("addAdvertLnkPreview").href="";
+        toServer("typeCode=7",1,document.getElementById("toReplace"));
+    });
+}
+function deleteAd(id){
+    var postData = "typeCode=11&adId="+id;
+    toServer(postData,2,function(){
+        toServer("typeCode=7",1,document.getElementById("toReplace"));
     });
 }
 /*-----------------------------------------*/

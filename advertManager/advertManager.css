@@ -264,6 +264,9 @@ input{
     grid-template-columns: fit-content(300px) fit-content(300px) fit-content(300px) 1fr;
     margin-bottom: 5px;
 }
+.shadeLogLine{
+    background-color: #0000001f;
+}
 .displayLogTime{
     padding-right: 11px;
     padding-left: 7px;
@@ -275,5 +278,40 @@ input{
 .displayLogInfo{
     padding-left: 7px;
 }
-
+#displayUsrInfo{
+    display: grid;
+    justify-content: center;
+}
+.usrInfoRight{
+    float: right;
+    margin-left: 30px;
+}
+.usrInfoLeft{
+    text-align: left;
+}
+#changePWordCont{
+    margin-top: 21px;
+    border-top: 1px black dotted;
+    padding-top: 10px;
+}
+.pwordInputCont{
+    text-align: left;
+}
+.PWordChng{
+    margin-left: 21px;
+    float: right;
+}
+#changePWordButtonCont{
+    margin-top: 13px;
+    text-align: right;
+}
+#changePWordButton{
+    border-left: 1px black solid;
+    border-right: 1px black solid;
+    padding: 0px 3px 0px 3px;
+}
+#changePWordButton:hover{
+    background-color: var(--hoverColor);
+    font-size:1.1rem;
+}
 
