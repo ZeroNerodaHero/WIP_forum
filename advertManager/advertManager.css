@@ -15,6 +15,15 @@ input{
     border:0px black solid;
     border-bottom:1px black solid;
 }
+input:hover{
+    background-color: var(--hoverColor);
+}
+.success{
+    color: green;
+}
+.failed{
+    color: red;
+}
 
 #loginHeader{
     margin-bottom: 2px;
@@ -67,6 +76,7 @@ input{
     color: red;
 }
 #advertPageHeader{
+    background-color: #00000024;
     font-size: 1.5rem;
     margin-bottom: 7px;
     border: 2px black solid;
@@ -306,12 +316,13 @@ input{
     text-align: right;
 }
 #changePWordButton{
-    border-left: 1px black solid;
-    border-right: 1px black solid;
     padding: 0px 3px 0px 3px;
 }
-#changePWordButton:hover{
-    background-color: var(--hoverColor);
-    font-size:1.1rem;
+#addAdvertErrorMessage{
+    border: 1px black solid;
+    margin-bottom: 7px;
+    padding: 9px;
+    padding-bottom: 3px;
+    background-color: #ff0000cc;
 }
 

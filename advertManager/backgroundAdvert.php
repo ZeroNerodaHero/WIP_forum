@@ -7,9 +7,7 @@
             $password = $_POST["password"];
             $usrAccount = accountExists($username,$password);
             if($usrAccount != NULL){
-                if(!isset($_COOKIE["usrId"])){
-                    setcookie("usrId", $usrAccount['userId'], time() + (86400 * 30));
-                }
+                setcookie("usrId", $usrAccount['userId'], time() + (86400 * 30));
 
                 $newSessionId = rand();
                 $que = "UPDATE advertManager
@@ -44,10 +42,29 @@
                 $lnkToImg = $_POST["lnkToImg"];
                 $lnkToSite= $_POST["lnkToSite"];
                 $credits = $_POST["credits"];    
-                addAdvert($usrAccount,$lnkToImg,$lnkToSite,$credits);
+                if($usrAccount["credits"] >= $credits){
+                    addAdvert($usrAccount,$lnkToImg,$lnkToSite,$credits);
+                    echo '{"code":0}';
+                } else{
+                    echo '{"code":1}';
+                }
             } else if($typeCode== 11){
                 $adId= $_POST["adId"];
                 deleteAdvert($usrAccount,$adId);
+            } else if($typeCode== 20){
+                $oldPassword = $_POST["pword"];
+                $newPassword = $_POST["newPWord"];
+                if($usrAccount["password"]==$oldPassword){
+                    updatePassword($usrAccount,$newPassword);
+                    echo genAccountInfo($usrAccount,
+                        "<div class=success>Password Has Been Updated</div><br>");
+                } else{
+                    echo genAccountInfo($usrAccount,
+                        "<div class=failed>You entered the wrong password</div><br>");
+                }
+            } else if($typeCode== 24){
+                $promoCode = $_POST["promoCode"];
+                checkPromo($usrAccount,$promoCode);
             }
         }
     }
@@ -73,7 +90,7 @@
         }
         return $account;
     }
-    function genMainPage($usrAccount){
+    function genMainPage($usrAccount,$opt=0){
         echo "
             <div id=advertMainBody>
                 <div id=mainContent>
@@ -105,9 +122,10 @@
                                 Messages
                             </div>
                         </div>
-                        <div id=advertStuff>".
-                            genMyAdverts($usrAccount["userId"]).
-                        "</div>
+                        <div id=advertStuff>";
+        if($opt==0) echo genMyAdverts($usrAccount["userId"]);
+        else if($opt==4) echo genAddCredits($usrAccount);
+                        echo "</div>
                     </div>
                     </div>
                 </div>
@@ -326,10 +344,45 @@
     }
     function genAddCredits($usrAccount){
         return genPageHeader("Add Credits").
-            "";
+            "<div id=Paypalstuff></div>".
+            "<div id=promoInputCont><b>Promo Code:</b><input id=promoCodeInput>
+                <input type=submit id=promotInputSubmit onclick=addPromo()>
+                <div id=promorInfo>*You can find these codes somewhere*</div>
+            </div>";
     }
-    function genAccountInfo($usrAccount){
+    function checkPromo($usrAccount,$promoCode){
+        global $conn;
+        $que = "SELECT * FROM promoCodes WHERE promoCode='$promoCode'";
+        $res = $conn->query($que);
+        if($res && $res->num_rows > 0){
+            while($row = $res->fetch_assoc()){
+                $newUses = $row["usesLeft"]-1;
+                $que = "UPDATE promoCodes 
+                        SET usesLeft=".($newUses)."
+                        WHERE promoCode='$promoCode'";
+                myQuery($conn,$que);
+            
+                $usrAccount["credits"] += $row["credits"];
+                $que = "UPDATE advertManager
+                        SET credits=".($usrAccount["credits"])."
+                        WHERE userId=".$usrAccount["userId"];
+                myQuery($conn,$que);
+                genMainPage($usrAccount,4);
+            }
+        } else{
+            echo "WTF";
+        }
+    }
+    function updatePassword($usrAccount,$newPassword){
+        global $conn;
+        $que = "UPDATE advertManager
+                SET password=$newPassword
+                WHERE userId=".$usrAccount["userId"];
+        myQuery($conn,$que);
+    }
+    function genAccountInfo($usrAccount,$miscInfo=""){
         return genPageHeader("Account Info").
+            ($miscInfo!="" ? "<div id=accountUpdatInfo>$miscInfo</div>":"").
             "<div id=displayUsrInfo>
                 <div class=usrInfoLeft><b>Username:</b>
                     <span class=usrInfoRight>".$usrAccount["username"]."</span></div>".
@@ -342,16 +395,23 @@
                         <b>Change Password</b>
                     </div>
                     <div id=oldPWordCont class=pwordInputCont>
-                        <b>Old Password:</b><input id=oldPword class=PWordChng>
+                        <b>Old Password:</b>
+                        <input type=password id=oldPword class=PWordChng
+                            oninput=updatePWordCheck()>
                     </div>
                     <div id=newPWordCont class=pwordInputCont>
-                        <b>New Password:</b><input id=newPword class=PWordChng>
+                        <b>New Password:</b>
+                        <input type=password id=newPword class=PWordChng
+                            oninput=updatePWordCheck()>
                     </div>
                     <div id=retypePWordCont class=pwordInputCont>
-                        <b>Retype Password:</b><input id=retypePword class=PWordChng>
+                        <b>Retype Password:</b>
+                        <input type=password id=retypePword class=PWordChng
+                            oninput=updatePWordCheck()>
                     </div>
                     <div id=changePWordButtonCont>
-                        <span id=changePWordButton>Change</span>
+                        <input type=button id=changePWordButton onclick=changePWord() 
+                        value=Change disabled>
                     </div>
                 </div>
             </div>";

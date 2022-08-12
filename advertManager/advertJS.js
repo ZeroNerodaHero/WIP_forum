@@ -32,6 +32,8 @@ function toServer(postData,responseType=0,stuff=0){
             }
             else if(responseType == 2){
                 stuff();
+            } else if(responseType == 3){
+                stuff(JSON.parse(this.responseText));
             }
         }
     }
@@ -57,12 +59,19 @@ function newAd(){
     var postData = "typeCode=10&lnkToImg="+encodeURIComponent(imgValEle.value)+
             "&lnkToSite="+encodeURIComponent(lnkValEle.value)+
             "&credits="+creditEle.value;
-    console.log(postData);
-    toServer(postData,2,function(){
+    toServer(postData,3,function(serverResponse){
         imgValEle.value = lnkValEle.value = creditEle.value = "";
         document.getElementById("addAdvertImgPreview").src="../res/emotes/emote_2.png";
         document.getElementById("addAdvertLnkPreview").href="";
-        toServer("typeCode=7",1,document.getElementById("toReplace"));
+        if(serverResponse.code == 0){
+            toServer("typeCode=7",1,document.getElementById("toReplace"));
+        } else{
+            var newEle = document.createElement("div");
+            newEle.id="addAdvertErrorMessage";
+            newEle.innerText = "OY VEY: YOU DO NOT HAVE ENOUGH CREDITS.";
+            document.getElementById("advertStuff").insertBefore(
+                newEle,document.getElementById("addAdvertCont"));
+        }
     });
 }
 function deleteAd(id){
@@ -71,6 +80,32 @@ function deleteAd(id){
         toServer("typeCode=7",1,document.getElementById("toReplace"));
     });
 }
+function updatePWordCheck(){
+    var oldPWord = document.getElementById("oldPword").value;
+    var newPWord = document.getElementById("newPword").value;
+    var retypePWord = document.getElementById("retypePword").value;
+    if(oldPWord != "" && newPWord != "" && newPWord.length > 6 && newPWord == retypePWord){
+        document.getElementById("changePWordButton").disabled=false;
+    } else {
+        document.getElementById("changePWordButton").disabled=true;
+    }
+}
+function changePWord(){
+    var oldPWord = document.getElementById("oldPword").value;
+    var newPWord = document.getElementById("newPword").value;
+    var retypePWord = document.getElementById("retypePword").value;
+    if(oldPWord != "" && newPWord != "" && newPWord.length > 6 && newPWord == retypePWord){
+        var postData = "typeCode=20&pword="+oldPWord+"&newPWord="+newPWord;
+        toServer(postData,1,document.getElementById("advertStuff"));
+    }
+}
+function addPromo(){
+    var promoInput = document.getElementById("promoCodeInput");
+    if(promoInput.value != ""){
+        var postData = "typeCode=24&promoCode="+promoInput.value;
+        toServer(postData,1,document.getElementById("toReplace"));
+    }
+}
 /*-----------------------------------------*/
 /*-------SIGN UP---------------------------*/
 function checkPasswds(){
@@ -78,7 +113,44 @@ function checkPasswds(){
     var repasswdEle = document.getElementById("repasswd");
     var checkerEle = document.getElementById("goodRetype");
     var submitEle = document.getElementById("registerInput");
-    if(passwdEle.value == repasswdEle.value){
+    if(passwdEle.value.length > 6 && passwdEle.value == repasswdEle.value){
+        checkerEle.style.color="green";
+    } else{
+        checkerEle.style.color="red";
+    }
+    checkRegister();
+}
+function uniqueUserName(){
+    var toCheck = "username";
+    var value = document.getElementById("username").value;
+    if(value.length > 5) checkUnique(toCheck,value);
+    else{
+        var goodEle = document.getElementById("goodusername");
+        setColorEle(goodEle,0);
+    }
+}
+function uniqueEmail(){
+    var toCheck = "email";
+    var value = document.getElementById("email").value;
+    if(checkValidEmail(value)){
+        checkUnique(toCheck,value);
+    } else{
+        var goodEle = document.getElementById("goodemail");
+        setColorEle(goodEle,0);
+    }
+}
+function checkUnique(toCheck,value){ 
+    var goodEle = document.getElementById("good"+toCheck);
+
+}
+/*-----------------------------------------*/
+/*-------SIGN UP---------------------------*/
+function checkPasswds(){
+    var passwdEle = document.getElementById("passwd");
+    var repasswdEle = document.getElementById("repasswd");
+    var checkerEle = document.getElementById("goodRetype");
+    var submitEle = document.getElementById("registerInput");
+    if(passwdEle.value.length > 6 && passwdEle.value == repasswdEle.value){
         checkerEle.style.color="green";
     } else{
         checkerEle.style.color="red";
