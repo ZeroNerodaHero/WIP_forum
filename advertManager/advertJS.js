@@ -34,6 +34,8 @@ function toServer(postData,responseType=0,stuff=0){
                 stuff();
             } else if(responseType == 3){
                 stuff(JSON.parse(this.responseText));
+            } else if(responseType == 4){
+                stuff(this.responseText);
             }
         }
     }
@@ -64,11 +66,19 @@ function newAd(){
         document.getElementById("addAdvertImgPreview").src="../res/emotes/emote_2.png";
         document.getElementById("addAdvertLnkPreview").href="";
         if(serverResponse.code == 0){
-            toServer("typeCode=7",1,document.getElementById("toReplace"));
+            toServer("typeCode=7",4,function(response){
+                document.getElementById("toReplace").innerHTML = response;
+
+                var newEle = document.createElement("div");
+                newEle.id="advertSuccessMessage";
+                newEle.innerHTML= "<b>BURY NICE</b>: YOU HAVE POSTED YOUR AD";
+                document.getElementById("advertStuff").insertBefore(
+                    newEle,document.getElementById("addAdvertCont"));
+            });
         } else{
             var newEle = document.createElement("div");
-            newEle.id="addAdvertErrorMessage";
-            newEle.innerText = "OY VEY: YOU DO NOT HAVE ENOUGH CREDITS.";
+            newEle.id="advertErrorMessage";
+            newEle.innerHTML = "<b>OY VEY</b>: YOU DO NOT HAVE ENOUGH CREDITS.";
             document.getElementById("advertStuff").insertBefore(
                 newEle,document.getElementById("addAdvertCont"));
         }

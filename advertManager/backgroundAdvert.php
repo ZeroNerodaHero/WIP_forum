@@ -90,7 +90,7 @@
         }
         return $account;
     }
-    function genMainPage($usrAccount,$opt=0){
+    function genMainPage($usrAccount,$opt=0,$etc=""){
         echo "
             <div id=advertMainBody>
                 <div id=mainContent>
@@ -124,7 +124,7 @@
                         </div>
                         <div id=advertStuff>";
         if($opt==0) echo genMyAdverts($usrAccount["userId"]);
-        else if($opt==4) echo genAddCredits($usrAccount);
+        else if($opt==4) echo genAddCredits($usrAccount,$etc);
                         echo "</div>
                     </div>
                     </div>
@@ -342,8 +342,8 @@
         }
         return genPageHeader("Transaction History").$ret;
     }
-    function genAddCredits($usrAccount){
-        return genPageHeader("Add Credits").
+    function genAddCredits($usrAccount,$etc=""){
+        return genPageHeader("Add Credits").$etc.
             "<div id=Paypalstuff></div>".
             "<div id=promoInputCont><b>Promo Code:</b><input id=promoCodeInput>
                 <input type=submit id=promotInputSubmit onclick=addPromo()>
@@ -354,24 +354,43 @@
         global $conn;
         $que = "SELECT * FROM promoCodes WHERE promoCode='$promoCode'";
         $res = $conn->query($que);
+        $ret = "<div id=advertErrorMessage>
+                <b>OY VEY<b>: CODE USED OR INVALID CODE</div>";
         if($res && $res->num_rows > 0){
             while($row = $res->fetch_assoc()){
-                $newUses = $row["usesLeft"]-1;
-                $que = "UPDATE promoCodes 
-                        SET usesLeft=".($newUses)."
-                        WHERE promoCode='$promoCode'";
-                myQuery($conn,$que);
-            
-                $usrAccount["credits"] += $row["credits"];
-                $que = "UPDATE advertManager
-                        SET credits=".($usrAccount["credits"])."
-                        WHERE userId=".$usrAccount["userId"];
-                myQuery($conn,$que);
-                genMainPage($usrAccount,4);
+                $jsonObj = json_decode($usrAccount["etcInfo"],1);
+                $promos= $jsonObj["promos"];
+                $hasPromo = 0;
+                if($promos != NULL){
+                    foreach($promos as $code){
+                        if($promoCode==$code) $hasPromo =1;
+                    }
+                } else{
+                    if($jsonObj==NULL) $jsonObj = array();
+                    $tmp = array("promos"=>array("noCode"));
+                    $jsonObj = array_merge($jsonObj,array("promos"=>array("noCode")));
+                }
+                if(!$hasPromo){
+                    $newUses = $row["usesLeft"]-1;
+                    $que = "UPDATE promoCodes 
+                            SET usesLeft=".($newUses)."
+                            WHERE promoCode='$promoCode'";
+                    myQuery($conn,$que);
+                
+                    $usrAccount["credits"] += $row["credits"];
+                    $jsonObj["promos"][]=$promoCode;
+                    $que = "UPDATE advertManager
+                            SET credits=".($usrAccount["credits"]).",
+                                etcInfo='".json_encode($jsonObj)."'
+                            WHERE userId=".$usrAccount["userId"];
+                    myQuery($conn,$que);
+                    $ret = "<div id=advertSuccessMessage>
+                            <b>BURY NICE</b>: YOU HAVE REDEEMED ".$row["credits"]." CREDITS
+                            </div>";
+                }
             }
-        } else{
-            echo "WTF";
-        }
+        } 
+        genMainPage($usrAccount,4,$ret);
     }
     function updatePassword($usrAccount,$newPassword){
         global $conn;
