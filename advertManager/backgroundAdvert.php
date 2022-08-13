@@ -42,11 +42,13 @@
                 $lnkToImg = $_POST["lnkToImg"];
                 $lnkToSite= $_POST["lnkToSite"];
                 $credits = $_POST["credits"];    
-                if($usrAccount["credits"] >= $credits){
+                if($usrAccount["credits"] < $credits){
+                    echo '{"code":1}';
+                } else if($usrAccount["verified"] != true){
+                    echo '{"code":2}';
+                } else{
                     addAdvert($usrAccount,$lnkToImg,$lnkToSite,$credits);
                     echo '{"code":0}';
-                } else{
-                    echo '{"code":1}';
                 }
             } else if($typeCode== 11){
                 $adId= $_POST["adId"];

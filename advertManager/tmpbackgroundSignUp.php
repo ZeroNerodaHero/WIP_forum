@@ -1,6 +1,5 @@
 <?php
-    //Import PHPMailer classes into the global namespace
-    //These must be at the top of your script, not inside a function
+    //BE SURE THE CHANGE THE PASSWORDS
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
@@ -27,15 +26,15 @@
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'funceldomain@gmail.com';
-            $mail->Password   = 'faqaxtrgzjebcrta';
+            $mail->Username   = '';
+            $mail->Password   = '';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = 465;
 
             //Recipients
-            $mail->setFrom('funceldomain@gmail.com', 'Me');
+            $mail->setFrom('', 'Me');
             $mail->addAddress($email, 'U');
-            $mail->addReplyTo('funceldomain@gmail.com', 'Reply Here: Human Response Incoming');
+            $mail->addReplyTo('', 'Reply Here: Human Response Incoming');
 
             //Content
             $mail->isHTML(true);
@@ -115,12 +114,14 @@
         newUser($_POST["username"],$_POST["passwd"],$_POST["email"],$usrId,$_POST["promo"]);
         $encodedVal = doubleEncode("$usrId");
         $ret = accountVerification($_POST["email"],$encodedVal);
-        genPage("Account Created",$ret."<br>Please Sign In");
+        genPage("Account Created",$ret."<br>Please Sign In. 
+            Also don't forget to verify your account. The Email is probably in your
+            Spam folder.");
     } else if(!empty($_GET["verify"])){
         $vId=$_GET["vId"];
         $usrId = doubleDecode($vId); 
         verifyUser($usrId);
-        genPage("Verification","Account Verified");
+        genPage("Verification","Account Verified If Exists");
     } 
     else if(!empty($_POST["isCheck"])){
         $toCheck = $_POST["toCheck"];

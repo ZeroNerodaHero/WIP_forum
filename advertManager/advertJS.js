@@ -78,7 +78,11 @@ function newAd(){
         } else{
             var newEle = document.createElement("div");
             newEle.id="advertErrorMessage";
-            newEle.innerHTML = "<b>OY VEY</b>: YOU DO NOT HAVE ENOUGH CREDITS.";
+            if(serverResponse.code == 1){
+                newEle.innerHTML = "<b>OY VEY</b>: YOU DO NOT HAVE ENOUGH CREDITS.";
+            } else if(serverResponse.code == 2){
+                newEle.innerHTML = "<b>OY VEY</b>: YOU NEED TO VERIFY.";
+            }
             document.getElementById("advertStuff").insertBefore(
                 newEle,document.getElementById("addAdvertCont"));
         }
