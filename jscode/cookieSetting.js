@@ -95,7 +95,7 @@ function setCookie(key,val){
     const d = new Date();
     d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
     let expires = "expires="+d.toUTCString();
-    document.cookie = key + "=" + val + ";" + expires + ";path=/";
+    document.cookie = key + "=" + val + ";" + expires + ";path=/php";
 }
 
 function getCookie(cname) {
