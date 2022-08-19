@@ -137,7 +137,7 @@
 	        <?php include_once('genPhp/generateAdvert.php'); ?>
             </div>
             <div id="miscLnk">
-                <a class=contactGen href="miscPg/advertisment.html">
+                <a class=contactGen href="../advertManager">
                     Advertisment
                 </a>
             </div>
