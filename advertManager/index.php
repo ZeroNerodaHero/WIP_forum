@@ -31,10 +31,10 @@
                 </div>
             </div>
             <div id=externalLink>
-                <a href="signUp.html">Sign Up</a> | 
-                <a href="">Info</a> | 
-                <a href="">Terms Of Service</a> | 
-                <a href="">Back to Funcel</a>
+                <a href="signUp.html">Sign Up</a> |
+                <a href="info.html">Info</a> |
+                <a href="../php">Back to Funcel</a>
+
             </div>
         </div>
     </body>

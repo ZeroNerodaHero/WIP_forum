@@ -120,9 +120,6 @@
                             <div class=myAdvertTab onclick='updateBody(5)'>
                                 Account Info 
                             </div>
-                            <div class=myAdvertTab onclick='updateBody(6)'>
-                                Messages
-                            </div>
                         </div>
                         <div id=advertStuff>";
         if($opt==0) echo genMyAdverts($usrAccount["userId"]);
