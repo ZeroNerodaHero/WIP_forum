@@ -157,7 +157,7 @@
         if($res && $res->num_rows > 0){
             while($row = $res->fetch_assoc()){
                 $ret .= genAdvertInfo($row["id"],$row["uploaderId"],
-                    $row["linkToImg"],$row["linkToImg"],
+                    $row["linkToImg"],$row["linkToSite"],
                     $row["totalLoads"],$row["maxPoints"],
                     $row["uploadTime"],$row["lastTime"]);
             }
