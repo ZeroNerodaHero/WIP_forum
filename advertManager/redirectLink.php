@@ -32,7 +32,7 @@
     </style>
 </head>
 <?php
-    $lnk = $_GET["link"];
+    $lnk = base64_decode($_GET["link"]);
     if($lnk != NULL){
         echo "
             <div id=redirectEncap>

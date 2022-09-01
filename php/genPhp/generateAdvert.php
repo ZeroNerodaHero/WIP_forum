@@ -15,7 +15,8 @@
         $que .= " LIMIT 1 OFFSET $ran";
         $res = $conn->query($que);
         while($row = $res->fetch_assoc()){
-            $toGo = "/advertManager/redirectLink.php?link=".$row["linkToSite"];
+            $toGo = "/advertManager/redirectLink.php?link=".
+                    base64_encode($row["linkToSite"]);
             echoImg($row["linkToImg"],$toGo,"advertImg");
 	    if($row["totalLoads"] >= $row["maxPoints"]){
 	        deleteAd($row["id"]);
