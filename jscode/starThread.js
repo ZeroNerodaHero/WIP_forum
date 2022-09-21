@@ -22,9 +22,12 @@ function setStarThread(board,TID,pCnt){
     setStarJson(JSON.stringify(starCol));
 
     var ele = document.getElementById("threadStarButton")
-    ele.text= "\u2605";
-    ele.href="javascript:unStarThread('"+board+"',"+TID+","+pCnt+")";
-    starReload(0);
+    if(ele != null){
+        //this is for the post success page that does the shit
+        ele.text= "\u2605";
+        ele.href="javascript:unStarThread('"+board+"',"+TID+","+pCnt+")";
+        starReload(0);
+    }
 }
 
 function unStarThread(board,TID,pCnt){

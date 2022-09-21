@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="../../css/postSuccess.css">
         <link rel="icon" href="../../../res/icon/icon_0.png">
 	<script type="text/javascript" src="../../jscode/jscrap.js"></script>
-        <title>FUNCEL.XYZ</title>
+	<script type="text/javascript" src="../../jscode/starThread.js"></script>
     </head>
 
     <body class=postSuccessBody>
@@ -168,6 +168,8 @@
             updateUsrScore($posterId,10);
             updateUsrTime($posterId);
             updatePostCnt($page,$TID);
+
+            //add to Star
         }
         function bumpThread($board,$tid){
             global $connBoards;
@@ -339,6 +341,9 @@
 	    echo "<div id=psEncap onclick='threadRedirect(\"$redirect\")'>";
             echo "<div class=postSuccessHeader><mark id=".$messageError."> "
 	        . $msg ."</mark></div>";
+            if(!$error){
+                addToStar($_GET["page"],$_GET["TID"]);
+            }
             
             echo '<p class=buryQuote> 
                     You have been blessed with Bury#'.$buryPic.'.<br><br>
@@ -366,7 +371,6 @@
                     setTimeout(function(){
                     location="'.$redirect.'";
                     }, 500000);
-
                 </script> ';
 
         }
@@ -424,6 +428,12 @@
                         primary key(postId))";
             myQuery($connBoards,$que);
             printPage("NEW ANOTE THREAD");
+        }
+        function addToStar($board,$tid){
+            global $connBoards;
+            $que = "SELECT * FROM $board"."_$tid";
+            $res = $connBoards->query($que);
+            echo "<script>setStarThread('$board','$tid',$res->num_rows)</script>";
         }
     ?>
     </body>
