@@ -1,4 +1,13 @@
 <?php
+    $emoteQUE = "SELECT * FROM emotes";
+    $emoteRES = $conn->query($emoteQUE);
+    $emoteList = array("NULL");
+    if($emoteRES->num_rows > 0){
+        while($row = $emoteRES->fetch_assoc()){
+            $emoteList[] = $row["filePATH"];
+        }
+    }
+
     function generatePage(){
         global $allBoards,$boardPageName,$threadType;
         $curPage = $boardPageName;
@@ -80,6 +89,7 @@
     }
         
     function postThreads($board,$title,$time,$TID,$postCnt,$acclaim,$classTag=""){
+        global $emoteList;
         $time = timeRegFormat($time);
         $newLink = $_SERVER["REQUEST_URI"] . "&TID=".$TID;
         echo "<div id=p_$TID class=threadEncap onclick='threadRedirect(\"$newLink\",$TID)' 
@@ -91,7 +101,7 @@
 		echo "<div class='thread_title $classTag'>" . $title . "</div>";
 
         echo "<div id=acclaimCont_$TID class=acclaimCont>";
-        genAcclaim($acclaim);
+        genAcclaim($acclaim,$emoteList);
         echo "<span id=acclaimTID_$TID class=acclaimDisplay 
                 onclick=loadAcclaim('$board',$TID)>+</span>";
         echo "</div>";

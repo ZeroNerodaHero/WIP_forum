@@ -18,11 +18,17 @@
             }
         }
         echo "Points: <span id=usrPointCount>".$totalPoints . "</span> | ";
-        $totalEmotes = 3;
-        for($i = 0; $i < $totalEmotes; $i++){
-            echo "<img src='../../res/emotes/emote_$i.png' class=threadEmote id=threadEmote_$i
-                  onmouseover=expandEmote(this) onmouseout=deflateEmote(this)
-                  onclick=addEmote(this,'$board',$TID,$i)>";
+
+        $que = "SELECT * FROM emotes";
+        $res = $conn->query($que);
+        if($res->num_rows > 0){
+            while($row = $res->fetch_assoc()){
+                $emotePATH = $row["filePATH"];
+                $id=$row["id"];
+                echo "<img src='../../res/emotes/$emotePATH' class=threadEmote id=threadEmote_$id
+                      onmouseover=expandEmote(this) onmouseout=deflateEmote(this)
+                      onclick=addEmote(this,'$board',$TID,$id)>";
+            }
         }
     }
 ?>

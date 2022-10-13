@@ -10,6 +10,15 @@
     $oldTime = 0;
     $totalPoints = 0;
 
+    $emoteQUE = "SELECT * FROM emotes";
+    $emoteRES = $conn->query($emoteQUE);
+    $emoteList = array("NULL");
+    if($emoteRES->num_rows > 0){
+        while($row = $emoteRES->fetch_assoc()){
+            $emoteList[] = $row["filePATH"];
+        }
+    }
+
     $que = "SELECT totalPoints FROM usrList WHERE usrId=$usrId";
     $res = $conn->query($que);
     if($res->num_rows > 0){
@@ -72,7 +81,7 @@
                     WHERE usrId=$usrId";
             myQuery($conn,$que);
 
-            genAcclaim($acclaimStr);
+            genAcclaim($acclaimStr,$emoteList);
         }
     } else{
         echo "0";
