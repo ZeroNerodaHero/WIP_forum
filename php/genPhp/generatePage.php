@@ -1,12 +1,6 @@
 <?php
-    $emoteQUE = "SELECT * FROM emotes";
-    $emoteRES = $conn->query($emoteQUE);
-    $emoteList = array("NULL");
-    if($emoteRES->num_rows > 0){
-        while($row = $emoteRES->fetch_assoc()){
-            $emoteList[] = $row["filePATH"];
-        }
-    }
+    include_once("acclaimGenerator/listAcclaim_func.php");
+    $emoteList = genEmoteList();
 
     function generatePage(){
         global $allBoards,$boardPageName,$threadType;
@@ -76,7 +70,6 @@
     }
 
     function generateBoard($board){
-        include_once("acclaimGenerator/listAcclaim_func.php");
         global $boardThreads,$pgN,$threadsPerPage;
 
         for($i = $pgN * $threadsPerPage, $j = 0; $j < $threadsPerPage && 

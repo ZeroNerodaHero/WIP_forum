@@ -1,5 +1,21 @@
 <?php
-    function genAcclaim($acclaimStr,$emoteList){
+    include_once("/var/www/html/adminPowerV2/login.php");
+    function genEmoteList(){
+        global $conn;
+        $emoteQUE = "SELECT * FROM emotes";
+        $emoteRES = $conn->query($emoteQUE);
+        $emoteList = array("NULL");
+        if($emoteRES->num_rows > 0){
+            while($row = $emoteRES->fetch_assoc()){
+                $emoteList[] = $row["filePATH"];
+            }
+        }
+        return $emoteList;
+    }
+    function genAcclaim($acclaimStr,$emoteList=NULL){
+        if($emoteList == NULL){
+            $emoteList = genEmoteList();
+        }
         //example str = "0:100,1:1,2:3,...
         $length = strlen($acclaimStr);
         //echo "<span class=acclaimList>";
