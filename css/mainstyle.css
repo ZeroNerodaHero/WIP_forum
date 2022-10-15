@@ -406,9 +406,6 @@ img:hover {
 .topRowButton{
     color: #ea82df;
 }
-.topRowButton:hover{
-    font-size: 1.1em;
-}
 .topRowButton> div {
     color: white;
     position: absolute;
@@ -418,7 +415,7 @@ img:hover {
 
     border: 2px double black;
     background-color: grey;
-    z-index: 2;
+    z-index: 99;
 }
 #topRowCont > details > summary{
     display: block;
