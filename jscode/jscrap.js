@@ -167,6 +167,7 @@ function loadAcclaim(board,TID){
         if(this.readyState == 4 && this.status == 200 && ele.innerHTML == "+"){
         //if(this.readyState == 4 && this.status == 200){
             ele.innerHTML = this.responseText;
+            console.log("fine")
             document.addEventListener('click',function(event){
                 if(!ele.matches(":hover")){
                     ele.innerHTML = "+"; 
@@ -179,6 +180,7 @@ function loadAcclaim(board,TID){
 
     xhttp.open("GET","acclaimGenerator/loadAcclaim.php?board="+board+"&TID="+TID,true);
     xhttp.send();
+            console.log("WTF")
 }
 
 function expandEmote(ele){

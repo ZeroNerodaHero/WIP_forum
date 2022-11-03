@@ -30,6 +30,7 @@
         $TID = NULL;
         $redirect = "php/?page=".$board;
 
+        $emoteList = Array();
         if(!($isThread)){
             $TID = $_GET["TID"];
             $redirect .= "&TID=".$TID;
@@ -68,6 +69,14 @@
 
         //wtf?
         function manageNewPost($postContent,$board,$TID){
+            global $emoteList,$conn;
+            $que = "SELECT filePATH,shortHand FROM emotes";
+            $res = $conn->query($que);
+            if($res->num_rows > 0){
+                while($row = $res->fetch_assoc()){
+                    $emoteList[$row["shortHand"]] = $row["filePATH"];
+                }
+            }
             postComment($board,$TID,$postContent);
         }
 
@@ -185,6 +194,7 @@
         //it is slow of course
         //optimize
         function postParser($content){
+            global $emoteList;
             $ws = 0; 
             $clen = strlen($content);
             $retStr = $content;
@@ -256,7 +266,7 @@
                             $lastSet++;
 
                             //complete break bc meets }
-                            if($sepId == 5){
+                            if($sepIt == 5){
                                 $doubleBreak = 1;
                             }
                             break;
@@ -304,7 +314,10 @@
                         $newStr = integrate_TXT($tmpLNK,$tmpOPT);
                     } else if($tmpTYPE == "VIDEO"){
                         $newStr = integrate_VIDEO($tmpLNK,$tmpOPT);
+                    } else if($tmpTYPE == "EMOTE"){
+                        $newStr = integrate_EMOTE($tmpLNK,$emoteList);
                     }
+
 
                     //this is used to detect if the next thing is a new line.
                     $newLineOffset = 1;

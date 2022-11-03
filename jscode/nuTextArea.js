@@ -1,7 +1,12 @@
+var emoteIsExpanded = false;
+var isTextboxChanged = false;
+var emoteGenStorage = null;
+var emoteJSONStorage = null;
+
 function generateTextArea(){
     var newTextAreaEle = document.createElement("div");
     newTextAreaEle.id = "nuTextEditor";
-    newTextAreaEle.innerHTML="<div id=textButtonButtonCont><div id=textButtonCont><span class=textButton onclick=addIMG()> ADD IMG </span><span class=textButton onclick=addLNK()> ADD LNK </span> <span class=textButton onclick=addYTB()> ADD YTB </span> <span class=textButton onclick=addVIDEO()> ADD VIDEO </span> </div> </div> <div id=newTextAreaCont> <div contenteditable='true' id=newTextArea></div> </div> <div id=submitCont> <div id=submitButtonCont> <div id=submitButton onclick=submitValue()>Submit </button> </div> </div>";
+    newTextAreaEle.innerHTML="<div id=textButtonButtonCont><div id=textButtonCont><span class=textButton onclick=addIMG()> ADD IMG </span><span class=textButton onclick=addLNK()> ADD LNK </span> <span class=textButton onclick=addYTB()> ADD YTB </span> <span class=textButton onclick=addVIDEO()> ADD VIDEO </span> <span class=textButton onclick=showTextEmote() id=emoteExpandButton>EMOTES &#9654;</span></div> </div> <div id=newTextAreaCont> <div contenteditable='true' id=newTextArea></div> </div> <div id=submitCont> <div id=submitButtonCont> <div id=submitButton onclick=submitValue()>Submit </button> </div> </div>";
     newTextAreaEle.addEventListener('keyup',function(event){
         replaceView();
     });
@@ -11,16 +16,16 @@ function generateTextArea(){
 }
 
 function addIMG(){
-    appendText("[IMG]");
+    appendType("[IMG]");
 }
 function addLNK(){
-    appendText("[LNK]",0);
+    appendType("[LNK]",0);
 }
 function addYTB(){
-    appendText("[YTB]");
+    appendType("[YTB]");
 }
 function addVIDEO(){
-    appendText("[VIDEO]");
+    appendType("[VIDEO]");
 }
 function submitValue(){
     var newTextAreaEle = document.getElementById("newTextArea");
@@ -42,7 +47,8 @@ function extractString(node){
     }
     if(node.nodeType == 1){
         if(node.nodeName == "IMG"){
-            return "\n[IMG]("+node.src+")\n";
+            return "\n["+((node.className == "inTextEmote") ? 
+                    "EMOTE]("+node.emoteName:"IMG]("+node.src)+")\n";
         }
         if(node.nodeName == "A"){
             if(node.className == "videoLink") return "";
@@ -89,7 +95,10 @@ function standardizeText(inputStr){
     return outputStr;
 }
 
-function appendText(text,lineBreak=1){
+function appendType(text,lineBreak=1){
+    var newTextArea = document.getElementById("newTextArea");
+    newTextArea.focus();
+
     var srcLnk=document.createElement("span");
     srcLnk.className = "insertLinkArea";
     srcLnk.innerHTML = "*insert link*";
@@ -103,7 +112,6 @@ function appendText(text,lineBreak=1){
     insertText.appendChild(srcLnk);
     insertText.append(") ");
 
-    var newTextArea = document.getElementById("newTextArea");
     newTextArea.appendChild(insertText);
 }
 
@@ -147,7 +155,8 @@ function replaceView(){
             if(optLink != "" && optLink[0] != "<"){
                 var toInsert = "";
                 if(optType == "IMG"){
-                    toInsert = "<img src='"+optLink+"'><br>";
+                    toInsert = "<img src='"+optLink+"'"+
+                                " class=newTextArea_img><br>";
                 }
                 else if(optType == "LNK"){
                     toInsert = "<a href='"+optLink+"'>"+optLink+"</a>";
@@ -223,6 +232,7 @@ function nuTextAreaDefaults(){
         newTextAreaEle.innerText = "";
         newTextAreaEle.style.color="#000000";
         newTextAreaEle.removeEventListener("focus",arguments.callee,false);
+        isTextboxChanged = true;
     });
 
     var titEle = document.getElementById("tit");
@@ -236,4 +246,74 @@ function nuTextAreaDefaults(){
         });
     }
 }
+function showTextEmote(){
+    var emoteBoxParent = document.getElementById("emoteExpandButton");
+    if(!emoteIsExpanded){
+        emoteBoxParent.innerHTML= "EMOTE &#9668;";
 
+        if(emoteGenStorage== null){
+            emoteGenStorage= document.createElement("div");
+            emoteGenStorage.id = "emoteBox";
+
+            var topBar = document.createElement("div");
+            topBar.id = "topBar";
+            topBar.innerHTML = "<div id=searchBar>Search:</div>";
+            emoteGenStorage.appendChild(topBar);
+            var horiRet = document.createElement("hr");
+            horiRet.id = "emoteHR";
+            emoteGenStorage.appendChild(horiRet);
+
+            var loadEmoteCont = document.createElement("div");
+            loadEmoteCont.id = "loadEmoteCont";
+            loadEmoteCont.innerHTML = emoteAjax();
+            emoteGenStorage.appendChild(loadEmoteCont);
+
+            emoteBoxParent.parentElement.appendChild(emoteGenStorage);
+        } else{
+            emoteGenStorage.style.display = "block";
+        }
+
+    } else {
+        collapseEmoteBox(emoteBoxParent);
+    }
+    emoteIsExpanded ^= 1;
+}
+function collapseEmoteBox(emoteParentText){
+    if(emoteIsExpanded && emoteGenStorage != null){
+        emoteGenStorage.style.display = "none";
+        emoteParentText.innerHTML= "EMOTE &#9658;";
+    }
+    return emoteGenStorage;
+}
+function emoteAjax(){
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+        console.log(this.responseText);
+        emoteJSONStorage = JSON.parse(this.responseText);
+        var returnStr = "";
+        for(let key in emoteJSONStorage){
+            let url= "../res/emotes/"+emoteJSONStorage[key];
+            emoteJSONStorage[key] = url;
+            returnStr+="<a href='javascript:addEmoteToText(\""+key+"\")'>"+
+                         "<img src='"+url+"' class=addEmote_icon "+
+                         "onmouseover='expandEmote(this)' "+
+                         "onmouseout='deflateEmote(this)'></a>";
+        }
+        document.getElementById("loadEmoteCont").innerHTML=returnStr;
+    }
+    xhttp.open("GET", "acclaimGenerator/loadEmotes.php", true);
+    xhttp.send();
+    return "LOADING...";
+}
+
+function addEmoteToText(key){
+    var newTextArea = document.getElementById("newTextArea");
+    newTextArea.focus();
+
+    var emote_icon = document.createElement("img");
+    emote_icon.src = emoteJSONStorage[key];
+    emote_icon.className = "inTextEmote";
+    emote_icon.emoteName = key;
+
+    newTextArea.appendChild(emote_icon);
+}

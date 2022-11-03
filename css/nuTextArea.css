@@ -4,7 +4,7 @@
 
     --buttonBkgColor: #ffe1fc;
     --buttonHoverBkgColor: #ea82df;
-    --buttonPadding: 1px 3px 1px 3px;
+    --buttonPadding: 0px 3px 0px 3px;
 }
 
 /* TEXT EDITOR STYLE*/
@@ -23,14 +23,14 @@
     margin-top: 3px;
 }
 .textButton{
-    border: 1px black dotted;
-    border-width: 1px 1px 0px 1px;
+    white-space: nowrap;
+    border-left: 1px black solid;
+    border-right: 1px black solid;
     background-color: var(--buttonBkgColor);
     padding: var(--buttonPadding);
 }
 .textButton:hover{
     background-color: var(--buttonHoverBkgColor);
-    padding-top: 5px;
 }
 
 /* SUBMIT STYLE*/
@@ -50,7 +50,13 @@
     resize: vertical;
     text-align: start;
 }
+/*
 #newTextArea img{
+    width: 50%;
+    display: block;
+}
+*/
+.newTextArea_img{
     width: 50%;
     display: block;
 }
@@ -84,4 +90,23 @@
 #submitButton:hover{
     background-color: var(--buttonHoverBkgColor);
     padding-bottom:5px;
+}
+#emoteBox{
+    margin: 2px 0px;
+    text-align: left;
+    background-color: #d4b4d1;
+    padding: 2px 3px;
+}
+#emoteHR{
+    margin: 1px 0px 3px 0px;
+    background-color: black;
+    height: 1px;
+    border: 0px;
+}
+#loadEmoteCont{
+    text-align: center;
+}
+.addEmote_icon{
+    width: 40px;
+    height: auto;
 }

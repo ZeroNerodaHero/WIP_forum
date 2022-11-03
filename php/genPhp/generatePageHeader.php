@@ -79,7 +79,7 @@
     }
     $que = "SELECT postCnt FROM ".$boardPageName."Threads WHERE threadId=".$threadID;
     $res = $connBoards->query($que);
-    if($res->num_rows > 0){ while($row = $res->fetch_assoc()){
+    if($res && $res->num_rows > 0){ while($row = $res->fetch_assoc()){
         $threadContentSize = $row["postCnt"];
     }}
     /*

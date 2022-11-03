@@ -549,3 +549,8 @@ img:hover {
 #hiddenTextInput{
     display: none;
 }
+.inTextEmote{
+    width: 40px;
+    display: inline;
+    margin: 0px 1px;
+}

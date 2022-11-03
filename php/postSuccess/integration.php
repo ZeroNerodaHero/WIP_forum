@@ -18,7 +18,6 @@ function integrate_IMG($tmpLNK,$option=""){
     return "<div style=\'display:inline-flex;flex-wrap:wrap;gap:6px;\'>" 
         . $retML . "</div>";
 }
-
 /* ------------------IMG ENDS----------------------*/
 
 function integrate_LNK($tmpLNK,$option=""){
@@ -115,7 +114,7 @@ function integrate_TXT($tmpTXT,$option=""){
             "</span>".$tagRight;
     return $newStr;
 }
-/* ------------------VIDEO ENDS----------------------*/
+/* ------------------TEXT ENDS----------------------*/
 function integrate_VIDEO($tmpTXT,$option=""){
     //gets the .xxxx whatever that may be
     //can only support webm or mp4 
@@ -133,6 +132,19 @@ function integrate_VIDEO($tmpTXT,$option=""){
         <div class=videoRed><a href='$tmpTXT'>redirect: ".$tmpTXT.
         "</a></div>";
 }
+
+/* ------------------VIDEO ENDS----------------------*/
+function integrate_EMOTE($tmpIcon,$emoteList){
+    $lnk = null;
+    $lnk = $emoteList[$tmpIcon];
+    foreach($emoteList as $emote){
+    }
+    return (($lnk != null)?
+        "<img src='../res/emotes/$lnk' class=inTextEmote>":
+        "[lmaoEmbededFail]");
+    
+}
+/* ------------------EMOTE ENDS----------------------*/
 
 
 
