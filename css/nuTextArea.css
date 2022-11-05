@@ -91,6 +91,23 @@
     background-color: var(--buttonHoverBkgColor);
     padding-bottom:5px;
 }
+#searchBar{
+    display: flex;
+    margin-bottom: 3px;
+}
+#searchBarInput{
+    width: 100%;
+    background: transparent;
+    border-width: 0px 0px 2px 0px;
+    font-family: monospace;
+}
+#searchBarInput:focus{
+    border-width: 0px 0px 1px 0px;
+}
+#searchBarInput:focus-visible{
+    outline: transparent;    
+    border-width: 0px 0px 1px 0px;
+}
 #emoteBox{
     margin: 2px 0px;
     text-align: left;
@@ -110,3 +127,4 @@
     width: 40px;
     height: auto;
 }
+

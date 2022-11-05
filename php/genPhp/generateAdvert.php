@@ -27,7 +27,7 @@
 	    }
 	}
     } else{
-        echoImg("../res/bulletin/bull_0.png","");
+        echoImg("../res/bulletin/bull_0.png","","advertImg");
     }
     function deleteAd($id){
         global $conn;

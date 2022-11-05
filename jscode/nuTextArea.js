@@ -1,7 +1,16 @@
+class trieNode{
+    constructor(nodeFinish = false){
+        this.nodeFinish = nodeFinish;
+        this.letters= new Map([]);
+    }
+}
+
 var emoteIsExpanded = false;
 var isTextboxChanged = false;
 var emoteGenStorage = null;
-var emoteJSONStorage = null;
+
+var emoteTrie = null;
+var emoteSearchResult = new Set;
 
 function generateTextArea(){
     var newTextAreaEle = document.createElement("div");
@@ -257,7 +266,10 @@ function showTextEmote(){
 
             var topBar = document.createElement("div");
             topBar.id = "topBar";
-            topBar.innerHTML = "<div id=searchBar>Search:</div>";
+            topBar.innerHTML = "<div id=searchBar>"+
+                "<span id=searchBarTit>Search:</span>"+
+                "<input id=searchBarInput oninput=searchEmotes(this)>"
+                +"</div>";
             emoteGenStorage.appendChild(topBar);
             var horiRet = document.createElement("hr");
             horiRet.id = "emoteHR";
@@ -278,6 +290,27 @@ function showTextEmote(){
     }
     emoteIsExpanded ^= 1;
 }
+function searchEmotes(textInput){
+    emoteSearcher(textInput.value.toLowerCase());
+    /*
+    for(var emote of emoteSearchResult){
+        console.log(emote);
+    }
+    console.log("---");
+    */
+    var ele= document.getElementById("loadEmoteCont");
+    var eleChildren = null;
+    if(ele != null) eleChildren = ele.children;
+
+    for(var cNode of eleChildren){
+        var str = cNode.id.substring(6).toLowerCase();
+        if(emoteSearchResult.has(str)){
+            cNode.style.display = "inline";
+        } else{
+            cNode.style.display = "none";
+        }
+    }
+}
 function collapseEmoteBox(emoteParentText){
     if(emoteIsExpanded && emoteGenStorage != null){
         emoteGenStorage.style.display = "none";
@@ -288,32 +321,79 @@ function collapseEmoteBox(emoteParentText){
 function emoteAjax(){
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function() {
-        console.log(this.responseText);
-        emoteJSONStorage = JSON.parse(this.responseText);
+        emoteTrie = new trieNode;
+
+        var emoteJSONStorage = JSON.parse(this.responseText);
+        var emoteKeys = [];
         var returnStr = "";
         for(let key in emoteJSONStorage){
             let url= "../res/emotes/"+emoteJSONStorage[key];
+            
             emoteJSONStorage[key] = url;
-            returnStr+="<a href='javascript:addEmoteToText(\""+key+"\")'>"+
-                         "<img src='"+url+"' class=addEmote_icon "+
-                         "onmouseover='expandEmote(this)' "+
-                         "onmouseout='deflateEmote(this)'></a>";
+            emoteKeys.push(key);
+            returnStr+="<a href='javascript:addEmoteToText(\""
+                        +key+"\",\""+url+"\")'"+
+                        " id=emote_"+key+">"+
+                        "<img src='"+url+"' class=addEmote_icon "+
+                        "onmouseover='expandEmote(this)' "+
+                        "onmouseout='deflateEmote(this)'></a>";
         }
         document.getElementById("loadEmoteCont").innerHTML=returnStr;
+        trieCreator(emoteKeys,emoteJSONStorage);
     }
     xhttp.open("GET", "acclaimGenerator/loadEmotes.php", true);
     xhttp.send();
     return "LOADING...";
 }
 
-function addEmoteToText(key){
+function addEmoteToText(key,url){
     var newTextArea = document.getElementById("newTextArea");
     newTextArea.focus();
 
     var emote_icon = document.createElement("img");
-    emote_icon.src = emoteJSONStorage[key];
+    emote_icon.src = url;
     emote_icon.className = "inTextEmote";
     emote_icon.emoteName = key;
 
     newTextArea.appendChild(emote_icon);
+}
+function trieCreator(wordList,JSONobj){
+    for(var tmp_word of wordList){
+        var word = tmp_word.toLowerCase();
+        var curNode = emoteTrie;
+        for(var i = 0; i < word.length; i++){
+            var letterChar = word[i];
+            var nodeRef = curNode.letters.get(letterChar);
+            if(nodeRef != null){
+                curNode = nodeRef;
+            } else{
+                curNode.letters.set(letterChar, new trieNode);
+                curNode = curNode.letters.get(letterChar);
+            }
+        }
+        curNode.nodeFinish=true;
+    }
+}
+//this is bad code bc of global(search result) but this 
+//might be the most efficient i can think of
+//at 12am. such is lyfe
+function emoteSearcher(prefix){
+    emoteSearchResult.clear();
+    var nodeRef = emoteTrie;
+    for(var i = 0; i < prefix.length; i++){
+        nodeRef = nodeRef.letters.get(prefix[i]);
+        if(nodeRef == null) return [];
+    }
+    return iterateNode(nodeRef,prefix);
+}
+function iterateNode(node,retStr){
+    if(node == null) return;
+    if(node.nodeFinish == true){
+        emoteSearchResult.add(retStr);
+        return;
+    }
+
+    for(const [key,value] of node.letters){
+        iterateNode(value,retStr+key);
+    }
 }
